@@ -5,5 +5,5 @@ package com.tyin.cloud.core.auth;
  * @date 2022/3/26 3:07
  * @description ...
  */
-public class AuthAppUser {
+public class AuthClientUser {
 }

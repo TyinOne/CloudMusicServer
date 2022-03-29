@@ -29,6 +29,8 @@ public class AuthAdminUserInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
+        String requestURI = request.getRequestURI();
+        String substring = requestURI.substring(0, requestURI.indexOf("/", 1));
         Asserts.isTrue(response.getStatus() != 404, ResultCode.NOT_FOUND);
         Open open = handlerMethod.getMethodAnnotation(Open.class);
         if (Objects.nonNull(open)) {
