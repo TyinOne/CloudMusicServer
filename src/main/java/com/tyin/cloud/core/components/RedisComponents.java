@@ -1,12 +1,10 @@
 package com.tyin.cloud.core.components;
 
 import com.tyin.cloud.core.utils.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -20,19 +18,9 @@ import java.util.stream.Stream;
  * @description ...
  */
 @Component
+@RequiredArgsConstructor
 public class RedisComponents {
-    private RedisTemplate<String, String> redisTemplate;
-
-    @Resource
-    public void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
-        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(stringSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(stringSerializer);
-        this.redisTemplate = redisTemplate;
-    }
-
+    private final RedisTemplate<String, String> redisTemplate;
 
     /**
      * 重名名key，如果newKey已经存在，则newKey的原值被覆盖

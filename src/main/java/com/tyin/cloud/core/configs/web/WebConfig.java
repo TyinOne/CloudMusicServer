@@ -1,7 +1,9 @@
 package com.tyin.cloud.core.configs.web;
 
+import com.google.common.collect.Lists;
 import com.tyin.cloud.core.auth.resolver.AuthUserMethodArgumentResolver;
-import com.tyin.cloud.core.interceptor.AuthAdminUserInterceptor;
+import com.tyin.cloud.core.configs.properties.PropertiesComponents;
+import com.tyin.cloud.core.interceptor.AuthUserInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -19,8 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthAdminUserInterceptor authUserInterceptor;
+    private final AuthUserInterceptor authUserInterceptor;
     private final AuthUserMethodArgumentResolver authUserMethodArgumentResolver;
+    private final PropertiesComponents properties;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -34,7 +37,10 @@ public class WebConfig implements WebMvcConfigurer {
          *         list.add("/v3/api-docs");
          *         list.add("/error");
          */
-        registry.addInterceptor(authUserInterceptor).addPathPatterns("/**");
+        List<String> excludeList = Lists.newArrayList();
+        excludeList.add(properties.getAdminPrefix() + "/user/login");
+        excludeList.add(properties.getAdminPrefix() + "/user/register");
+        registry.addInterceptor(authUserInterceptor).addPathPatterns("/**").excludePathPatterns(excludeList);
     }
 
     @Override

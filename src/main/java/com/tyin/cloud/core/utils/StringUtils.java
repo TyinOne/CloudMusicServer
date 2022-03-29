@@ -24,4 +24,6 @@ public class StringUtils extends org.springframework.util.StringUtils {
         return hasLength(value.toString().trim());
     }
 
+//    public boolean
+
 }
