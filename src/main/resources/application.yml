@@ -36,7 +36,7 @@ spring:
 #      matching-strategy: ant_path_matcher
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: com.tyin.cloud.core.configs.mybatis.logs.CloudMyBatisLog
 
 cloud:
   api:
