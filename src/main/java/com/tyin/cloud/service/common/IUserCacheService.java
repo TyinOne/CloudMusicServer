@@ -6,5 +6,5 @@ package com.tyin.cloud.service.common;
  * @description ...
  */
 public interface IUserCacheService {
-    <T>T getUserCache(String userCache, Class<T> parameterType);
+    <T> T getUserCache(String userCache, Class<T> parameterType);
 }

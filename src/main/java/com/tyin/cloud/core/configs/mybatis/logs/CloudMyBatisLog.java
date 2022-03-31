@@ -26,21 +26,19 @@ public class CloudMyBatisLog implements Log {
     }
 
     @Override
-    public void error(String s, Throwable e) {
-        log.error(s, e);
-
+    public void error(String s, Throwable throwable) {
+        log.error(s);
+        throwable.printStackTrace();
     }
 
     @Override
     public void error(String s) {
         log.error(s);
-
     }
 
     @Override
     public void debug(String s) {
         log.debug(s);
-
     }
 
     @Override

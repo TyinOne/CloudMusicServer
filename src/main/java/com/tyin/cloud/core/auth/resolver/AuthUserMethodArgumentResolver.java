@@ -22,6 +22,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
     private final RedisComponents redisComponents;
     private final IUserCacheService userCacheService;
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(Auth.class);

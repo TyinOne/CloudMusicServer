@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @description ...
  */
 @RestController
-@RequestMapping("${cloud.api.prefix.admin}")
+@RequestMapping("${cloud.api.prefix.admin}/sys")
 @RequiredArgsConstructor
 public class SysServerController {
     private final ISysServerService sysServerService;
 
-    @GetMapping("/sys/config")
+    @GetMapping("/server/config")
     public Result<SysInfoRes> getServerConfig(@Auth AuthAdminUser user) {
         return Result.success(sysServerService.getSysInfo());
     }

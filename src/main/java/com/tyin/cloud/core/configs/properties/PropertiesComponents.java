@@ -15,7 +15,6 @@ public class PropertiesComponents {
     private final ApiPrefixConfig apiPrefixConfig;
 
 
-
     public String getAdminPrefix() {
         return this.apiPrefixConfig.getAdmin();
     }
