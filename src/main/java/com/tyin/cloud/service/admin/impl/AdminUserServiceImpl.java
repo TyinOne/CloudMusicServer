@@ -45,7 +45,14 @@ public class AdminUserServiceImpl implements IAdminUserService {
         AdminUser adminUser = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda().eq(AdminUser::getPassword, password));
         Asserts.isTrue(Objects.nonNull(adminUser), AUTH_FAILED);
         Asserts.isTrue(!adminUser.getDisabled(), USER_DISABLED);
-        String token = StringUtils.getUuid();
+        String token;
+        if (StringUtils.isNotEmpty(adminUser.getToken())) {
+            token = adminUser.getToken();
+        } else {
+            token = StringUtils.getUuid();
+            adminUser.setToken(token);
+            adminUserRepository.updateById(adminUser);
+        }
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(AuthAdminUser.builder().token(token).name(adminUser.getName()).avatar(adminUser.getAvatar()).build()));
         return AdminUserLoginRes.builder().token(token).build();
     }

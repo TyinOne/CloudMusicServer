@@ -14,7 +14,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Objects;
 
-import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_CLIENT_TOKEN_PREFIX;
+import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 
 /**
@@ -56,7 +56,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         if (value.equals(adminPrefix)) {
             return ADMIN_USER_TOKEN_PREFIX;
         } else if (value.equals(clientPrefix)) {
-            return ADMIN_CLIENT_TOKEN_PREFIX;
+            return CLIENT_USER_TOKEN_PREFIX;
         }
         return "";
     }

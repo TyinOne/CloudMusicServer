@@ -1,19 +1,19 @@
 package com.tyin.cloud.controller.admin;
 
+import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
+import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.utils.IpUtils;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
+import com.tyin.cloud.model.res.AdminUserPermissionRes;
 import com.tyin.cloud.model.valid.AdminUserLoginValidSequence;
 import com.tyin.cloud.service.admin.IAdminUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Tyin
@@ -34,5 +34,9 @@ public class AdminUserController {
         Integer ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
         AdminUserLoginRes res = adminUserService.login(adminLoginParams, ipAddress);
         return Result.success(res);
+    }
+    @GetMapping("/permission")
+    public Result<AdminUserPermissionRes> getAdminUserPermission(@Auth AuthAdminUser user) {
+        return Result.success();
     }
 }
