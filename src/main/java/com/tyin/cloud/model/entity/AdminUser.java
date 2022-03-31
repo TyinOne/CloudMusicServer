@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 /**
  * @author Tyin
  * @date 2022/3/30 10:07
@@ -28,7 +30,7 @@ public class AdminUser extends BaseEntity {
     /**
      * 登录验证
      */
-    private String key;
+    private String token;
 
     /**
      * 用户名
@@ -49,4 +51,11 @@ public class AdminUser extends BaseEntity {
      * password
      */
     private String password;
+
+    private Boolean disabled;
+
+    private int lastLogin;
+
+    private Date lastLoginTime;
+
 }

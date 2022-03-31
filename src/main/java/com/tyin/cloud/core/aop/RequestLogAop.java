@@ -17,7 +17,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Tyin
@@ -44,13 +47,14 @@ public class RequestLogAop {
         HttpServletRequest request = attributes.getRequest();
 
         RequestLog.RequestLogBuilder builder = RequestLog.builder();
-        String params = JsonUtils.toJSONString(joinPoint.getArgs());
+        Object[] args = joinPoint.getArgs();
+        List<Object> collect = Arrays.stream(args).filter(i -> !(i instanceof HttpServletRequest)).collect(Collectors.toList());
+        String params = JsonUtils.toJSONString(collect);
         String uri = request.getRequestURI();
         String ip = request.getRemoteAddr();
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         builder.params(params).uri(uri).ip(IpUtils.ipToInt(ip)).method(method);
         long start = System.currentTimeMillis();
-        long elapsed;
         log.info("URI          :" + uri);
         log.info("IP           :" + ip);
         log.info("METHOD       :" + method);

@@ -5,5 +5,5 @@ package com.tyin.cloud.core.auth.resolver;
  * @date 2022/3/29 23:20
  * @description ...
  */
-public class AuthUser {
+public interface AuthUser {
 }

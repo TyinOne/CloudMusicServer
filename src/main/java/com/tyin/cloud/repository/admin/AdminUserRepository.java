@@ -8,5 +8,5 @@ import com.tyin.cloud.model.entity.AdminUser;
  * @date 2022/3/30 10:00
  * @description ...
  */
-public interface AdminUserMapper extends BaseMapper<AdminUser> {
+public interface AdminUserRepository extends BaseMapper<AdminUser> {
 }

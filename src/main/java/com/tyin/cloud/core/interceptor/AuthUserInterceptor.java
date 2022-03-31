@@ -14,6 +14,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Objects;
 
+import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_CLIENT_TOKEN_PREFIX;
+import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
+
 /**
  * @author Tyin
  * @date 2022/3/26 3:08
@@ -43,13 +46,18 @@ public class AuthUserInterceptor implements HandlerInterceptor {
     }
 
     private boolean authentication(String prefix, HttpServletRequest request) {
+        Asserts.isTrue(redisComponents.existsKey(getTokenPrefix(prefix) + request.getHeader("token")), ResultCode.SIGNATURE_NOT_MATCH);
+        return true;
+    }
+
+    private String getTokenPrefix(String value) {
         String adminPrefix = properties.getAdminPrefix();
         String clientPrefix = properties.getClientPrefix();
-        if (prefix.equals(adminPrefix)) {
-            Asserts.isTrue(redisComponents.existsKey("user:admin:token:" + request.getHeader("token")), ResultCode.SIGNATURE_NOT_MATCH);
-        } else if (prefix.equals(clientPrefix)) {
-            Asserts.isTrue(redisComponents.existsKey("user:client:token:" + request.getHeader("token")), ResultCode.SIGNATURE_NOT_MATCH);
+        if (value.equals(adminPrefix)) {
+            return ADMIN_USER_TOKEN_PREFIX;
+        } else if (value.equals(clientPrefix)) {
+            return ADMIN_CLIENT_TOKEN_PREFIX;
         }
-        return true;
+        return "";
     }
 }

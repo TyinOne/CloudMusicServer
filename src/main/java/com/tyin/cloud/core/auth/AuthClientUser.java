@@ -7,5 +7,5 @@ import com.tyin.cloud.core.auth.resolver.AuthUser;
  * @date 2022/3/26 3:07
  * @description ...
  */
-public class AuthClientUser extends AuthUser {
+public class AuthClientUser implements AuthUser {
 }

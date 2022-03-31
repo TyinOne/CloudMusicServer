@@ -13,7 +13,6 @@ public enum ResultCode implements BaseErrorInfoInterface {
     FAIL(400, "fail"),
     SIGNATURE_NOT_MATCH(403, "token invalid"),
     NOT_FOUND(404, "not found"),
-    PARAM_ERROR(407, "params error"),
     INTERNAL_SERVER_ERROR(500, "server error"),
     SERVER_BUSY(503, "server busyness");
     /**

@@ -1,6 +1,5 @@
-package com.tyin.cloud.core.auth;
+package com.tyin.cloud.model.res;
 
-import com.tyin.cloud.core.auth.resolver.AuthUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,15 +7,13 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Tyin
- * @date 2022/3/26 3:16
+ * @date 2022/3/31 13:47
  * @description ...
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AuthAdminUser implements AuthUser {
+public class AdminUserLoginRes {
     private String token;
-    private String name;
-    private String avatar;
 }

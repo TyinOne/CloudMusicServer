@@ -14,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RequestLog extends BaseEntity{
+public class RequestLog extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String uri;
