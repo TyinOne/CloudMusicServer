@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.tyin.cloud.core.constants.ParamsConstants.*;
 import static com.tyin.cloud.core.constants.PatternConstants.MAIL_PATTERN;
 import static com.tyin.cloud.core.constants.PatternConstants.TEL_PATTERN;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
@@ -58,8 +59,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
     }
 
     private String getColumns(String username) {
-        if (username.matches(TEL_PATTERN)) return "phone";
-        if (username.matches(MAIL_PATTERN)) return "mail";
-        return "account";
+        if (username.matches(TEL_PATTERN)) return PHONE;
+        if (username.matches(MAIL_PATTERN)) return MAIL;
+        return ACCOUNT;
     }
 }

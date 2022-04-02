@@ -6,5 +6,5 @@ package com.tyin.cloud.core.constants;
  * @description ...
  */
 public class CommonConstants {
-    public final static String TOKEN = "token";
+    public final static String TOKEN = "Authentication";
 }

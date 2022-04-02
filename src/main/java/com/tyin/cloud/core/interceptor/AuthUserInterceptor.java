@@ -14,6 +14,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Objects;
 
+import static com.tyin.cloud.core.constants.CommonConstants.TOKEN;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 
@@ -46,7 +47,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
     }
 
     private boolean authentication(String prefix, HttpServletRequest request) {
-        Asserts.isTrue(redisComponents.existsKey(getTokenPrefix(prefix) + request.getHeader("token")), ResultCode.SIGNATURE_NOT_MATCH);
+        Asserts.isTrue(redisComponents.existsKey(getTokenPrefix(prefix) + request.getHeader(TOKEN)), ResultCode.SIGNATURE_NOT_MATCH);
         return true;
     }
 

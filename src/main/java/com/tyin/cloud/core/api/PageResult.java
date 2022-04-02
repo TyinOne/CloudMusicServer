@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Tyin
@@ -12,15 +11,18 @@ import java.util.Map;
  * @description ...
  */
 @Data
-public class PageResult<T> {
+public class PageResult<T, E> {
+
     private List<T> list;
     private Long size;
     private Long pages;
     private Long current;
     private Long total;
-    private Map<String, String> extra;
+    private E extra;
 
-    public PageResult(IPage<T> page, Map<String, String> extra) {
+    private Long timestamp = System.currentTimeMillis();
+
+    public PageResult(IPage<T> page, E extra) {
         this.list = page.getRecords();
         this.size = page.getSize();
         this.current = page.getCurrent();

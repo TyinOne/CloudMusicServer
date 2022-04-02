@@ -18,6 +18,8 @@ public class Result<T> {
 
     private T result;
 
+    private Long timestamp = System.currentTimeMillis();
+
     public Result(Integer code, String message, T result) {
         this.code = code;
         this.message = message;

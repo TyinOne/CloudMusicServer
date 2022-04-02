@@ -1,6 +1,7 @@
 package com.tyin.cloud.model.res;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tyin.cloud.core.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -103,6 +104,23 @@ public class SysInfoRes {
          * JDK路径
          */
         private String home;
+
+        @JsonProperty("start_time")
+        private String startTime = getStartTime();
+
+        @JsonProperty("run_time")
+        private String runTime = getRunTime();
+
+        public String getStartTime() {
+            return DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, DateUtils.getServerStartDate());
+        }
+
+        /**
+         * JDK运行时间
+         */
+        public String getRunTime() {
+            return DateUtils.getDatePoor(DateUtils.getNowDate(), DateUtils.getServerStartDate());
+        }
     }
 
     @Data
