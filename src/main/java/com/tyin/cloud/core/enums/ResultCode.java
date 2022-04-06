@@ -9,12 +9,14 @@ import com.tyin.cloud.core.exception.handle.BaseErrorInfoInterface;
  */
 public enum ResultCode implements BaseErrorInfoInterface {
     // 数据操作错误定义
-    SUCCESS(200, "ok"),
-    FAIL(400, "fail"),
-    SIGNATURE_NOT_MATCH(403, "token invalid"),
-    NOT_FOUND(404, "not found"),
-    INTERNAL_SERVER_ERROR(500, "server error"),
-    SERVER_BUSY(503, "server busyness");
+    SUCCESS(200, "Ok"),
+    FAIL(400, "Fail"),
+    //permission denied
+    PERMISSION_DENIED(402, "Permission Denied"),
+    SIGNATURE_NOT_MATCH(403, "Token Invalid"),
+    NOT_FOUND(404, "Not Found"),
+    INTERNAL_SERVER_ERROR(500, "Server Error"),
+    SERVER_BUSY(503, "Server Busyness");
     /**
      * 错误码
      */

@@ -36,7 +36,7 @@ public class AuthUserMethodArgumentResolver implements HandlerMethodArgumentReso
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String token = webRequest.getHeader(TOKEN);
         Class<?> parameterType = parameter.getParameterType();
-        String userCache = parameterType.equals(AuthAdminUser.class) ? redisComponents.get(ADMIN_USER_TOKEN_PREFIX + token) : redisComponents.get(CLIENT_USER_TOKEN_PREFIX + token);
-        return userCacheService.getUserCache(userCache, parameterType);
+        String userCacheStr = parameterType.equals(AuthAdminUser.class) ? redisComponents.get(ADMIN_USER_TOKEN_PREFIX + token) : redisComponents.get(CLIENT_USER_TOKEN_PREFIX + token);
+        return userCacheService.getUserCache(userCacheStr, parameterType);
     }
 }

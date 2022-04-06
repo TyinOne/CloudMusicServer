@@ -1,8 +1,10 @@
 package com.tyin.cloud.service.admin.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.collect.Lists;
 import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.components.RedisComponents;
+import com.tyin.cloud.core.configs.properties.PropertiesComponents;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.JsonUtils;
 import com.tyin.cloud.core.utils.StringUtils;
@@ -37,6 +39,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
 
     private final AdminUserRepository adminUserRepository;
     private final RedisComponents redisComponents;
+    private final PropertiesComponents propertiesComponents;
 
     @Override
     public AdminUserLoginRes login(AdminLoginParams adminLoginParams, Integer ipAddress) {
@@ -46,6 +49,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
         AdminUser adminUser = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda().eq(AdminUser::getPassword, password));
         Asserts.isTrue(Objects.nonNull(adminUser), AUTH_FAILED);
         Asserts.isTrue(!adminUser.getDisabled(), USER_DISABLED);
+        adminUser.setAvatar(StringUtils.isNotEmpty(adminUser.getAvatar()) ? propertiesComponents.getOssUrl() + adminUser.getAvatar() : StringUtils.EMPTY);
         String token;
         if (StringUtils.isNotEmpty(adminUser.getToken())) {
             token = adminUser.getToken();
@@ -54,8 +58,14 @@ public class AdminUserServiceImpl implements IAdminUserService {
             adminUser.setToken(token);
             adminUserRepository.updateById(adminUser);
         }
-        redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(AuthAdminUser.builder().token(token).name(adminUser.getName()).avatar(adminUser.getAvatar()).build()));
-        return AdminUserLoginRes.builder().token(token).build();
+        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).avatar(adminUser.getAvatar()).build();
+        redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
+        return AdminUserLoginRes.builder().token(token)
+                .name(adminUser.getName())
+                .avatar(adminUser.getAvatar())
+                .roles(Lists.newArrayList("admin"))
+                .btn(Lists.newArrayList())
+                .build();
     }
 
     private String getColumns(String username) {

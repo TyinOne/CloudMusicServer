@@ -1,6 +1,7 @@
 package com.tyin.cloud.core.configs.properties;
 
 import com.tyin.cloud.core.configs.properties.models.ApiPrefixConfig;
+import com.tyin.cloud.core.configs.properties.models.OssConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PropertiesComponents {
     private final ApiPrefixConfig apiPrefixConfig;
+    private final OssConfig ossConfig;
 
+    public String getOssUrl() {
+        return ossConfig.getUrl();
+    }
 
     public String getAdminPrefix() {
         return this.apiPrefixConfig.getAdmin();

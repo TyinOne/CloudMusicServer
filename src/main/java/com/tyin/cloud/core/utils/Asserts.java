@@ -52,4 +52,7 @@ public class Asserts {
             fail(message);
         }
     }
+
+    public static void isTrue(boolean hasPermission) {
+    }
 }

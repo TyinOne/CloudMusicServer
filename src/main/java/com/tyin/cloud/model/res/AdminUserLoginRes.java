@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @author Tyin
  * @date 2022/3/31 13:47
@@ -16,4 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminUserLoginRes {
     private String token;
+    private String avatar;
+    private String name;
+    private List<String> btn;
+    private List<String> roles;
 }

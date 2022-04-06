@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 /**
  * @author Tyin
  * @date 2022/3/26 3:16
@@ -19,4 +21,5 @@ public class AuthAdminUser implements AuthUser {
     private String token;
     private String name;
     private String avatar;
+    private Set<String> permissions;
 }
