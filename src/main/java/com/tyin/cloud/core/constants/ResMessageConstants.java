@@ -8,8 +8,8 @@ package com.tyin.cloud.core.constants;
 
 public class ResMessageConstants {
 
-    public static String AUTH_FAILED = "用户名或密码错误";
+    public final static String AUTH_FAILED = "用户名或密码错误";
 
-    public static String USER_DISABLED = "账户已禁用";
+    public final static String USER_DISABLED = "账户已禁用";
 
 }

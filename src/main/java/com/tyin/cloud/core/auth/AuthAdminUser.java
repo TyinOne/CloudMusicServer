@@ -20,6 +20,8 @@ import java.util.Set;
 public class AuthAdminUser implements AuthUser {
     private String token;
     private String name;
+    private String account;
     private String avatar;
+    private Set<String> roles;
     private Set<String> permissions;
 }

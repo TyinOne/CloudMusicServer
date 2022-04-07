@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +18,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class AdminUser extends BaseEntity {
+public class AdminUser extends BaseEntity implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
     private Long id;

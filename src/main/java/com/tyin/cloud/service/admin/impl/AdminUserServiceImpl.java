@@ -9,19 +9,22 @@ import com.tyin.cloud.core.configs.properties.PropertiesComponents;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.JsonUtils;
 import com.tyin.cloud.core.utils.StringUtils;
+import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminUser;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
+import com.tyin.cloud.model.res.AdminUserPermissionRes;
 import com.tyin.cloud.repository.admin.AdminUserRepository;
+import com.tyin.cloud.service.admin.IAdminMenuService;
+import com.tyin.cloud.service.admin.IAdminRoleService;
 import com.tyin.cloud.service.admin.IAdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.tyin.cloud.core.constants.ParamsConstants.*;
 import static com.tyin.cloud.core.constants.PatternConstants.MAIL_PATTERN;
@@ -42,6 +45,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
     private final AdminUserRepository adminUserRepository;
     private final RedisComponents redisComponents;
     private final PropertiesComponents propertiesComponents;
+    private final IAdminRoleService adminRoleService;
+    private final IAdminMenuService adminMenuService;
 
     @Override
     public AdminUserLoginRes login(AdminLoginParams adminLoginParams, Integer ipAddress) {
@@ -60,14 +65,23 @@ public class AdminUserServiceImpl implements IAdminUserService {
             adminUser.setToken(token);
             adminUserRepository.updateById(adminUser);
         }
-        HashSet<String> permissions = Sets.newHashSet("*:*:*");
-        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).avatar(adminUser.getAvatar()).permissions(permissions).build();
+        List<AdminRole> roles = adminRoleService.getRoles(adminUser);
+        Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
+        HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
+        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).account(adminUser.getAccount()).avatar(adminUser.getAvatar()).roles(roleValues).permissions(permissions).build();
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return AdminUserLoginRes.builder().token(token)
                 .name(adminUser.getName())
                 .avatar(adminUser.getAvatar())
-                .roles(Lists.newArrayList("admin"))
+                .roles(roleValues)
                 .btn(Lists.newArrayList())
+                .build();
+    }
+
+    @Override
+    public AdminUserPermissionRes getUserPermission(AuthAdminUser user) {
+        return AdminUserPermissionRes.builder()
+                .routerRes(adminMenuService.getRouterForUser(adminUserRepository.selectOne(Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, user.getAccount())).getId()))
                 .build();
     }
 

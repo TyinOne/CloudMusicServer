@@ -42,6 +42,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
             return true;
         }
         String requestURI = request.getRequestURI();
+        Asserts.isTrue(requestURI.startsWith(properties.getAdminPrefix()) || requestURI.startsWith(properties.getClientPrefix()), ResultCode.NOT_FOUND);
         String prefix = requestURI.substring(0, requestURI.indexOf("/", 1));
         return authentication(prefix, request);
     }

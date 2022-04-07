@@ -5,6 +5,7 @@ import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.enums.ResultCode;
 import com.tyin.cloud.core.expression.ExpressionEvaluator;
 import com.tyin.cloud.core.utils.Asserts;
+import com.tyin.cloud.core.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -51,6 +52,7 @@ public class PreAuthorizeAdviceAop {
         }
         if (Objects.isNull(parameter)) return;
         Auth annotation = parameter.getAnnotation(Auth.class);
+        if (StringUtils.isEmpty(annotation.value())) return;
         Asserts.isTrue(getValue(joinPoint, annotation.value()), ResultCode.PERMISSION_DENIED);
     }
 

@@ -1,7 +1,11 @@
 package com.tyin.cloud.model.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * @author Tyin
@@ -10,8 +14,15 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AdminRole extends BaseEntity {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class AdminRole extends BaseEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    @TableId(type = IdType.AUTO)
     private Long id;
+    private String value;
     private String name;
     private Boolean disabled;
 }

@@ -38,6 +38,7 @@ public class AdminUserController {
 
     @GetMapping("/permission")
     public Result<AdminUserPermissionRes> getAdminUserPermission(@Auth AuthAdminUser user) {
-        return Result.success();
+        AdminUserPermissionRes res = adminUserService.getUserPermission(user);
+        return Result.success(res);
     }
 }

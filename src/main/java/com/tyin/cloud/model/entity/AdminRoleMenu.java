@@ -9,23 +9,20 @@ import java.io.Serializable;
 
 /**
  * @author Tyin
- * @date 2022/3/30 23:21
+ * @date 2022/4/8 0:04
  * @description ...
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class RequestLog extends BaseEntity implements Serializable {
+public class AdminRoleMenu extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
     private Long id;
-    private String uri;
-    private Integer ip;
-    private String method;
-    private String params;
-    private String result;
-    private Long elapsed;
+    private Long roleId;
+    private Long menuId;
+
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Tyin
@@ -21,5 +22,5 @@ public class AdminUserLoginRes {
     private String avatar;
     private String name;
     private List<String> btn;
-    private List<String> roles;
+    private Set<String> roles;
 }

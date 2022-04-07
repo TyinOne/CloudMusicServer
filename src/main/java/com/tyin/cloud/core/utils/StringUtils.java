@@ -12,7 +12,7 @@ import java.util.UUID;
  * @description ...
  */
 public class StringUtils extends org.springframework.util.StringUtils {
-    public static String EMPTY = "";
+    public static final String EMPTY = "";
 
     public static boolean isEmpty(CharSequence value) {
         return !isNotEmpty(value);
@@ -31,7 +31,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
     }
 
     public static String sha256Encode(String value) {
-        BigInteger sha = null;
+        BigInteger sha;
         byte[] bytes = value.getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");

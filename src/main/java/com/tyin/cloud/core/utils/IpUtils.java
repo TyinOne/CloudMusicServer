@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
  */
 public class IpUtils {
     public static String getIpAddress(HttpServletRequest request) {
-        String ipAddress = null;
+        String ipAddress;
         try {
             ipAddress = request.getHeader("x-forwarded-for");
             if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
@@ -25,7 +25,7 @@ public class IpUtils {
                 ipAddress = request.getRemoteAddr();
                 if ("127.0.0.1".equals(ipAddress)) {
                     // 根据网卡取本机配置的IP
-                    InetAddress inet = null;
+                    InetAddress inet;
                     try {
                         inet = InetAddress.getLocalHost();
                         ipAddress = inet.getHostAddress();
@@ -135,10 +135,10 @@ public class IpUtils {
     }
 
     public static String intToIp(int intIp) {
-        return String.valueOf(intIp >> 24) + "." +
-                String.valueOf((intIp & 0x00FFFFFF) >> 16) + "." +
-                String.valueOf((intIp & 0x0000FFFF) >> 8) + "." +
-                String.valueOf((intIp & 0x000000FF));
+        return (intIp >> 24) + "." +
+                ((intIp & 0x00FFFFFF) >> 16) + "." +
+                ((intIp & 0x0000FFFF) >> 8) + "." +
+                (intIp & 0x000000FF);
     }
 
     public static String getHostIp() {

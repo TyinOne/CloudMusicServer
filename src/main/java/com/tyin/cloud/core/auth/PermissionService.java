@@ -3,7 +3,6 @@ package com.tyin.cloud.core.auth;
 import com.tyin.cloud.core.auth.resolver.AuthUser;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -25,7 +24,6 @@ public class PermissionService {
 
     public Boolean hasPermission(String permission) {
         Set<String> permissions = authUser.getPermissions();
-        if (Objects.isNull(permission) || permission.isEmpty()) return false;
         if (permissions.contains("*:*:*")) return true;
         return permissions.contains(permission);
     }
