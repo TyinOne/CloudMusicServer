@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminUserRole extends BaseEntity{
+public class AdminUserRole extends BaseEntity {
     private Long id;
     private Long userId;
     private Long roleId;

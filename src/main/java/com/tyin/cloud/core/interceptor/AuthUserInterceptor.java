@@ -15,8 +15,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.util.Objects;
 
 import static com.tyin.cloud.core.constants.CommonConstants.TOKEN;
-import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
+import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
 
 /**
  * @author Tyin

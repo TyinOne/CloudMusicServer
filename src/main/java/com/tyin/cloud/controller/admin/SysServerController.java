@@ -22,7 +22,7 @@ public class SysServerController {
     private final ISysServerService sysServerService;
 
     @GetMapping("/server/config")
-    public Result<SysInfoRes> getServerConfig(@Auth("123") AuthAdminUser user) {
+    public Result<SysInfoRes> getServerConfig(@Auth("@permission.hasPermission('sys:server:preview')") AuthAdminUser user) {
         return Result.success(sysServerService.getSysInfo());
     }
 }

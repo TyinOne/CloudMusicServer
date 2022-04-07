@@ -2,6 +2,7 @@ package com.tyin.cloud.service.admin.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.components.RedisComponents;
 import com.tyin.cloud.core.configs.properties.PropertiesComponents;
@@ -18,6 +19,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -58,7 +60,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
             adminUser.setToken(token);
             adminUserRepository.updateById(adminUser);
         }
-        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).avatar(adminUser.getAvatar()).build();
+        HashSet<String> permissions = Sets.newHashSet("*:*:*");
+        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).avatar(adminUser.getAvatar()).permissions(permissions).build();
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return AdminUserLoginRes.builder().token(token)
                 .name(adminUser.getName())

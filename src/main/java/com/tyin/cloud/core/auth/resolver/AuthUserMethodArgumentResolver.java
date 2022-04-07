@@ -1,7 +1,6 @@
 package com.tyin.cloud.core.auth.resolver;
 
 import com.tyin.cloud.core.annotations.Auth;
-import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.components.RedisComponents;
 import com.tyin.cloud.service.common.IUserCacheService;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +11,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import static com.tyin.cloud.core.constants.CommonConstants.ENV;
 import static com.tyin.cloud.core.constants.CommonConstants.TOKEN;
-import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
-import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
+import static com.tyin.cloud.core.utils.EnvUtils.getPrefix;
 
 /**
  * @author Tyin
@@ -35,8 +34,9 @@ public class AuthUserMethodArgumentResolver implements HandlerMethodArgumentReso
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String token = webRequest.getHeader(TOKEN);
+        String env = webRequest.getHeader(ENV);
         Class<?> parameterType = parameter.getParameterType();
-        String userCacheStr = parameterType.equals(AuthAdminUser.class) ? redisComponents.get(ADMIN_USER_TOKEN_PREFIX + token) : redisComponents.get(CLIENT_USER_TOKEN_PREFIX + token);
+        String userCacheStr = redisComponents.get(getPrefix(env) + token);
         return userCacheService.getUserCache(userCacheStr, parameterType);
     }
 }

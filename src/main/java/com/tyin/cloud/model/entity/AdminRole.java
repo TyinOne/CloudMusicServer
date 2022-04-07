@@ -10,5 +10,8 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AdminRole extends BaseEntity{
+public class AdminRole extends BaseEntity {
+    private Long id;
+    private String name;
+    private Boolean disabled;
 }

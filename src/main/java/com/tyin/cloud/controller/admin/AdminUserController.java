@@ -35,6 +35,7 @@ public class AdminUserController {
         AdminUserLoginRes res = adminUserService.login(adminLoginParams, ipAddress);
         return Result.success(res);
     }
+
     @GetMapping("/permission")
     public Result<AdminUserPermissionRes> getAdminUserPermission(@Auth AuthAdminUser user) {
         return Result.success();
