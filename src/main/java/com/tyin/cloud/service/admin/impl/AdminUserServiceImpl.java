@@ -56,7 +56,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
         AdminUser adminUser = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda().eq(AdminUser::getPassword, password));
         Asserts.isTrue(Objects.nonNull(adminUser), AUTH_FAILED);
         Asserts.isTrue(!adminUser.getDisabled(), USER_DISABLED);
-        adminUser.setAvatar(StringUtils.isNotEmpty(adminUser.getAvatar()) ? propertiesComponents.getOssUrl() + adminUser.getAvatar() : StringUtils.EMPTY);
+        String avatar = StringUtils.isNotEmpty(adminUser.getAvatar()) ? propertiesComponents.getOssUrl() + adminUser.getAvatar() : StringUtils.EMPTY;
         String token;
         if (StringUtils.isNotEmpty(adminUser.getToken())) {
             token = adminUser.getToken();
@@ -68,11 +68,11 @@ public class AdminUserServiceImpl implements IAdminUserService {
         List<AdminRole> roles = adminRoleService.getRoles(adminUser);
         Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
         HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
-        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).account(adminUser.getAccount()).avatar(adminUser.getAvatar()).roles(roleValues).permissions(permissions).build();
+        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).account(adminUser.getAccount()).avatar(avatar).roles(roleValues).permissions(permissions).build();
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return AdminUserLoginRes.builder().token(token)
                 .name(adminUser.getName())
-                .avatar(adminUser.getAvatar())
+                .avatar(avatar)
                 .roles(roleValues)
                 .btn(Lists.newArrayList())
                 .build();

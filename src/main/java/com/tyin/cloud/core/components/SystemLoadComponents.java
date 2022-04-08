@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class SystemLoad {
+public class SystemLoadComponents {
 
     @PostConstruct
     public void onLoad() {

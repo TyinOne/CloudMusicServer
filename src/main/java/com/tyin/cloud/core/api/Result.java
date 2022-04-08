@@ -36,15 +36,15 @@ public class Result<T> {
      * 成功返回结果
      */
     public static <T> Result<T> success(T result) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), result);
+        return success(ResultCode.SUCCESS.getMessage(), result);
     }
 
     /**
      * 成功返回空对象
      */
 
-    public static <T> Result<T> success() {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+    public static Result<String> success() {
+        return success(ResultCode.SUCCESS.getMessage(), null);
     }
 
     /**
@@ -53,8 +53,12 @@ public class Result<T> {
      * @param result  获取的数据
      * @param message 提示信息
      */
-    public static <T> Result<T> success(T result, String message) {
+    public static <T> Result<T> success(String message, T result) {
         return new Result<>(ResultCode.SUCCESS.getCode(), message, result);
+    }
+
+    public static Result<String> failed() {
+        return failed(ResultCode.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -62,28 +66,22 @@ public class Result<T> {
      *
      * @param message 提示信息
      */
-    public static <T> Result<T> failed(String message, T result) {
-        return new Result<>(ResultCode.FAIL.getCode(), message, result);
+    public static Result<String> failed(String message) {
+        return failed(ResultCode.FAIL.getCode(), message);
+    }
+
+
+    /**
+     * 失败返回结果
+     */
+    public static Result<String> failed(BaseErrorInfoInterface errorCode) {
+        return failed(errorCode.getCode(), errorCode.getMessage());
     }
 
     /**
      * 失败返回结果
      */
-    public static <T> Result<T> failed(String message) {
-        return new Result<>(ResultCode.FAIL.getCode(), message);
-    }
-
-    /**
-     * 失败返回结果
-     */
-    public static <T> Result<T> failed(BaseErrorInfoInterface errorCode) {
-        return new Result<>(errorCode.getCode(), errorCode.getMessage());
-    }
-
-    /**
-     * 失败返回结果
-     */
-    public static <T> Result<T> failed(Integer code, String message) {
+    public static Result<String> failed(Integer code, String message) {
         return new Result<>(code, message);
     }
 }

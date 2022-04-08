@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -32,7 +33,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class PreAuthorizeAdviceAop {
+public class PreAuthorizeAdviceAop implements Ordered {
 
     private final ExpressionEvaluator<Boolean> evaluator = new ExpressionEvaluator<>();
     private final ApplicationContext applicationContext;
@@ -70,5 +71,10 @@ public class PreAuthorizeAdviceAop {
         evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
         AnnotatedElementKey methodKey = new AnnotatedElementKey(method, clazz);
         return evaluator.condition(condition, methodKey, evaluationContext, Boolean.class);
+    }
+
+    @Override
+    public int getOrder() {
+        return 1;
     }
 }

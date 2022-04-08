@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description ...
  */
 @RestController
-@RequestMapping("${cloud.api.prefix.client}")
+@RequestMapping("${cloud.api.prefix.client}/")
 public class SwiperController {
     @GetMapping("/swiper/list")
     public Result<SwiperRes> getList() {

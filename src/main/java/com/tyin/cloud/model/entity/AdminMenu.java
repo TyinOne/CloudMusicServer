@@ -19,10 +19,14 @@ import java.io.Serializable;
 public class AdminMenu extends BaseEntity implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
+    private Integer sort;
+
     private String name;
     private String path;
     private String redirect;
     private String component;
+    private Integer type;
+    private String security;
 
     private String metaTitle;
     private String metaIcons;
@@ -32,4 +36,6 @@ public class AdminMenu extends BaseEntity implements Serializable {
     private Boolean metaIsAffix;
     private Boolean metaIsIframe;
     private Boolean metaIsKeepAlive;
+
+    private Boolean disabled;
 }

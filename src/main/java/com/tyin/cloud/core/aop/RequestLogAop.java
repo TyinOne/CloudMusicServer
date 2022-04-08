@@ -1,6 +1,8 @@
 package com.tyin.cloud.core.aop;
 
 import com.tyin.cloud.core.api.Result;
+import com.tyin.cloud.core.enums.ResultCode;
+import com.tyin.cloud.core.exception.ApiException;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.IpUtils;
 import com.tyin.cloud.core.utils.JsonUtils;
@@ -13,6 +15,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -31,7 +34,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class RequestLogAop {
+public class RequestLogAop implements Ordered {
     private final IRequestLogService requestLogService;
 
     @Pointcut("execution(public * com.tyin.cloud.controller..*(..))")
@@ -40,7 +43,7 @@ public class RequestLogAop {
     }
 
     @Around("pointcut()")
-    public Object requestLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object requestLog(ProceedingJoinPoint joinPoint) throws ApiException {
         log.info("=====================================Method  start====================================");
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         Asserts.isTrue(Objects.nonNull(attributes), "无效请求");
@@ -68,9 +71,14 @@ public class RequestLogAop {
             return result;
         } catch (Throwable e) {
             long end = System.currentTimeMillis();
-            resultStr = JsonUtils.toJSONString(Result.failed(e.getMessage()));
+            Integer code = ResultCode.FAIL.getCode();
+            if (e instanceof ApiException) {
+                code = ((ApiException) e).getErrorCode();
+            }
+            Result<?> result = new Result<>(code, e.getMessage());
+            resultStr = JsonUtils.toJSONString(result);
             builder(builder, start, resultStr, end);
-            throw e;
+            throw new ApiException(code, e.getMessage(), e);
         }
     }
 
@@ -83,5 +91,10 @@ public class RequestLogAop {
         log.info("ELAPSED      :" + elapsed + " ms");
         log.info("=====================================Method  End====================================");
         requestLogService.save(builder.build());
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }
