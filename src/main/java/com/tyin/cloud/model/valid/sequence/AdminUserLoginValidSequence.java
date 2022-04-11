@@ -1,7 +1,5 @@
-package com.tyin.cloud.model.valid;
+package com.tyin.cloud.model.valid.sequence;
 
-import com.tyin.cloud.model.valid.sequence.PasswordCheck;
-import com.tyin.cloud.model.valid.sequence.UsernameCheck;
 import jakarta.validation.GroupSequence;
 
 /**

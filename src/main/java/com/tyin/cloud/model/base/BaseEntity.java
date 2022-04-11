@@ -1,4 +1,4 @@
-package com.tyin.cloud.model.entity;
+package com.tyin.cloud.model.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

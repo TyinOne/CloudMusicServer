@@ -8,7 +8,7 @@ import com.tyin.cloud.core.utils.IpUtils;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
 import com.tyin.cloud.model.res.AdminUserPermissionRes;
-import com.tyin.cloud.model.valid.AdminUserLoginValidSequence;
+import com.tyin.cloud.model.valid.sequence.AdminUserLoginValidSequence;
 import com.tyin.cloud.service.admin.IAdminUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

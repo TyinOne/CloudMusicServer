@@ -2,6 +2,7 @@ package com.tyin.cloud.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.tyin.cloud.model.base.BaseEntity;
 import lombok.*;
 
 import java.io.Serial;
@@ -23,6 +24,7 @@ public class AdminRoleMenu extends BaseEntity implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     private Long roleId;
-    private Long menuId;
+    private String halfId;
+    private String menuId;
 
 }

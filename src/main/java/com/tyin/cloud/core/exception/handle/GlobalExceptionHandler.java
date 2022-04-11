@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Result<?> handle(Exception e) {
+        e.printStackTrace();
         log.error(e.getMessage(), e.fillInStackTrace());
         return Result.failed(ResultCode.INTERNAL_SERVER_ERROR);
     }
@@ -41,7 +42,7 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = ApiException.class)
-    public Result<String> handle(ApiException e) {
+    public Result<?> handle(ApiException e) {
         log.error(e.getMessage());
         if (e.getErrorCode() != null) {
             return Result.failed(e.getErrorCode(), e.getMessage());

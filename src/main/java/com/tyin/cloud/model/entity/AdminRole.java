@@ -2,6 +2,7 @@ package com.tyin.cloud.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.tyin.cloud.model.base.BaseEntity;
 import lombok.*;
 
 import java.io.Serial;
@@ -24,5 +25,7 @@ public class AdminRole extends BaseEntity implements Serializable {
     private Long id;
     private String value;
     private String name;
+    private String description;
     private Boolean disabled;
+    private Integer sort;
 }

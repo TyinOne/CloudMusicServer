@@ -1,5 +1,6 @@
 package com.tyin.cloud.core.exception;
 
+import com.tyin.cloud.core.enums.ResultCode;
 import com.tyin.cloud.core.exception.handle.BaseErrorInfoInterface;
 
 import java.io.Serial;
@@ -40,6 +41,7 @@ public class ApiException extends RuntimeException {
 
     public ApiException(String errorMsg) {
         super(errorMsg);
+        this.errorCode = ResultCode.FAIL.getCode();
         this.errorMsg = errorMsg;
     }
 

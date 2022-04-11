@@ -14,9 +14,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Objects;
 
-import static com.tyin.cloud.core.constants.CommonConstants.TOKEN;
+import static com.tyin.cloud.core.constants.CommonConstants.*;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
+import static com.tyin.cloud.core.utils.StringUtils.EMPTY;
 
 /**
  * @author Tyin
@@ -43,8 +44,8 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         }
         String requestURI = request.getRequestURI();
         String prefix = "";
-        if ("/error".equals(requestURI)) return true;
-        prefix = requestURI.substring(0, requestURI.indexOf("/", 1));
+        if (ERROR_URI.equals(requestURI)) return true;
+        prefix = requestURI.substring(0, requestURI.indexOf(ROOT_URL, 1));
         return authentication(prefix, request);
     }
 
@@ -61,6 +62,6 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         } else if (value.equals(clientPrefix)) {
             return CLIENT_USER_TOKEN_PREFIX;
         }
-        return "";
+        return EMPTY;
     }
 }

@@ -12,4 +12,10 @@ public class ResMessageConstants {
 
     public final static String USER_DISABLED = "账户已禁用";
 
+    public final static String ADD_FAILED = "新增失败";
+
+    public final static String UPDATE_FAILED = "修改失败";
+
+    public final static String ROLE_HAS_EXIST = "角色已存在";
+
 }

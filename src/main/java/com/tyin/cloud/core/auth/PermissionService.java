@@ -6,12 +6,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+import static com.tyin.cloud.core.constants.PermissionConstants.ADMIN_SECURITY;
+import static com.tyin.cloud.core.constants.PermissionConstants.PERMISSION_SERVICE;
+
 /**
  * @author Tyin
  * @date 2022/4/7 9:54
  * @description ...
  */
-@Component("permission")
+@Component(PERMISSION_SERVICE)
 public class PermissionService {
     private AuthUser authUser;
 
@@ -25,9 +28,15 @@ public class PermissionService {
         this.authUser = authUser;
     }
 
+    /**
+     * 接口鉴权
+     *
+     * @param permission 接口权限字符
+     * @return boolean
+     */
     public Boolean hasPermission(String permission) {
         Set<String> permissions = authUser.getPermissions();
-        if (permissions.contains("*:*:*")) return true;
+        if (permissions.contains(ADMIN_SECURITY)) return true;
         return permissions.contains(permission);
     }
 }

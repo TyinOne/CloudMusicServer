@@ -22,7 +22,7 @@ public class PageResult<T, E> {
 
     private Long timestamp = System.currentTimeMillis();
 
-    public PageResult(IPage<T> page, E extra) {
+    private PageResult(IPage<T> page, E extra) {
         this.list = page.getRecords();
         this.size = page.getSize();
         this.current = page.getCurrent();
@@ -31,11 +31,19 @@ public class PageResult<T, E> {
         this.pages = (long) (int) Math.ceil((double) page.getTotal() / (double) page.getSize());
     }
 
-    public PageResult(IPage<T> page) {
+    private PageResult(IPage<T> page) {
         this.list = page.getRecords();
         this.size = page.getSize();
         this.current = page.getCurrent();
         this.total = page.getTotal();
         this.pages = (long) (int) Math.ceil((double) page.getTotal() / (double) page.getSize());
+    }
+
+    public static <T, E> PageResult<T, E> buildResult(IPage<T> resPage, E extra) {
+        return new PageResult<>(resPage, extra);
+    }
+
+    public static <T, E> PageResult<T, E> buildResult(IPage<T> resPage) {
+        return new PageResult<>(resPage);
     }
 }

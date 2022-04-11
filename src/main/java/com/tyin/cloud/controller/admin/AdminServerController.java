@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/sys")
 @RequiredArgsConstructor
-public class SysServerController {
+public class AdminServerController {
     private final ISysServerService sysServerService;
 
     @GetMapping("/server/config")
