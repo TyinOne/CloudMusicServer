@@ -23,6 +23,7 @@ public class MenuRes {
         private String name;
         private String path;
         private String component;
+        private String metaRoles;
         private String metaIcons;
         private String metaTitle;
         private String security;

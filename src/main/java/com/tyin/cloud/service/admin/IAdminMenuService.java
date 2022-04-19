@@ -21,5 +21,5 @@ public interface IAdminMenuService {
 
     MenuLabelRes getMenuLabel(Integer id);
 
-    List<? extends TreeBase> getMenuRes(String keywords);
+    List<? extends TreeBase> getMenuRes(String keywords, Integer roleId, Boolean disabled);
 }

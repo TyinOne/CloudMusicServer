@@ -51,14 +51,23 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
         }
         List<MenuData> list = adminMenuRepository.selectLabel(Wrappers.<AdminMenu>lambdaQuery().eq(AdminMenu::getDisabled, Boolean.FALSE));
         return MenuLabelRes.builder()
-                .list(TreeUtils.buildTree(list, 0L))
+                .list(TreeUtils.buildTree(list, 0L, Boolean.TRUE))
                 .selected(selected)
                 .build();
     }
 
     @Override
-    public List<? extends TreeBase> getMenuRes(String keywords) {
-        List<MenuRes.MenuItem> res = adminMenuRepository.selectListRes(Wrappers.<AdminMenu>lambdaQuery().eq(StringUtils.isNotEmpty(keywords), AdminMenu::getMetaTitle, keywords));
-        return TreeUtils.buildTree(res, 0L);
+    public List<? extends TreeBase> getMenuRes(String keywords, Integer roleId, Boolean disabled) {
+        List<Long> ids = Lists.newArrayList();
+        if (roleId > 1) {
+            ids = adminRoleService.getRoleMenuSelectedLabel(roleId);
+            ids.addAll(adminRoleService.getRoleMenuHalfLabel(roleId));
+        }
+        List<MenuRes.MenuItem> res = adminMenuRepository.selectListRes(Wrappers.<AdminMenu>lambdaQuery()
+                .apply(StringUtils.isNotEmpty(keywords), "INSTR(`meta_title`, {0}) > 0", keywords)
+                .in(roleId > 1, AdminMenu::getId, ids)
+                .eq(Objects.nonNull(disabled), AdminMenu::getDisabled, disabled)
+        );
+        return TreeUtils.buildTree(res, 0L, Boolean.TRUE);
     }
 }

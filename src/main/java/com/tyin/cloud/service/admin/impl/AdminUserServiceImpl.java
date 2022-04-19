@@ -49,7 +49,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     private final IAdminMenuService adminMenuService;
 
     @Override
-    public AdminUserLoginRes login(AdminLoginParams adminLoginParams, Integer ipAddress) {
+    public AdminUserLoginRes login(AdminLoginParams adminLoginParams, Long ipAddress) {
         String username = adminLoginParams.getUsername();
         String password = adminLoginParams.getPassword();
         password = StringUtils.sha256Encode(DigestUtils.md5Hex(password.getBytes(StandardCharsets.UTF_8))).toUpperCase(Locale.ROOT);
@@ -63,8 +63,9 @@ public class AdminUserServiceImpl implements IAdminUserService {
         } else {
             token = StringUtils.getUuid();
             adminUser.setToken(token);
-            adminUserRepository.updateById(adminUser);
         }
+        adminUser.setLastLogin(ipAddress);
+        adminUserRepository.updateById(adminUser);
         List<AdminRole> roles = adminRoleService.getRoles(adminUser);
         Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
         HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);

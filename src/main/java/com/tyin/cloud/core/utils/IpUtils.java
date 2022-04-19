@@ -51,7 +51,7 @@ public class IpUtils {
         return ipAddress;
     }
 
-    public static Integer getIpAddressInt(HttpServletRequest request) {
+    public static Long getIpAddressInt(HttpServletRequest request) {
         return ipToInt(getIpAddress(request));
     }
 
@@ -129,9 +129,9 @@ public class IpUtils {
         return bytes;
     }
 
-    public static Integer ipToInt(String ipStr) {
+    public static Long ipToInt(String ipStr) {
         String[] ip = ipStr.split("\\.");
-        return (Integer.parseInt(ip[0]) << 24) + (Integer.parseInt(ip[1]) << 16) + (Integer.parseInt(ip[2]) << 8) + Integer.parseInt(ip[3]);
+        return (Long.parseLong(ip[0]) << 24) + (Long.parseLong(ip[1]) << 16) + (Long.parseLong(ip[2]) << 8) + Integer.parseInt(ip[3]);
     }
 
     public static String intToIp(int intIp) {

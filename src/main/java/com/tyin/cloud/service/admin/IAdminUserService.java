@@ -18,7 +18,7 @@ public interface IAdminUserService {
      * @param ipAddress        登录IP
      * @return token
      */
-    AdminUserLoginRes login(AdminLoginParams adminLoginParams, Integer ipAddress);
+    AdminUserLoginRes login(AdminLoginParams adminLoginParams, Long ipAddress);
 
     AdminUserPermissionRes getUserPermission(AuthAdminUser user);
 }

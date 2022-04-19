@@ -24,7 +24,7 @@ public class RequestLog extends BaseEntity implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String uri;
-    private Integer ip;
+    private Long ip;
     private String method;
     private String params;
     private String result;

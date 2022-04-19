@@ -15,6 +15,6 @@ public class SystemLoadComponents {
 
     @PostConstruct
     public void onLoad() {
-        log.info("System Start INIT!");
+        log.info("System Start success!");
     }
 }

@@ -8,12 +8,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-M2</version>
         <relativePath/>
     </parent>
     <properties>
         <java.version>17</java.version>
-        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <jackson.version>2.13.0-rc1</jackson.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger.ui.version>3.0.2</swagger.ui.version>
@@ -24,6 +24,7 @@
         <log4j.version>2.17.0</log4j.version>
         <druid.version>1.2.8</druid.version>
         <oshi.version>6.1.5</oshi.version>
+        <mybatis-spring.version>2.2.2</mybatis-spring.version>
     </properties>
     <dependencies>
         <dependency>
@@ -157,6 +158,11 @@
                 <artifactId>hibernate-validator</artifactId>
                 <version>${validation.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -177,7 +183,7 @@
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>

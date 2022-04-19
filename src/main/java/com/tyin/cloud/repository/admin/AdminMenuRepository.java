@@ -35,6 +35,7 @@ public interface AdminMenuRepository extends BaseMapper<AdminMenu> {
             \t`component`,
             \t`meta_icons`,
             \t`meta_title`,
+            \t`meta_roles`,
             \t`security`,
             \t`type`,
             \t`sort`

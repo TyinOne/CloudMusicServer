@@ -13,18 +13,19 @@ import java.util.stream.Collectors;
  * @description ...
  */
 public class TreeUtils {
-    public static List<? extends TreeBase> buildTree(List<? extends TreeBase> entities, Long root) {
+
+    public static List<? extends TreeBase> buildTree(List<? extends TreeBase> entities, Long root, Boolean sort) {
         return entities.stream().filter(categoryEntity ->
                 categoryEntity.getParentId().equals(root)
-        ).peek((menu) -> menu.setChildren(getChildren(menu, entities))).sorted(Comparator.comparingInt(menu -> (menu.getSort() == null ? 0 : menu.getSort()))).collect(Collectors.toList());
+        ).peek((menu) -> menu.setChildren(getChildren(menu, entities, sort))).sorted(Comparator.comparingInt(menu -> (menu.getSort() == null ? 0 : menu.getSort()))).collect(Collectors.toList());
     }
-    private static List<? extends TreeBase> getChildren(TreeBase root, List<? extends TreeBase> list) {
+    private static List<? extends TreeBase> getChildren(TreeBase root, List<? extends TreeBase> list, Boolean sort) {
         return list.stream().filter(i -> {
             return Objects.equals(i.getParentId(), root.getId());
         }).peek(i -> {
-            i.setChildren(getChildren(i, list));
-        }).sorted((menu1, menu2) -> {
-            return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu1.getSort() == null ? 0 : menu2.getSort());
+            i.setChildren(getChildren(i, list, sort));
+        }).sorted((i, j) -> {
+            return sort ? (i.getSort() == null ? 0 : i.getSort()) - (i.getSort() == null ? 0 : j.getSort()) : 0;
         }).collect(Collectors.toList());
     }
 }

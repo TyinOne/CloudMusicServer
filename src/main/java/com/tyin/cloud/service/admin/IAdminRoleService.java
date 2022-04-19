@@ -4,6 +4,7 @@ import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminUser;
+import com.tyin.cloud.model.res.AdminRoleLabelRes.RoleLabel;
 import com.tyin.cloud.model.res.AdminRoleRes;
 import com.tyin.cloud.model.valid.InsertRoleValid;
 import com.tyin.cloud.model.valid.UpdateRoleValid;
@@ -25,4 +26,8 @@ public interface IAdminRoleService {
     void updateRole(UpdateRoleValid valid, AuthAdminUser user);
 
     List<Long> getRoleMenuSelectedLabel(Integer rowId);
+
+    List<Long> getRoleMenuHalfLabel(Integer rowId);
+
+    List<RoleLabel> getRoleLabel();
 }

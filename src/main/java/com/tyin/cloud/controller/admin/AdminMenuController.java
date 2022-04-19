@@ -27,8 +27,11 @@ public class AdminMenuController {
     private final IAdminMenuService adminMenuService;
 
     @GetMapping("/list/tree")
-    public Result<MenuRes> getMenuRes(@RequestParam(required = false) String keywords, @Auth AuthAdminUser user) {
-        List<? extends TreeBase> menuRes = adminMenuService.getMenuRes(keywords);
+    public Result<MenuRes> getMenuRes(@RequestParam(required = false) String keywords,
+                                      @RequestParam(required = false) Integer roleId,
+                                      @RequestParam(required = false) Boolean disabled,
+                                      @Auth AuthAdminUser user) {
+        List<? extends TreeBase> menuRes = adminMenuService.getMenuRes(keywords, roleId, disabled);
         return Result.success(MenuRes.builder().list(menuRes).build());
     }
 

@@ -58,7 +58,7 @@ public class AdminUser extends BaseEntity implements Serializable {
 
     private Boolean disabled;
 
-    private int lastLogin;
+    private Long lastLogin;
 
     private Date lastLoginTime;
 

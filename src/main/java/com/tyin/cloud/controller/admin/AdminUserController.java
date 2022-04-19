@@ -31,7 +31,7 @@ public class AdminUserController {
     @PostMapping("/login")
     public Result<AdminUserLoginRes> login(@Validated(AdminUserLoginValidSequence.class) @RequestBody AdminLoginParams adminLoginParams, HttpServletRequest httpServletRequest) {
         //登录IP
-        Integer ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
+        Long ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
         AdminUserLoginRes res = adminUserService.login(adminLoginParams, ipAddress);
         return Result.success(res);
     }
