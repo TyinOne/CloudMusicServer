@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.core.utils.TreeUtils;
-import com.tyin.cloud.model.base.TreeBase;
 import com.tyin.cloud.model.entity.AdminMenu;
 import com.tyin.cloud.model.entity.AdminUser;
 import com.tyin.cloud.model.res.AdminUserPermissionRes.RouterRes;
@@ -57,7 +56,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
     }
 
     @Override
-    public List<? extends TreeBase> getMenuRes(String keywords, Integer roleId, Boolean disabled) {
+    public List<MenuRes.MenuItem> getMenuRes(String keywords, Integer roleId, Boolean disabled) {
         List<Long> ids = Lists.newArrayList();
         if (roleId > 1) {
             ids = adminRoleService.getRoleMenuSelectedLabel(roleId);

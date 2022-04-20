@@ -20,8 +20,6 @@ public class PageResult<T, E> {
     private Long total;
     private E extra;
 
-    private Long timestamp = System.currentTimeMillis();
-
     private PageResult(IPage<T> page, E extra) {
         this.list = page.getRecords();
         this.size = page.getSize();

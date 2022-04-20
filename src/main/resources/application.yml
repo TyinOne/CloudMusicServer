@@ -50,3 +50,6 @@ cloud:
 logging:
   level:
     com.tyin: debug
+springdoc:
+  swagger-ui:
+    path: /doc.html

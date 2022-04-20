@@ -20,7 +20,7 @@ public class EnvUtils {
         return switch (env) {
             case CLIENT -> CLIENT_USER_TOKEN_PREFIX;
             case ADMIN -> ADMIN_USER_TOKEN_PREFIX;
-            default -> "";
+            default -> ADMIN_USER_TOKEN_PREFIX;
         };
     }
 

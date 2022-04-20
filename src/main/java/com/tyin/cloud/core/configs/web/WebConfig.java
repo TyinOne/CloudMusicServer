@@ -38,8 +38,15 @@ public class WebConfig implements WebMvcConfigurer {
          *         list.add("/error");
          */
         List<String> excludeList = Lists.newArrayList();
-        excludeList.add(properties.getAdminPrefix() + "/user/login");
-        excludeList.add(properties.getAdminPrefix() + "/user/register");
+        excludeList.add("/doc.html");
+        excludeList.add("/swagger-ui.html");
+        excludeList.add("/swagger-ui/index.html");
+        excludeList.add("/swagger-resources");
+        excludeList.add("/api-docs");
+        excludeList.add("/v2/**");
+        excludeList.add("/v3/**");
+//        excludeList.add(properties.getAdminPrefix() + "/user/login");
+//        excludeList.add(properties.getAdminPrefix() + "/user/register");
         registry.addInterceptor(authUserInterceptor).addPathPatterns("/**").excludePathPatterns(excludeList);
     }
 

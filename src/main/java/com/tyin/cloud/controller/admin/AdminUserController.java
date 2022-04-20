@@ -5,6 +5,7 @@ import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.utils.IpUtils;
+import com.tyin.cloud.model.entity.AdminUserDetailRes;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
 import com.tyin.cloud.model.res.AdminUserPermissionRes;
@@ -33,6 +34,12 @@ public class AdminUserController {
         //登录IP
         Long ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
         AdminUserLoginRes res = adminUserService.login(adminLoginParams, ipAddress);
+        return Result.success(res);
+    }
+
+    @GetMapping("/info")
+    public Result<AdminUserDetailRes> getUserInfo(@Auth AuthAdminUser user) {
+        AdminUserDetailRes res = adminUserService.getUserInfo(user);
         return Result.success(res);
     }
 

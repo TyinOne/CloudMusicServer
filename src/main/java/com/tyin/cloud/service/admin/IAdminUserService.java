@@ -1,6 +1,7 @@
 package com.tyin.cloud.service.admin;
 
 import com.tyin.cloud.core.auth.AuthAdminUser;
+import com.tyin.cloud.model.entity.AdminUserDetailRes;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
 import com.tyin.cloud.model.res.AdminUserPermissionRes;
@@ -21,4 +22,6 @@ public interface IAdminUserService {
     AdminUserLoginRes login(AdminLoginParams adminLoginParams, Long ipAddress);
 
     AdminUserPermissionRes getUserPermission(AuthAdminUser user);
+
+    AdminUserDetailRes getUserInfo(AuthAdminUser user);
 }

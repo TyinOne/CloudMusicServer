@@ -130,6 +130,7 @@ public class IpUtils {
     }
 
     public static Long ipToInt(String ipStr) {
+        if (ipStr.startsWith("0")) return 1L;
         String[] ip = ipStr.split("\\.");
         return (Long.parseLong(ip[0]) << 24) + (Long.parseLong(ip[1]) << 16) + (Long.parseLong(ip[2]) << 8) + Integer.parseInt(ip[3]);
     }

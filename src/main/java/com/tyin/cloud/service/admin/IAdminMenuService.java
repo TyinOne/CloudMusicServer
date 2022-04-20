@@ -1,9 +1,9 @@
 package com.tyin.cloud.service.admin;
 
-import com.tyin.cloud.model.base.TreeBase;
 import com.tyin.cloud.model.entity.AdminUser;
 import com.tyin.cloud.model.res.AdminUserPermissionRes;
 import com.tyin.cloud.model.res.MenuLabelRes;
+import com.tyin.cloud.model.res.MenuRes;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,5 +21,5 @@ public interface IAdminMenuService {
 
     MenuLabelRes getMenuLabel(Integer id);
 
-    List<? extends TreeBase> getMenuRes(String keywords, Integer roleId, Boolean disabled);
+    List<MenuRes.MenuItem> getMenuRes(String keywords, Integer roleId, Boolean disabled);
 }

@@ -11,6 +11,7 @@ import com.tyin.cloud.core.utils.JsonUtils;
 import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminUser;
+import com.tyin.cloud.model.entity.AdminUserDetailRes;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
 import com.tyin.cloud.model.res.AdminUserPermissionRes;
@@ -84,6 +85,13 @@ public class AdminUserServiceImpl implements IAdminUserService {
         return AdminUserPermissionRes.builder()
                 .routerRes(adminMenuService.getRouterForUser(adminUserRepository.selectOne(Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, user.getAccount())).getId()))
                 .build();
+    }
+
+    @Override
+    public AdminUserDetailRes getUserInfo(AuthAdminUser user) {
+        String account = user.getAccount();
+        String ossUrl = propertiesComponents.getOssUrl();
+        return adminUserRepository.selectUserDetail(account, ossUrl);
     }
 
     private String getColumns(String username) {
