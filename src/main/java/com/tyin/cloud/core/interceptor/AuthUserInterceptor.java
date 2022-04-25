@@ -8,6 +8,7 @@ import com.tyin.cloud.core.utils.Asserts;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -26,6 +27,7 @@ import static com.tyin.cloud.core.utils.StringUtils.EMPTY;
  */
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class AuthUserInterceptor implements HandlerInterceptor {
 
     private final RedisComponents redisComponents;
@@ -34,6 +36,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        log.info(request.getRequestURI());
         Asserts.isTrue(response.getStatus() != 404, ResultCode.NOT_FOUND);
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
