@@ -41,6 +41,15 @@ mybatis-plus:
     log-impl: com.tyin.cloud.core.configs.mybatis.logs.CloudMyBatisLog
 
 cloud:
+  map:
+    key: FTRBZ-TK4CV-GR4PG-U3JFQ-7WHCQ-LSFNU
+    secret-key: nqsh444578AIJQDjAIMQkZtLpjvCpuwT
+  ok-http:
+    connect-timeout: 30
+    read-timeout: 30
+    write-timeout: 30
+    max-idle-connections: 200
+    keep-alive-duration: 300
   oss:
     url: http://files.ubuntu.wsl/files/images
   api:

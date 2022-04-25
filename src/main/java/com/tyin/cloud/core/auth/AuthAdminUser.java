@@ -19,7 +19,7 @@ import java.util.Set;
 @Builder
 public class AuthAdminUser implements AuthUser {
     private String token;
-    private String name;
+    private String nickName;
     private String account;
     private String avatar;
     private Set<String> roles;

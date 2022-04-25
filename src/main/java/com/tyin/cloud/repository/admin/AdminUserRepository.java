@@ -22,14 +22,21 @@ public interface AdminUserRepository extends BaseMapper<AdminUser> {
      */
     @Select("""
             SELECT
-            \t`account`,
-            \t`name`,
-            \tCONCAT(#{oss},`avatar`) `avatar`,
-            \t`phone`,
-            \t`mail`,
-            \t(SELECT GROUP_CONCAT( `name` ) FROM `admin_role` WHERE `id` IN ( SELECT role_id FROM admin_user_role WHERE user_id = `user`.id )) `role`
+            \t`user`.`account`,
+            \t`user`.`nick_name`,
+            \tCONCAT(#{oss},`user`.`avatar`) `avatar`,
+            \t`user`.`phone`,
+            \t`user`.`mail`,
+            \t(SELECT GROUP_CONCAT( `name` ) FROM `admin_role` WHERE `id` IN ( SELECT role_id FROM admin_user_role WHERE user_id = `user`.id )) `role`,
+            \t`extra`.`sex`,
+            \t`extra`.`birth`,
+            \t`extra`.`region`,
+            \t`extra`.`id_card_no`,
+            \t`extra`.`id_card_name`,
+            \t`extra`.`id_card_address`
             FROM
             \t`admin_user` `user`
+            LEFT JOIN `admin_user_extra` `extra` on `extra`.`user_id` = `user`.`id`
             WHERE
             \t`account` = #{account}
             """)

@@ -1,9 +1,13 @@
 package com.tyin.cloud.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tyin.cloud.core.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 /**
  * @author Tyin
@@ -16,11 +20,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminUserDetailRes {
     private String account;
-    private String name;
+    private String nickName;
     private String avatar;
     private String phone;
     private String mail;
+    private Integer sex;
+    private Integer age;
+    @JsonFormat(pattern = DateUtils.YYYY_MM_DD)
+    private Date birth;
     private String role;
-    private String area;
+    private String region;
     private String ipAddress;
+    private String idCardNo;
+    private String idCardAddress;
 }

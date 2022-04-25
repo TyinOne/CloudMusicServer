@@ -70,10 +70,10 @@ public class AdminUserServiceImpl implements IAdminUserService {
         List<AdminRole> roles = adminRoleService.getRoles(adminUser);
         Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
         HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
-        AuthAdminUser user = AuthAdminUser.builder().token(token).name(adminUser.getName()).account(adminUser.getAccount()).avatar(avatar).roles(roleValues).permissions(permissions).build();
+        AuthAdminUser user = AuthAdminUser.builder().token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).roles(roleValues).permissions(permissions).build();
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return AdminUserLoginRes.builder().token(token)
-                .name(adminUser.getName())
+                .nickName(adminUser.getNickName())
                 .avatar(avatar)
                 .roles(roleValues)
                 .btn(Lists.newArrayList())

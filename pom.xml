@@ -26,6 +26,7 @@
         <oshi.version>6.1.5</oshi.version>
         <mybatis-spring.version>2.2.2</mybatis-spring.version>
         <openapi.version>2.0.0-M2</openapi.version>
+        <okhttp.version>4.9.3</okhttp.version>
     </properties>
     <dependencies>
         <dependency>
@@ -100,6 +101,10 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
         </dependency>
     </dependencies>
 
@@ -182,6 +187,11 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
             </dependency>
 
         </dependencies>
