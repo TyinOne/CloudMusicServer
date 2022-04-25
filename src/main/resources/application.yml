@@ -1,5 +1,6 @@
 server:
   port: 8888
+  max-http-header-size: 8192
 spring:
   application:
     name: cloud_music
@@ -59,6 +60,13 @@ cloud:
 logging:
   level:
     com.tyin: debug
+  file:
+    name: /data/logs/cloud-music.log
+  logback:
+    rollingpolicy:
+      max-file-size: 500MB
+      max-history: 20
+      file-name-pattern: /data/logs/cloud-music.%d{yyyy-MM-dd}.%i.log
 springdoc:
   swagger-ui:
     path: /doc.html
