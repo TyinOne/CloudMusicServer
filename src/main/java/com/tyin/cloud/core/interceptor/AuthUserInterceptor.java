@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -35,8 +36,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        log.info(request.getRequestURI());
+    public boolean preHandle(@NotNull HttpServletRequest request, HttpServletResponse response, @NotNull Object handler) {
         Asserts.isTrue(response.getStatus() != 404, ResultCode.NOT_FOUND);
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
@@ -46,7 +46,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
             return true;
         }
         String requestURI = request.getRequestURI();
-        String prefix = "";
+        String prefix;
         if (ERROR_URI.equals(requestURI)) return true;
         prefix = requestURI.substring(0, requestURI.indexOf(ROOT_URL, 1));
         return authentication(prefix, request);

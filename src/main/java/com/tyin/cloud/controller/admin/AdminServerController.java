@@ -1,8 +1,7 @@
 package com.tyin.cloud.controller.admin;
 
-import com.tyin.cloud.core.annotations.Auth;
+import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
-import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.res.SysInfoRes;
 import com.tyin.cloud.service.system.ISysServerService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,8 @@ public class AdminServerController {
     private final ISysServerService sysServerService;
 
     @GetMapping("/server/config")
-    public Result<SysInfoRes> getServerConfig(@Auth("@permission.hasPermission('sys:server:preview')") AuthAdminUser user) {
+    @Open
+    public Result<SysInfoRes> getServerConfig() {
         return Result.success(sysServerService.getSysInfo());
     }
 }

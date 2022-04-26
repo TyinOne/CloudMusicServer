@@ -1,12 +1,10 @@
 package com.tyin.cloud.model.res;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tyin.cloud.core.configs.math.Ardith;
 import com.tyin.cloud.core.utils.DateUtils;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.lang.management.ManagementFactory;
 import java.util.List;
 
 /**
@@ -26,12 +24,11 @@ public class SysInfoRes {
     private SysVo sys;
     private List<DiskVo> disks;
 
-    @Data
+    @Setter
     public static class CpuVo {
         /**
          * 核心数
          */
-        @JsonProperty("cpu_num")
         private int cpuNum;
 
         /**
@@ -58,6 +55,26 @@ public class SysInfoRes {
          * CPU当前空闲率
          */
         private double free;
+
+        public double getTotal() {
+            return Ardith.round(Ardith.mul(total, 100d), 2);
+        }
+
+        public double getSys() {
+            return Ardith.round(Ardith.mul(sys / total, 100d), 2);
+        }
+
+        public double getUsed() {
+            return Ardith.round(Ardith.mul(used / total, 100d), 2);
+        }
+
+        public double getWait() {
+            return Ardith.round(Ardith.mul(wait / total, 100d), 2);
+        }
+
+        public double getFree() {
+            return Ardith.round(Ardith.mul(free / total, 100d), 2);
+        }
     }
 
     @Data
@@ -76,6 +93,22 @@ public class SysInfoRes {
          * 剩余内存
          */
         private double free;
+
+        public double getTotal() {
+            return Ardith.div(total, (1024 * 1024 * 1024), 2);
+        }
+
+        public double getUsed() {
+            return Ardith.div(used, (1024 * 1024 * 1024), 2);
+        }
+
+        public double getFree() {
+            return Ardith.div(free, (1024 * 1024 * 1024), 2);
+        }
+
+        public double getUsage() {
+            return Ardith.mul(Ardith.div(used, total, 4), 100d);
+        }
     }
 
     @Data
@@ -95,6 +128,10 @@ public class SysInfoRes {
          */
         private double free;
 
+        private double used;
+
+        private double usage;
+
         /**
          * JDK版本
          */
@@ -105,12 +142,19 @@ public class SysInfoRes {
          */
         private String home;
 
-        @JsonProperty("start_time")
+        private String name = getName();
+
         private String startTime = getStartTime();
 
-        @JsonProperty("run_time")
         private String runTime = getRunTime();
 
+        public String getName() {
+            return ManagementFactory.getRuntimeMXBean().getVmName();
+        }
+
+        /**
+         * 服务启动时间
+         */
         public String getStartTime() {
             return DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, DateUtils.getServerStartDate());
         }
@@ -121,6 +165,26 @@ public class SysInfoRes {
         public String getRunTime() {
             return DateUtils.getDatePoor(DateUtils.getNowDate(), DateUtils.getServerStartDate());
         }
+
+        public double getTotal() {
+            return Ardith.div(total, (1024 * 1024), 2);
+        }
+
+        public double getMax() {
+            return Ardith.div(max, (1024 * 1024), 2);
+        }
+
+        public double getFree() {
+            return Ardith.div(free, (1024 * 1024), 2);
+        }
+
+        public double getUsed() {
+            return Ardith.div(total - free, (1024 * 1024), 2);
+        }
+
+        public double getUsage() {
+            return Ardith.mul(Ardith.div(total - free, total, 4), 100d);
+        }
     }
 
     @Data
@@ -128,31 +192,26 @@ public class SysInfoRes {
         /**
          * 服务器名称
          */
-        @JsonProperty("computer_name")
         private String computerName;
 
         /**
          * 服务器Ip
          */
-        @JsonProperty("computer_ip")
         private String computerIp;
 
         /**
          * 项目路径
          */
-        @JsonProperty("user_dir")
         private String userDir;
 
         /**
          * 操作系统
          */
-        @JsonProperty("os_name")
         private String osName;
 
         /**
          * 系统架构
          */
-        @JsonProperty("os_arch")
         private String osArch;
     }
 
@@ -161,19 +220,16 @@ public class SysInfoRes {
         /**
          * 盘符路径
          */
-        @JsonProperty("dir_name")
         private String dirName;
 
         /**
          * 盘符类型
          */
-        @JsonProperty("sys_type_name")
         private String sysTypeName;
 
         /**
          * 文件类型
          */
-        @JsonProperty("file_type_name")
         private String fileTypeName;
 
         /**
