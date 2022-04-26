@@ -1,6 +1,7 @@
 package com.tyin.cloud.service.system;
 
 import com.tyin.cloud.model.res.SysInfoRes;
+import com.tyin.cloud.model.res.SysRedisRes;
 
 /**
  * @author Tyin
@@ -9,4 +10,6 @@ import com.tyin.cloud.model.res.SysInfoRes;
  */
 public interface ISysServerService {
     SysInfoRes getSysInfo();
+
+    SysRedisRes getSysRedisInfo();
 }

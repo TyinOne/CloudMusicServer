@@ -4,8 +4,13 @@ import com.google.common.collect.Lists;
 import com.tyin.cloud.core.configs.math.Ardith;
 import com.tyin.cloud.core.utils.IpUtils;
 import com.tyin.cloud.model.res.SysInfoRes;
+import com.tyin.cloud.model.res.SysRedisRes;
 import com.tyin.cloud.service.system.ISysServerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
@@ -18,6 +23,7 @@ import oshi.software.os.OperatingSystem;
 import oshi.util.Util;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import static com.tyin.cloud.model.res.SysInfoRes.*;
@@ -29,7 +35,9 @@ import static com.tyin.cloud.model.res.SysInfoRes.*;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SysServerServiceImpl implements ISysServerService {
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public SysInfoRes getSysInfo() {
@@ -41,6 +49,29 @@ public class SysServerServiceImpl implements ISysServerService {
                 .sys(getSysVo())
                 .jvm(getJvmVo())
                 .disks(getDisksVo(systemInfo.getOperatingSystem()))
+                .build();
+    }
+
+    @Override
+    public SysRedisRes getSysRedisInfo() {
+        Properties info = redisTemplate.execute((RedisCallback<Properties>) c -> c.serverCommands().info());
+        Properties commandStats = redisTemplate.execute((RedisCallback<Properties>) c -> c.serverCommands().info("commandstats"));
+        Long dbSize = redisTemplate.execute((RedisCallback<Long>) connection -> connection.serverCommands().dbSize());
+        List<SysRedisRes.Command> commands = Lists.newArrayList();
+        if (Objects.nonNull(commandStats)) {
+            commandStats.stringPropertyNames().forEach(key -> {
+                String property = commandStats.getProperty(key);
+                commands.add(SysRedisRes.Command.builder()
+                        .name(StringUtils.removeStart(key, "cmdstat_"))
+                        .value(StringUtils.substringBetween(property, "calls=", ",usec"))
+                        .build()
+                );
+            });
+        }
+        return SysRedisRes.builder()
+                .info(info)
+                .commandStats(commands)
+                .dbSize(dbSize)
                 .build();
     }
 
