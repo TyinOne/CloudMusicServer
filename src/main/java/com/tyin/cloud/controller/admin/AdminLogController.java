@@ -1,6 +1,5 @@
 package com.tyin.cloud.controller.admin;
 
-import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.model.res.AdminLogRes;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminLogController {
     private final IRequestLogService requestLogService;
-    @Open
+
     @GetMapping("/list")
     public Result<PageResult<AdminLogRes, ?>> queryLog(@RequestParam(required = false, defaultValue = "20") Long size,
                                                        @RequestParam(required = false, defaultValue = "1") Long current) {

@@ -48,7 +48,6 @@ public class RequestLogAop implements Ordered {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         Asserts.isTrue(Objects.nonNull(attributes), "无效请求");
         HttpServletRequest request = attributes.getRequest();
-
         RequestLog.RequestLogBuilder builder = RequestLog.builder();
         Object[] args = joinPoint.getArgs();
         List<Object> collect = Arrays.stream(args).filter(i -> !(i instanceof HttpServletRequest)).collect(Collectors.toList());
@@ -90,7 +89,10 @@ public class RequestLogAop implements Ordered {
         log.info("RESULT       :" + resultStr);
         log.info("ELAPSED      :" + elapsed + " ms");
         log.info("=====================================Method  End====================================");
-        requestLogService.save(builder.build());
+        RequestLog requestLog = builder.build();
+        //查询日志相关接口  不记录日志
+        if (requestLog.getUri().startsWith("/admin/log")) return;
+        requestLogService.save(requestLog);
     }
 
     @Override

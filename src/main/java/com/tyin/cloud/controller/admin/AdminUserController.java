@@ -1,5 +1,6 @@
 package com.tyin.cloud.controller.admin;
 
+import com.google.common.collect.Lists;
 import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
@@ -41,6 +42,15 @@ public class AdminUserController {
     public Result<AdminUserDetailRes> getUserInfo(@Auth AuthAdminUser user) {
         AdminUserDetailRes res = adminUserService.getUserInfo(user);
         return Result.success(res);
+    }
+    @GetMapping("/session")
+    public Result<AdminUserLoginRes> getSession(@Auth AuthAdminUser user) {
+        return Result.success(AdminUserLoginRes.builder().token(user.getToken())
+                .nickName(user.getNickName())
+                .avatar(user.getAvatar())
+                .roles(user.getRoles())
+                .btn(Lists.newArrayList())
+                .build());
     }
 
     @GetMapping("/permission")

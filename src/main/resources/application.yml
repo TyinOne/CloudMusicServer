@@ -30,6 +30,7 @@ spring:
     host: redis.tyin.vip
     port: 6379
     password: tyinzero
+    connect-timeout: 3000
   jackson:
     default-property-inclusion: NON_NULL
     time-zone: GMT+8
