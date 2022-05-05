@@ -1,7 +1,13 @@
 package com.tyin.cloud.repository.common;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.cloud.model.entity.RequestLog;
+import com.tyin.cloud.model.res.AdminLogRes;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author Tyin
@@ -9,4 +15,6 @@ import com.tyin.cloud.model.entity.RequestLog;
  * @description ...
  */
 public interface RequestLogRepository extends BaseMapper<RequestLog> {
+    @Select("SELECT `id`, `uri`, `ip`, `method`, `params`, `result`, `elapsed`, `created` FROM `request_log`  ${ew.customSqlSegment}")
+    IPage<AdminLogRes> selectLogPage(Page<Object> page, @Param("ew") LambdaQueryWrapper<RequestLog> wrappery);
 }

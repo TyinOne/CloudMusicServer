@@ -52,7 +52,7 @@ public class IpUtils {
     }
 
     public static Long getIpAddressInt(HttpServletRequest request) {
-        return ipToInt(getIpAddress(request));
+        return ipToLong(getIpAddress(request));
     }
 
     /**
@@ -129,17 +129,19 @@ public class IpUtils {
         return bytes;
     }
 
-    public static Long ipToInt(String ipStr) {
+    public static Long ipToLong(String ipStr) {
         if (ipStr.startsWith("0")) return 1L;
         String[] ip = ipStr.split("\\.");
         return (Long.parseLong(ip[0]) << 24) + (Long.parseLong(ip[1]) << 16) + (Long.parseLong(ip[2]) << 8) + Integer.parseInt(ip[3]);
     }
 
-    public static String intToIp(int intIp) {
-        return (intIp >> 24) + "." +
-                ((intIp & 0x00FFFFFF) >> 16) + "." +
-                ((intIp & 0x0000FFFF) >> 8) + "." +
-                (intIp & 0x000000FF);
+    public static String longToIp(long intIp) {
+        String[] ipArr = new String[4];
+        for (int i = 0; i < ipArr.length; i++) {
+            long n = (intIp >>> (8 * i)) & (0xFF);
+            ipArr[3 - i] = String.valueOf(n);
+        }
+        return String.join(".", ipArr);
     }
 
     public static String getHostIp() {

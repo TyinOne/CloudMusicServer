@@ -1,6 +1,8 @@
 package com.tyin.cloud.service.common;
 
+import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.model.entity.RequestLog;
+import com.tyin.cloud.model.res.AdminLogRes;
 
 /**
  * @author Tyin
@@ -9,4 +11,6 @@ import com.tyin.cloud.model.entity.RequestLog;
  */
 public interface IRequestLogService {
     void save(RequestLog log);
+
+    PageResult<AdminLogRes,?> queryLog(Long size, Long current);
 }

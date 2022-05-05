@@ -29,6 +29,7 @@ public class SysInfoRes {
         /**
          * 核心数
          */
+        @Getter
         private int cpuNum;
 
         /**

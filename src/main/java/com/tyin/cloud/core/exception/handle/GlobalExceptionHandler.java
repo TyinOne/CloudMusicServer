@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result<String> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        e.printStackTrace();
         log.error(e.getMessage(), e.fillInStackTrace());
         BindingResult result = e.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
@@ -43,6 +44,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = ApiException.class)
     public Result<?> handle(ApiException e) {
+        e.printStackTrace();
         log.error(e.getMessage());
         if (e.getErrorCode() != null) {
             return Result.failed(e.getErrorCode(), e.getMessage());

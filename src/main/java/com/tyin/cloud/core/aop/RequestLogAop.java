@@ -56,7 +56,7 @@ public class RequestLogAop implements Ordered {
         String uri = request.getRequestURI();
         String ip = request.getRemoteAddr();
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        builder.params(params).uri(uri).ip(IpUtils.ipToInt(ip)).method(method);
+        builder.params(params).uri(uri).ip(IpUtils.ipToLong(ip)).method(method);
         long start = System.currentTimeMillis();
         log.info("URI          :" + uri);
         log.info("IP           :" + ip);
