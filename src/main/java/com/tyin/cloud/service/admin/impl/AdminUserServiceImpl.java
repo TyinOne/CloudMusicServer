@@ -1,20 +1,23 @@
 package com.tyin.cloud.service.admin.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.components.RedisComponents;
 import com.tyin.cloud.core.configs.properties.PropertiesComponents;
-import com.tyin.cloud.core.utils.Asserts;
-import com.tyin.cloud.core.utils.JsonUtils;
-import com.tyin.cloud.core.utils.StringUtils;
+import com.tyin.cloud.core.utils.*;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminUser;
 import com.tyin.cloud.model.entity.AdminUserDetailRes;
 import com.tyin.cloud.model.params.AdminLoginParams;
+import com.tyin.cloud.model.res.AdminAccountDetailRes;
+import com.tyin.cloud.model.res.AdminAccountRes;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
-import com.tyin.cloud.model.res.AdminUserPermissionRes;
 import com.tyin.cloud.repository.admin.AdminUserRepository;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRoleService;
@@ -67,7 +70,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
         }
         adminUser.setLastLogin(ipAddress);
         adminUserRepository.updateById(adminUser);
-        List<AdminRole> roles = adminRoleService.getRoles(adminUser);
+        List<AdminRole> roles = adminRoleService.getRoles(adminUser.getId());
         Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
         HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
         AuthAdminUser user = AuthAdminUser.builder().token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).roles(roleValues).permissions(permissions).build();
@@ -81,17 +84,40 @@ public class AdminUserServiceImpl implements IAdminUserService {
     }
 
     @Override
-    public AdminUserPermissionRes getUserPermission(AuthAdminUser user) {
-        return AdminUserPermissionRes.builder()
-                .routerRes(adminMenuService.getRouterForUser(adminUserRepository.selectOne(Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, user.getAccount())).getId()))
-                .build();
-    }
-
-    @Override
     public AdminUserDetailRes getUserInfo(AuthAdminUser user) {
         String account = user.getAccount();
         String ossUrl = propertiesComponents.getOssUrl();
         return adminUserRepository.selectUserDetail(account, ossUrl);
+    }
+
+    @Override
+    public AdminUser getUserEntity(String account) {
+        return adminUserRepository.selectOne(Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, account));
+    }
+
+    @Override
+    public PageResult<AdminAccountRes, ?> getUserList(Long size, Long current, String name, Long roleId, Long disabled) {
+        QueryWrapper<AdminUser> wrapper = new QueryWrapper<>();
+        wrapper.lambda()
+                .apply(disabled != -1, " `user`.`disabled` = {0} ", disabled)
+                .apply(roleId != 0, " `role`.`id` = {0}", roleId)
+                .and(StringUtils.isNotEmpty(name), i -> i
+                        .apply(" INSTR(`user`.`nick_name`, {0}) > 0", name)
+                        .or()
+                        .apply(" INSTR(`extra`.`id_card_name`, {0}) > 0", name))
+        ;
+        IPage<AdminAccountRes> resPage = adminUserRepository.selectUserList(new Page<>(current, size), wrapper);
+        return PageResult.buildResult(resPage);
+    }
+
+    @Override
+    public AdminAccountDetailRes getAccountDetail(String account) {
+        AdminAccountDetailRes res = adminUserRepository.selectAccountDetail(account);
+        res.setAvatar(propertiesComponents.getOssUrl() + res.getAvatar());
+        res.setLastLogin(IpUtils.longToIp(Long.parseLong(res.getLastLogin())));
+        Set<Long> collect = adminRoleService.getRoles(res.getId()).stream().map(AdminRole::getId).collect(Collectors.toSet());
+        if (collect.size() > 0) res.setRoles(adminRoleService.getRoleLabel(collect));
+        return res;
     }
 
     private String getColumns(String username) {

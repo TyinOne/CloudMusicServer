@@ -18,4 +18,6 @@ public class ResMessageConstants {
 
     public final static String ROLE_HAS_EXIST = "角色已存在";
 
+    public final static String USER_NOT_FOUND = "用户信息异常";
+
 }

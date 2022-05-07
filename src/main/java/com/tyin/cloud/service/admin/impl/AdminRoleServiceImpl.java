@@ -9,10 +9,9 @@ import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.constants.ResMessageConstants;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.StringUtils;
+import com.tyin.cloud.model.bean.RoleLabel;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminRoleMenu;
-import com.tyin.cloud.model.entity.AdminUser;
-import com.tyin.cloud.model.res.AdminRoleLabelRes.RoleLabel;
 import com.tyin.cloud.model.res.AdminRoleRes;
 import com.tyin.cloud.model.valid.InsertRoleValid;
 import com.tyin.cloud.model.valid.UpdateRoleValid;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tyin.cloud.core.constants.ResMessageConstants.ROLE_HAS_EXIST;
@@ -41,9 +41,9 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     private final AdminRoleMenuRepository adminRoleMenuRepository;
 
     @Override
-    public List<AdminRole> getRoles(AdminUser adminUser) {
+    public List<AdminRole> getRoles(Long userId) {
         return adminRoleRepository.selectList(Wrappers.<AdminRole>lambdaQuery()
-                .apply("`id` IN ( SELECT `role_id` FROM `admin_user_role` WHERE `user_id` = {0} ) ", adminUser.getId())
+                .apply("`id` IN ( SELECT `role_id` FROM `admin_user_role` WHERE `user_id` = {0} ) ", userId)
                 .eq(AdminRole::getDisabled, Boolean.FALSE)
         );
     }
@@ -111,19 +111,30 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     @Override
     public List<Long> getRoleMenuSelectedLabel(Integer rowId) {
         AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, rowId));
-        if (Objects.isNull(adminRoleMenu) || StringUtils.isEmpty(adminRoleMenu.getMenuId())) return Lists.newArrayList();
+        if (Objects.isNull(adminRoleMenu) || StringUtils.isEmpty(adminRoleMenu.getMenuId()))
+            return Lists.newArrayList();
         return Arrays.stream(adminRoleMenu.getMenuId().split(",")).map(Long::parseLong).collect(Collectors.toList());
     }
 
     @Override
     public List<Long> getRoleMenuHalfLabel(Integer rowId) {
         AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, rowId));
-        if (Objects.isNull(adminRoleMenu) || StringUtils.isEmpty(adminRoleMenu.getHalfId())) return Lists.newArrayList();
+        if (Objects.isNull(adminRoleMenu) || StringUtils.isEmpty(adminRoleMenu.getHalfId()))
+            return Lists.newArrayList();
         return Arrays.stream(adminRoleMenu.getHalfId().split(",")).map(Long::parseLong).collect(Collectors.toList());
     }
 
     @Override
     public List<RoleLabel> getRoleLabel() {
         return adminRoleRepository.selectLabel(Wrappers.<AdminRole>lambdaQuery().eq(AdminRole::getDisabled, Boolean.FALSE));
+    }
+
+    @Override
+    public List<RoleLabel> getRoleLabel(Set<Long> ids) {
+        return adminRoleRepository.selectLabel(
+                Wrappers.<AdminRole>lambdaQuery()
+                        .eq(AdminRole::getDisabled, Boolean.FALSE)
+                        .in(AdminRole::getId, ids)
+        );
     }
 }

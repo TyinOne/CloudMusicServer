@@ -1,5 +1,6 @@
 package com.tyin.cloud.model.res;
 
+import com.tyin.cloud.model.bean.RoleLabel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,4 @@ import java.util.List;
 @Builder
 public class AdminRoleLabelRes {
     private List<RoleLabel> list;
-
-    @Data
-    public static class RoleLabel {
-        private String value;
-        private String label;
-    }
 }

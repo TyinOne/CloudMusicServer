@@ -2,14 +2,14 @@ package com.tyin.cloud.service.admin;
 
 import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.auth.AuthAdminUser;
+import com.tyin.cloud.model.bean.RoleLabel;
 import com.tyin.cloud.model.entity.AdminRole;
-import com.tyin.cloud.model.entity.AdminUser;
-import com.tyin.cloud.model.res.AdminRoleLabelRes.RoleLabel;
 import com.tyin.cloud.model.res.AdminRoleRes;
 import com.tyin.cloud.model.valid.InsertRoleValid;
 import com.tyin.cloud.model.valid.UpdateRoleValid;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Tyin
@@ -17,9 +17,9 @@ import java.util.List;
  * @description ...
  */
 public interface IAdminRoleService {
-    List<AdminRole> getRoles(AdminUser adminUser);
+    List<AdminRole> getRoles(Long id);
 
-    PageResult<AdminRoleRes,?> getRolesPageResult(String keywords, Long size, Long current);
+    PageResult<AdminRoleRes, ?> getRolesPageResult(String keywords, Long size, Long current);
 
     Integer addRole(InsertRoleValid valid, AuthAdminUser user);
 
@@ -30,4 +30,6 @@ public interface IAdminRoleService {
     List<Long> getRoleMenuHalfLabel(Integer rowId);
 
     List<RoleLabel> getRoleLabel();
+
+    List<RoleLabel> getRoleLabel(Set<Long> ids);
 }

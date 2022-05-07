@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tyin.cloud.model.bean.RoleLabel;
 import com.tyin.cloud.model.entity.AdminRole;
-import com.tyin.cloud.model.res.AdminRoleLabelRes;
 import com.tyin.cloud.model.res.AdminRoleRes;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -38,7 +38,7 @@ public interface AdminRoleRepository extends BaseMapper<AdminRole> {
             FROM
             \t`admin_role` ${ew.customSqlSegment}\s
             """)
-    IPage<AdminRoleRes> selectPageRes(Page<Object> page, @Param("ew") LambdaQueryWrapper<AdminRole> wrapper);
+    IPage<AdminRoleRes> selectPageRes(Page<AdminRole> page, @Param("ew") LambdaQueryWrapper<AdminRole> wrapper);
 
     @Select("""
             SELECT
@@ -47,5 +47,5 @@ public interface AdminRoleRepository extends BaseMapper<AdminRole> {
             FROM
             \t `admin_role` ${ew.customSqlSegment}\s
             """)
-    List<AdminRoleLabelRes.RoleLabel> selectLabel(@Param("ew") LambdaQueryWrapper<AdminRole> lambdaQuery);
+    List<RoleLabel> selectLabel(@Param("ew") LambdaQueryWrapper<AdminRole> lambdaQuery);
 }

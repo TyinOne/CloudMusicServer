@@ -9,7 +9,6 @@ import com.tyin.cloud.core.utils.IpUtils;
 import com.tyin.cloud.model.entity.AdminUserDetailRes;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
-import com.tyin.cloud.model.res.AdminUserPermissionRes;
 import com.tyin.cloud.model.valid.sequence.AdminUserLoginValidSequence;
 import com.tyin.cloud.service.admin.IAdminUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,11 +50,5 @@ public class AdminUserController {
                 .roles(user.getRoles())
                 .btn(Lists.newArrayList())
                 .build());
-    }
-
-    @GetMapping("/permission")
-    public Result<AdminUserPermissionRes> getAdminUserPermission(@Auth AuthAdminUser user) {
-        AdminUserPermissionRes res = adminUserService.getUserPermission(user);
-        return Result.success(res);
     }
 }

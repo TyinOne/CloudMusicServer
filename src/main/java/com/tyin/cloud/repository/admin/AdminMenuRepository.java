@@ -2,8 +2,8 @@ package com.tyin.cloud.repository.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tyin.cloud.model.bean.MenuLabel;
 import com.tyin.cloud.model.entity.AdminMenu;
-import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.MenuRes;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -24,7 +24,7 @@ public interface AdminMenuRepository extends BaseMapper<AdminMenu> {
             \t`sort`
             FROM
             \t`admin_menu` ${ew.customSqlSegment}""")
-    List<MenuLabelRes.MenuData> selectLabel(@Param("ew") LambdaQueryWrapper<AdminMenu> wrapper);
+    List<MenuLabel> selectLabel(@Param("ew") LambdaQueryWrapper<AdminMenu> wrapper);
 
     @Select("""
             SELECT

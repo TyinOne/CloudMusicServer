@@ -3,7 +3,6 @@ package com.tyin.cloud.controller.admin;
 import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.auth.AuthAdminUser;
-import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.MenuRes;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,11 +36,5 @@ public class AdminMenuController {
                                       @Parameter(hidden = true) @Auth AuthAdminUser user) {
         List<MenuRes.MenuItem> menuRes = adminMenuService.getMenuRes(keywords, roleId, disabled);
         return Result.success(MenuRes.builder().list(menuRes).build());
-    }
-
-    @GetMapping("/label")
-    public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id, @Parameter(hidden = true) @Auth AuthAdminUser user) {
-        MenuLabelRes res = adminMenuService.getMenuLabel(id);
-        return Result.success(res);
     }
 }

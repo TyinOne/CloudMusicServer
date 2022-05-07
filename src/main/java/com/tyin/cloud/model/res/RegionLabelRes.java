@@ -1,6 +1,6 @@
 package com.tyin.cloud.model.res;
 
-import com.tyin.cloud.model.base.TreeBase;
+import com.tyin.cloud.model.bean.RegionLabel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,14 +10,13 @@ import java.util.List;
 
 /**
  * @author Tyin
- * @date 2022/4/9 23:42
+ * @date 2022/5/7 13:50
  * @description ...
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuLabelRes {
-    private List<? extends TreeBase> list;
-    private List<Long> selected;
+public class RegionLabelRes {
+    private List<RegionLabel> list;
 }

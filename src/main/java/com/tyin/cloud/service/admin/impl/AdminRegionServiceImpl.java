@@ -1,5 +1,6 @@
 package com.tyin.cloud.service.admin.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -8,6 +9,8 @@ import com.tyin.cloud.core.configs.api.res.TencentMapDistrictRes;
 import com.tyin.cloud.core.configs.properties.PropertiesComponents;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.JsonUtils;
+import com.tyin.cloud.core.utils.TreeUtils;
+import com.tyin.cloud.model.bean.RegionLabel;
 import com.tyin.cloud.model.entity.AdminRegion;
 import com.tyin.cloud.repository.admin.AdminRegionRepository;
 import com.tyin.cloud.service.admin.IAdminRegionService;
@@ -33,6 +36,7 @@ import static com.tyin.cloud.core.constants.SDKConstants.DISTRICT_API;
 public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, AdminRegion> implements IAdminRegionService {
     private final HttpComponents httpComponents;
     private final PropertiesComponents propertiesComponents;
+    private final AdminRegionRepository adminRegionRepository;
 
     @Override
     @Async
@@ -45,6 +49,9 @@ public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, A
         String str = httpComponents.doGet(DISTRICT_API, params);
         TencentMapDistrictRes res = JsonUtils.toJavaObject(str.replaceAll("\r|\n*", "").replaceAll("\\s", ""), TencentMapDistrictRes.class);
         Asserts.isTrue(Objects.nonNull(res) && Objects.nonNull(res.getResult()), Objects.isNull(Objects.requireNonNull(res).getMessage()) ? "" : res.getMessage());
+        //检查更新
+        Long dataVersion = res.getDataVersion();
+        Asserts.isTrue(false, "最新版本！");
         List<List<TencentMapDistrictRes.DistrictResultItem>> result = res.getResult();
         //省市区
         List<TencentMapDistrictRes.DistrictResultItem> provinces = result.get(0);
@@ -113,5 +120,11 @@ public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, A
                     .build());
         }
         Asserts.isTrue(this.saveOrUpdateBatch(list), "同步数据失败");
+    }
+
+    @Override
+    public List<RegionLabel> getRegionLabel(Long rootId) {
+        List<RegionLabel> list = adminRegionRepository.selectLabel(Wrappers.<AdminRegion>lambdaQuery().ge(AdminRegion::getParentId, rootId));
+        return TreeUtils.buildTree(list, rootId, false);
     }
 }

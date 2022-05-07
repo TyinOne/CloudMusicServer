@@ -1,7 +1,7 @@
 package com.tyin.cloud.service.admin;
 
+import com.tyin.cloud.model.entity.AdminMenu;
 import com.tyin.cloud.model.entity.AdminUser;
-import com.tyin.cloud.model.res.AdminUserPermissionRes;
 import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.MenuRes;
 
@@ -17,7 +17,7 @@ public interface IAdminMenuService {
 
     HashSet<String> getMenuPermission(AdminUser adminUser);
 
-    List<AdminUserPermissionRes.RouterRes> getRouterForUser(Long id);
+    List<AdminMenu> getRouterByPermission(Long userId);
 
     MenuLabelRes getMenuLabel(Integer id);
 

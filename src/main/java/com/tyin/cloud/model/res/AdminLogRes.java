@@ -1,6 +1,7 @@
 package com.tyin.cloud.model.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tyin.cloud.core.utils.DateUtils;
 import lombok.Data;
 
 import java.util.Date;
@@ -19,6 +20,6 @@ public class AdminLogRes {
     private String params;
     private String result;
     private String elapsed;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
     private Date created;
 }

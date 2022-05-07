@@ -6,6 +6,7 @@ package com.tyin.cloud.core.constants;
  * @description ...
  */
 public class PermissionConstants {
+    public static final String SUPPER_ROLE = "admin";
     public static final String PERMISSION_SERVICE = "permission";
     public static final String ADMIN_SECURITY = "*:*:*";
 }

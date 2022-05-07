@@ -10,4 +10,6 @@ public class RedisKeyConstants {
     public final static String ADMIN_USER_TOKEN_PREFIX = "user:admin:token:";
 
     public final static String CLIENT_USER_TOKEN_PREFIX = "user:client:token:";
+
+    public final static String ROLE_MENU_PREFIX = "role:menu:";
 }

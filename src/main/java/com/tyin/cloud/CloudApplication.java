@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @date 2022/3/26 2:22
  * @description ...
  */
-//@SpringBootApplication(exclude={MybatisPlusAutoConfiguration.class})
 @SpringBootApplication
 @MapperScan("com.tyin.cloud.repository.*")
 @EnableAsync

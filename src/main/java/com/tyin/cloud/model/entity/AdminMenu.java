@@ -20,6 +20,7 @@ import java.io.Serializable;
 public class AdminMenu extends BaseEntity implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
+    private Long parentId;
     private Integer sort;
 
     private String name;
