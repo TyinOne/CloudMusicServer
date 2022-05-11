@@ -28,6 +28,7 @@ public class SystemLoadComponents {
     private final AdminDictRepository adminDictRepository;
     private final PropertiesComponents propertiesComponents;
     private final RedisComponents redisComponents;
+
     @PostConstruct
     public void onLoad() {
         //加载字典
@@ -35,6 +36,7 @@ public class SystemLoadComponents {
 
         log.info("System Start success!");
     }
+
     public OssProperties initOss() {
         if (redisComponents.existsKey(OSS_PROPERTIES)) {
             String ossStr = redisComponents.get(OSS_PROPERTIES);

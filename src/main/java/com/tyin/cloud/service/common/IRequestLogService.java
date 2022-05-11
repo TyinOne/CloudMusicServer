@@ -12,5 +12,5 @@ import com.tyin.cloud.model.res.AdminLogRes;
 public interface IRequestLogService {
     void save(RequestLog log);
 
-    PageResult<AdminLogRes,?> queryLog(Long size, Long current);
+    PageResult<AdminLogRes, ?> queryLog(Long size, Long current);
 }

@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminDict  extends BaseEntity implements Serializable {
+public class AdminDict extends BaseEntity implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 

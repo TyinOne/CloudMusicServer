@@ -10,6 +10,6 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UpdateRoleValid extends InsertRoleValid{
+public class UpdateRoleValid extends InsertRoleValid {
     private Long id;
 }

@@ -33,11 +33,13 @@ public class AdminAccountController {
         PageResult<AdminAccountRes, ?> res = userService.getUserList(size, current, name, roleId, disabled);
         return Result.success(res);
     }
+
     @GetMapping("/detail")
     public Result<AdminAccountDetailRes> getUserDetail(@RequestParam String account, @Auth AuthAdminUser user) {
         AdminAccountDetailRes res = userService.getAccountDetail(account);
         return Result.success(res);
     }
+
     @PostMapping("/save")
     public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid) {
         userService.saveAccountInfo(valid);

@@ -31,6 +31,7 @@ public class OkHttpConfig {
     private Integer writeTimeout;
     private Integer maxIdleConnections;
     private Long keepAliveDuration;
+
     @Bean
     public OkHttpClient okHttpClient() {
         return new OkHttpClient.Builder()
@@ -40,7 +41,7 @@ public class OkHttpConfig {
                 .connectionPool(pool())
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout,TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
                 .hostnameVerifier((hostname, session) -> true)
                 // 设置代理
 //            	.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8888)))
@@ -48,15 +49,18 @@ public class OkHttpConfig {
 //                .addInterceptor()
                 .build();
     }
+
     @Bean
     public X509TrustManager x509TrustManager() {
         return new X509TrustManager() {
             @Override
             public void checkClientTrusted(X509Certificate[] chain, String authType) {
             }
+
             @Override
             public void checkServerTrusted(X509Certificate[] chain, String authType) {
             }
+
             @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return new X509Certificate[0];

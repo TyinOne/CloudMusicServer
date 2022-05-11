@@ -29,7 +29,7 @@ public interface IAdminUserService {
 
     AdminUser getUserEntity(String account);
 
-    PageResult<AdminAccountRes,?> getUserList(Long size, Long current, String name, Long roleId, Long disabled);
+    PageResult<AdminAccountRes, ?> getUserList(Long size, Long current, String name, Long roleId, Long disabled);
 
     AdminAccountDetailRes getAccountDetail(String account);
 

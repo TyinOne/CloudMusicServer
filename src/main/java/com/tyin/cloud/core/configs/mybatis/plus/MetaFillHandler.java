@@ -18,6 +18,7 @@ public class MetaFillHandler implements MetaObjectHandler {
         setFieldValByName("created", new Date(), metaObject);
         setFieldValByName("modified", new Date(), metaObject);
     }
+
     @Override
     public void updateFill(MetaObject metaObject) {
         setFieldValByName("modified", new Date(), metaObject);

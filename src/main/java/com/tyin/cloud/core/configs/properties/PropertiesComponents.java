@@ -15,20 +15,23 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PropertiesComponents {
+    private static OssProperties oss;
     private final OkHttpConfig okHttpConfig;
     private final ApiPrefixConfig apiPrefixConfig;
-    private static OssProperties oss;
     private final TencentMapConfig tencentMapConfig;
 
     public String getOssUrl() {
         return oss.getOssFileHost();
     }
+
     public String getOssTmp() {
         return oss.getOssFileUriTmp();
     }
+
     public String getOssServer() {
         return oss.getOssServerUri();
     }
+
     public String getOssImages() {
         return oss.getOssFileUriImages();
     }

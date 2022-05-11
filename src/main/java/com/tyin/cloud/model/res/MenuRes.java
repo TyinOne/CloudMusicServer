@@ -1,7 +1,6 @@
 package com.tyin.cloud.model.res;
 
 import com.tyin.cloud.model.base.TreeBase;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;

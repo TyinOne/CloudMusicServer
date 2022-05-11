@@ -36,7 +36,7 @@ public class RequestLogServiceImpl implements IRequestLogService {
     public PageResult<AdminLogRes, ?> queryLog(Long size, Long current) {
         IPage<AdminLogRes> resPage = requestLogRepository.selectLogPage(new Page<>(current, size),
                 Wrappers.<RequestLog>lambdaQuery()
-                );
+        );
         List<AdminLogRes> records = resPage.getRecords();
         for (AdminLogRes item : records) {
             item.setIp(IpUtils.longToIp(Long.parseLong(item.getIp())));

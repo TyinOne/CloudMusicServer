@@ -26,9 +26,10 @@ public class HttpComponents {
 
     /**
      * get 请求
-     * @param url       请求url地址
+     *
+     * @param url 请求url地址
      * @return string
-     * */
+     */
     public String doGet(String url) {
         return doGet(url, null, null);
     }
@@ -36,20 +37,22 @@ public class HttpComponents {
 
     /**
      * get 请求
-     * @param url       请求url地址
-     * @param params    请求参数 map
+     *
+     * @param url    请求url地址
+     * @param params 请求参数 map
      * @return string
-     * */
+     */
     public String doGet(String url, Map<String, String> params) {
         return doGet(url, params, null);
     }
 
     /**
      * get 请求
-     * @param url       请求url地址
-     * @param headers   请求头字段 {k1, v1 k2, v2, ...}
+     *
+     * @param url     请求url地址
+     * @param headers 请求头字段 {k1, v1 k2, v2, ...}
      * @return string
-     * */
+     */
     public String doGet(String url, String[] headers) {
         return doGet(url, null, headers);
     }
@@ -57,11 +60,12 @@ public class HttpComponents {
 
     /**
      * get 请求
-     * @param url       请求url地址
-     * @param params    请求参数 map
-     * @param headers   请求头字段 {k1, v1 k2, v2, ...}
+     *
+     * @param url     请求url地址
+     * @param params  请求参数 map
+     * @param headers 请求头字段 {k1, v1 k2, v2, ...}
      * @return string
-     * */
+     */
     public String doGet(String url, Map<String, String> params, String[] headers) {
         StringBuilder sb = new StringBuilder(url);
         if (params != null && params.keySet().size() > 0) {
@@ -95,8 +99,9 @@ public class HttpComponents {
 
     /**
      * post 请求
-     * @param url       请求url地址
-     * @param params    请求参数 map
+     *
+     * @param url    请求url地址
+     * @param params 请求参数 map
      * @return string
      */
     public String doPost(String url, Map<String, String> params) {
@@ -116,8 +121,9 @@ public class HttpComponents {
 
     /**
      * post 请求, 请求数据为 json 的字符串
-     * @param url       请求url地址
-     * @param json      请求数据, json 字符串
+     *
+     * @param url  请求url地址
+     * @param json 请求数据, json 字符串
      * @return string
      */
     public String doPostJson(String url, String json) {
@@ -127,8 +133,9 @@ public class HttpComponents {
 
     /**
      * post 请求, 请求数据为 xml 的字符串
-     * @param url       请求url地址
-     * @param xml       请求数据, xml 字符串
+     *
+     * @param url 请求url地址
+     * @param xml 请求数据, xml 字符串
      * @return string
      */
     public String doPostXml(String url, String xml) {

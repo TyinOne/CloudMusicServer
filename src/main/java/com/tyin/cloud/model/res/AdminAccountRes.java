@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public  class AdminAccountRes {
+public class AdminAccountRes {
     private String account;
     private String nickName;
     private String mail;

@@ -7,10 +7,10 @@ import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.bean.DictLabel;
 import com.tyin.cloud.model.bean.RegionLabel;
 import com.tyin.cloud.model.bean.RoleLabel;
-import com.tyin.cloud.model.res.RoleLabelRes;
 import com.tyin.cloud.model.res.DictLabelRes;
 import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.RegionLabelRes;
+import com.tyin.cloud.model.res.RoleLabelRes;
 import com.tyin.cloud.service.admin.IAdminDictService;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRegionService;
@@ -58,6 +58,7 @@ public class AdminLabelController {
         MenuLabelRes res = adminMenuService.getMenuLabel(id);
         return Result.success(res);
     }
+
     @GetMapping("/dict")
     @Open
     public Result<DictLabelRes> getDictLabel() {

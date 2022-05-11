@@ -15,5 +15,5 @@ public interface IAdminDictService {
 
     List<DictLabel> getDictLabel();
 
-    PageResult<AdminDictRes,?> getDictList(String keywords, String dictKey, String dictType, Long size, Long current);
+    PageResult<AdminDictRes, ?> getDictList(String keywords, String dictKey, String dictType, Long size, Long current);
 }

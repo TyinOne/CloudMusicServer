@@ -41,6 +41,7 @@ public class AdminUserController {
         AdminUserDetailRes res = adminUserService.getUserInfo(user);
         return Result.success(res);
     }
+
     @GetMapping("/session")
     public Result<AdminUserLoginRes> getSession(@Auth AuthAdminUser user) {
         return Result.success(AdminUserLoginRes.builder().token(user.getToken())

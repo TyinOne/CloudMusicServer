@@ -30,6 +30,7 @@ public class AdminCommonController {
         adminRegionService.getAreaForTencent();
         return Result.success();
     }
+
     @NoLog
     @PostMapping("/images/upload/tmp")
     public Result<UploadTmpRes> uploadImage(@RequestParam MultipartFile file, @Auth AuthAdminUser user) {

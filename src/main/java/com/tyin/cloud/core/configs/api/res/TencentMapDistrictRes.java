@@ -23,10 +23,12 @@ public class TencentMapDistrictRes {
     public static class DistrictResult {
         private List<DistrictResultItems> list;
     }
+
     @Data
     public static class DistrictResultItems {
         private List<DistrictResultItem> list;
     }
+
     @Data
     public static class DistrictResultItem {
         private String id;
@@ -38,6 +40,7 @@ public class TencentMapDistrictRes {
         private List<Integer> cidx;
         private List<DistrictResultItem> children;
     }
+
     @Data
     public static class Location {
         private BigDecimal lat;
