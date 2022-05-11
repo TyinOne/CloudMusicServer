@@ -48,6 +48,7 @@ public class AdminRouterServiceImpl implements IAdminRouterService {
                             .isLink(i.getMetaIsLink())
                             .roles(Sets.newHashSet(i.getMetaRoles().split(",")))
                             .title(i.getMetaTitle())
+                            .icon(i.getMetaIcons())
                             .build())
                     .name(i.getName())
                     .component(i.getComponent())

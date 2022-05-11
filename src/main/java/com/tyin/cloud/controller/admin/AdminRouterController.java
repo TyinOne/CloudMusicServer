@@ -22,7 +22,7 @@ public class AdminRouterController {
 
     private final IAdminRouterService routerService;
 
-    @GetMapping("/permission")
+    @GetMapping("/getRouter")
     public Result<AdminRouterListRes> getRouterByPermission(@Auth AuthAdminUser user) {
         AdminRouterListRes res = routerService.getRouterByPermission(user);
         return Result.success(res);

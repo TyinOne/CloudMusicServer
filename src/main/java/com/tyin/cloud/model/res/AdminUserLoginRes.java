@@ -21,6 +21,4 @@ public class AdminUserLoginRes {
     private String token;
     private String avatar;
     private String nickName;
-    private List<String> btn;
-    private Set<String> roles;
 }

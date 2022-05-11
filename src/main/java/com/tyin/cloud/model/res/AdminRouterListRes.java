@@ -37,6 +37,7 @@ public class AdminRouterListRes {
         @AllArgsConstructor
         @NoArgsConstructor
         public static class MetaRes {
+            private String icon;
             private String title;
             private String isLink;
             private Boolean isHide;

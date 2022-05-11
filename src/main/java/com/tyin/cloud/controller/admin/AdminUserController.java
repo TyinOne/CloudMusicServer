@@ -1,6 +1,5 @@
 package com.tyin.cloud.controller.admin;
 
-import com.google.common.collect.Lists;
 import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
@@ -47,8 +46,6 @@ public class AdminUserController {
         return Result.success(AdminUserLoginRes.builder().token(user.getToken())
                 .nickName(user.getNickName())
                 .avatar(user.getAvatar())
-                .roles(user.getRoles())
-                .btn(Lists.newArrayList())
                 .build());
     }
 }

@@ -29,7 +29,7 @@ public class UploadComponents {
         String originalFilename = file.getOriginalFilename();
         originalFilename = Objects.isNull(originalFilename) ? "file.jpeg" : originalFilename;
         String suffix = originalFilename.split("\\.")[1];
-        String fileName = user.getAccount() + "-" + System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + suffix;
+        String fileName = System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + suffix;
         String serverTmpPath = propertiesComponents.getOssServer() + propertiesComponents.getOssTmp();
         String absolutePath;
         try {

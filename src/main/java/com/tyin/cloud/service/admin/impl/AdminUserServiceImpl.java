@@ -64,7 +64,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
 
     @Override
     public AdminUserLoginRes login(AdminLoginParams adminLoginParams, Long ipAddress) {
-        String username = adminLoginParams.getUsername();
+        String username = adminLoginParams.getAccount();
         String password = adminLoginParams.getPassword();
         password = StringUtils.sha256Encode(DigestUtils.md5Hex(password.getBytes(StandardCharsets.UTF_8))).toUpperCase(Locale.ROOT);
         AdminUser adminUser = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda().eq(AdminUser::getPassword, password));
@@ -83,13 +83,11 @@ public class AdminUserServiceImpl implements IAdminUserService {
         List<AdminRole> roles = adminRoleService.getRoles(adminUser.getId());
         Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
         HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
-        AuthAdminUser user = AuthAdminUser.builder().token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).roles(roleValues).permissions(permissions).build();
+        AuthAdminUser user = AuthAdminUser.builder().token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).permissions(permissions).build();
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return AdminUserLoginRes.builder().token(token)
                 .nickName(adminUser.getNickName())
                 .avatar(avatar)
-                .roles(roleValues)
-                .btn(Lists.newArrayList())
                 .build();
     }
 

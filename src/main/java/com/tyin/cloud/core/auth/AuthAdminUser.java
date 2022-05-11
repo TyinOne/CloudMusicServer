@@ -22,6 +22,5 @@ public class AuthAdminUser implements AuthUser {
     private String nickName;
     private String account;
     private String avatar;
-    private Set<String> roles;
     private Set<String> permissions;
 }

@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class AdminLoginParams implements Serializable {
 
     @NotBlank(message = "请输入用户名", groups = UsernameCheck.class)
-    private String username;
+    private String account;
     @NotBlank(message = "请输入密码", groups = PasswordCheck.class)
     private String password;
 }
