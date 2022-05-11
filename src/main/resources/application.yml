@@ -3,6 +3,9 @@ server:
   max-http-header-size: 8192
   tomcat:
     basedir: /
+    remoteip:
+      remote-ip-header: x-forwarded-for
+      protocol-header: x-forwarded-proto
 spring:
   application:
     name: cloud_music
@@ -45,7 +48,6 @@ mybatis-plus:
   configuration:
     #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     log-impl: com.tyin.cloud.core.configs.mybatis.logs.CloudMyBatisLog
-
 cloud:
   map:
     key: FTRBZ-TK4CV-GR4PG-U3JFQ-7WHCQ-LSFNU
