@@ -4,11 +4,14 @@ import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.auth.AuthAdminUser;
+import com.tyin.cloud.model.bean.DictLabel;
 import com.tyin.cloud.model.bean.RegionLabel;
 import com.tyin.cloud.model.bean.RoleLabel;
-import com.tyin.cloud.model.res.AdminRoleLabelRes;
+import com.tyin.cloud.model.res.RoleLabelRes;
+import com.tyin.cloud.model.res.DictLabelRes;
 import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.RegionLabelRes;
+import com.tyin.cloud.service.admin.IAdminDictService;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRegionService;
 import com.tyin.cloud.service.admin.IAdminRoleService;
@@ -33,6 +36,7 @@ public class AdminLabelController {
     private final IAdminRoleService adminRoleService;
     private final IAdminMenuService adminMenuService;
     private final IAdminRegionService adminRegionService;
+    private final IAdminDictService adminDictService;
 
     @GetMapping("/region")
     @Open
@@ -42,14 +46,22 @@ public class AdminLabelController {
     }
 
     @GetMapping("/role")
-    public Result<AdminRoleLabelRes> getRoleLabel(@Auth AuthAdminUser user) {
+    @Open
+    public Result<RoleLabelRes> getRoleLabel(@Auth AuthAdminUser user) {
         List<RoleLabel> list = adminRoleService.getRoleLabel();
-        return Result.success(AdminRoleLabelRes.builder().list(list).build());
+        return Result.success(RoleLabelRes.builder().list(list).build());
     }
 
     @GetMapping("/menu")
+    @Open
     public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id, @Parameter(hidden = true) @Auth AuthAdminUser user) {
         MenuLabelRes res = adminMenuService.getMenuLabel(id);
         return Result.success(res);
+    }
+    @GetMapping("/dict")
+    @Open
+    public Result<DictLabelRes> getDictLabel() {
+        List<DictLabel> list = adminDictService.getDictLabel();
+        return Result.success(DictLabelRes.builder().list(list).build());
     }
 }

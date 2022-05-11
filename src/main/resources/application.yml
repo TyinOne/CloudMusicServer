@@ -1,6 +1,8 @@
 server:
   port: 8888
   max-http-header-size: 8192
+  tomcat:
+    basedir: /
 spring:
   application:
     name: cloud_music
@@ -34,6 +36,8 @@ spring:
   jackson:
     default-property-inclusion: NON_NULL
     time-zone: GMT+8
+  mvc:
+    static-path-pattern: /**
 #  mvc:
 #    pathmatch:
 #      matching-strategy: ant_path_matcher
@@ -52,8 +56,6 @@ cloud:
     write-timeout: 30
     max-idle-connections: 200
     keep-alive-duration: 300
-  oss:
-    url: http://files.ubuntu.wsl/files/images
   api:
     prefix:
       admin: /admin

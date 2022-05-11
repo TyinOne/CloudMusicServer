@@ -1,5 +1,6 @@
 package com.tyin.cloud.core.aop;
 
+import com.tyin.cloud.core.annotations.NoLog;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.enums.ResultCode;
 import com.tyin.cloud.core.exception.ApiException;
@@ -15,11 +16,13 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +47,15 @@ public class RequestLogAop implements Ordered {
 
     @Around("pointcut()")
     public Object requestLog(ProceedingJoinPoint joinPoint) throws ApiException {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method classMethod = signature.getMethod();
+        if (Objects.nonNull(classMethod.getAnnotation(NoLog.class))) {
+            try {
+                return joinPoint.proceed();
+            } catch (Throwable e) {
+                Asserts.fail(e.getMessage());
+            }
+        }
         log.info("=====================================Method  start====================================");
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         Asserts.isTrue(Objects.nonNull(attributes), "无效请求");
