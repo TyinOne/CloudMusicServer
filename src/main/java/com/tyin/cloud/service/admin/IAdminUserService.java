@@ -8,6 +8,7 @@ import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminAccountDetailRes;
 import com.tyin.cloud.model.res.AdminAccountRes;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
+import com.tyin.cloud.model.valid.SaveAccountValid;
 
 /**
  * @author Tyin
@@ -31,4 +32,6 @@ public interface IAdminUserService {
     PageResult<AdminAccountRes,?> getUserList(Long size, Long current, String name, Long roleId, Long disabled);
 
     AdminAccountDetailRes getAccountDetail(String account);
+
+    void saveAccountInfo(SaveAccountValid valid);
 }

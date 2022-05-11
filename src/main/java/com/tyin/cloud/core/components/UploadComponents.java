@@ -27,9 +27,9 @@ public class UploadComponents {
 
     public UploadTmpRes upload(MultipartFile file, AuthAdminUser user) {
         String originalFilename = file.getOriginalFilename();
-        Asserts.isTrue(Objects.nonNull(originalFilename));
-        String prefix = originalFilename.split("\\.")[1];
-        String fileName = user.getAccount() + "-" + System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + prefix;
+        originalFilename = Objects.isNull(originalFilename) ? "file.jpeg" : originalFilename;
+        String suffix = originalFilename.split("\\.")[1];
+        String fileName = user.getAccount() + "-" + System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + suffix;
         String serverTmpPath = propertiesComponents.getOssServer() + propertiesComponents.getOssTmp();
         String absolutePath;
         try {

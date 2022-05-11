@@ -6,12 +6,11 @@ import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.res.AdminAccountDetailRes;
 import com.tyin.cloud.model.res.AdminAccountRes;
+import com.tyin.cloud.model.valid.SaveAccountValid;
 import com.tyin.cloud.service.admin.IAdminUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Tyin
@@ -38,5 +37,10 @@ public class AdminAccountController {
     public Result<AdminAccountDetailRes> getUserDetail(@RequestParam String account, @Auth AuthAdminUser user) {
         AdminAccountDetailRes res = userService.getAccountDetail(account);
         return Result.success(res);
+    }
+    @PostMapping("/save")
+    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid) {
+        userService.saveAccountInfo(valid);
+        return Result.success();
     }
 }
