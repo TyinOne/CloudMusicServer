@@ -167,7 +167,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 AuthAdminUser authAdminUser = JsonUtils.toJavaObject(s, AuthAdminUser.class);
                 if (Objects.nonNull(authAdminUser)) {
                     authAdminUser.setNickName(user.getNickName());
-                    authAdminUser.setAvatar(user.getAvatar());
+                    authAdminUser.setAvatar(propertiesComponents.getOssUrl() + user.getAvatar());
                     redisComponents.save(ADMIN_USER_TOKEN_PREFIX + userBase.getToken(), JsonUtils.toJSONString(authAdminUser));
                 }
             }
