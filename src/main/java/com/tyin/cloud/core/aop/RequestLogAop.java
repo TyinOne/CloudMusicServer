@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.tyin.cloud.core.utils.IpUtils.getIpAddress;
+
 /**
  * @author Tyin
  * @date 2022/3/30 22:22
@@ -65,7 +67,7 @@ public class RequestLogAop implements Ordered {
         List<Object> collect = Arrays.stream(args).filter(i -> !(i instanceof HttpServletRequest)).collect(Collectors.toList());
         String params = JsonUtils.toJSONString(collect);
         String uri = request.getRequestURI();
-        String ip = request.getRemoteAddr();
+        String ip = getIpAddress(request);
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         builder.params(params).uri(uri).ip(IpUtils.ipToLong(ip)).method(method);
         long start = System.currentTimeMillis();
