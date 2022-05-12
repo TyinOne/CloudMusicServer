@@ -24,6 +24,7 @@ public class SaveAccountValid {
     private String region;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birth;
+    private Long roleId;
     private AvatarUpdate avatar;
 
     @Data

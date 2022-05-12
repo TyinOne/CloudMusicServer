@@ -12,6 +12,7 @@ import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.model.bean.RoleLabel;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminRoleMenu;
+import com.tyin.cloud.model.entity.AdminUserRole;
 import com.tyin.cloud.model.res.AdminRoleRes;
 import com.tyin.cloud.model.valid.InsertRoleValid;
 import com.tyin.cloud.model.valid.UpdateRoleValid;
@@ -41,11 +42,16 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     private final AdminRoleMenuRepository adminRoleMenuRepository;
 
     @Override
-    public List<AdminRole> getRoles(Long userId) {
-        return adminRoleRepository.selectList(Wrappers.<AdminRole>lambdaQuery()
+    public AdminRole getRoles(Long userId) {
+        return adminRoleRepository.selectOne(Wrappers.<AdminRole>lambdaQuery()
                 .apply("`id` IN ( SELECT `role_id` FROM `admin_user_role` WHERE `user_id` = {0} ) ", userId)
                 .eq(AdminRole::getDisabled, Boolean.FALSE)
         );
+    }
+
+    @Override
+    public AdminRole getRoleById(Long roleId) {
+        return adminRoleRepository.selectById(roleId);
     }
 
     @Override
@@ -136,5 +142,10 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
                         .eq(AdminRole::getDisabled, Boolean.FALSE)
                         .in(AdminRole::getId, ids)
         );
+    }
+
+    @Override
+    public void updateUserRole(String account, Long roleId) {
+        adminRoleRepository.updateUserRole(account, roleId);
     }
 }

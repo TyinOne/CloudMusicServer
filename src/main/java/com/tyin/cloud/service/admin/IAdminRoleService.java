@@ -17,7 +17,9 @@ import java.util.Set;
  * @description ...
  */
 public interface IAdminRoleService {
-    List<AdminRole> getRoles(Long id);
+    AdminRole getRoles(Long id);
+
+    AdminRole getRoleById(Long roleId);
 
     PageResult<AdminRoleRes, ?> getRolesPageResult(String keywords, Long size, Long current);
 
@@ -32,4 +34,6 @@ public interface IAdminRoleService {
     List<RoleLabel> getRoleLabel();
 
     List<RoleLabel> getRoleLabel(Set<Long> ids);
+
+    void updateUserRole(String account, Long roleId);
 }

@@ -21,10 +21,8 @@ import com.tyin.cloud.service.admin.IAdminRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.tyin.cloud.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ROLE_MENU_PREFIX;
@@ -50,42 +48,40 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
     @Override
     public List<AdminMenu> getRouterByPermission(Long userId) {
         List<AdminMenu> adminMenusForUser = Lists.newArrayList();
-        List<AdminRole> roles = adminRoleService.getRoles(userId);
-        Boolean isAdmin = roles.stream().map(i -> i.getValue().equals(SUPPER_ROLE)).filter(i -> i).findFirst().orElse(Boolean.FALSE);
-        if (isAdmin) {
+        AdminRole role = adminRoleService.getRoles(userId);
+        if (role.getValue().equals(SUPPER_ROLE)) {
             String key = ROLE_MENU_PREFIX + SUPPER_ROLE;
             String menuArrayStr = redisComponents.get(key);
             if (StringUtils.isNotEmpty(menuArrayStr)) {
                 List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
                 if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
             } else {
-                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.lambdaQuery());
+                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1));
                 adminMenusForUser.addAll(adminMenus);
                 redisComponents.save(key, JsonUtils.toJSONString(adminMenus));
             }
         } else {
-            roles.forEach(i -> {
-                String key = ROLE_MENU_PREFIX + i.getValue();
-                String menuArrayStr = redisComponents.get(key);
-                Set<String> ids = Sets.newHashSet();
-                if (StringUtils.isNotEmpty(menuArrayStr)) {
-                    List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
-                    if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
-                } else {
-                    List<AdminRoleMenu> adminRoleMenus = adminRoleMenuRepository.selectList(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, i.getId()));
-                    adminRoleMenus.forEach(item -> {
-                        ids.addAll(Sets.newHashSet(item.getMenuId().split(",")));
-                        ids.addAll(Sets.newHashSet(item.getHalfId().split(",")));
-                    });
-                    if (adminRoleMenus.size() > 0) {
-                        List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids));
-                        adminMenusForUser.addAll(adminMenus);
-                    }
-                    redisComponents.save(key, JsonUtils.toJSONString(adminMenusForUser));
+            String key = ROLE_MENU_PREFIX + role.getValue();
+            String menuArrayStr = redisComponents.get(key);
+            Set<String> ids = Sets.newHashSet();
+            if (StringUtils.isNotEmpty(menuArrayStr)) {
+                List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
+                if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
+            } else {
+                List<AdminRoleMenu> adminRoleMenus = adminRoleMenuRepository.selectList(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, role.getId()));
+                adminRoleMenus.forEach(item -> {
+                    ids.addAll(Sets.newHashSet(item.getMenuId().split(",")));
+                    ids.addAll(Sets.newHashSet(item.getHalfId().split(",")));
+                });
+                if (adminRoleMenus.size() > 0) {
+                    List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids));
+                    adminMenusForUser.addAll(adminMenus);
                 }
-            });
+                redisComponents.save(key, JsonUtils.toJSONString(adminMenusForUser));
+            }
         }
-        return adminMenusForUser;
+        adminMenusForUser.add(adminMenuRepository.selectById(1L));
+        return adminMenusForUser.stream().sorted(Comparator.comparingLong(AdminMenu::getId)).collect(Collectors.toList());
     }
 
     @Override

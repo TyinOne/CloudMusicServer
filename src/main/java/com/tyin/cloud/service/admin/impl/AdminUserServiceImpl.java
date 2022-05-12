@@ -35,12 +35,14 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Objects;
 
 import static com.tyin.cloud.core.constants.ParamsConstants.*;
 import static com.tyin.cloud.core.constants.PatternConstants.MAIL_PATTERN;
 import static com.tyin.cloud.core.constants.PatternConstants.TEL_PATTERN;
+import static com.tyin.cloud.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 import static com.tyin.cloud.core.constants.ResMessageConstants.AUTH_FAILED;
 import static com.tyin.cloud.core.constants.ResMessageConstants.USER_DISABLED;
@@ -79,9 +81,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
         }
         adminUser.setLastLogin(ipAddress);
         adminUserRepository.updateById(adminUser);
-        List<AdminRole> roles = adminRoleService.getRoles(adminUser.getId());
-        Set<String> roleValues = roles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
-        HashSet<String> permissions = roleValues.contains("admin") ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
+        AdminRole role = adminRoleService.getRoles(adminUser.getId());
+        HashSet<String> permissions = role.getValue().equals(SUPPER_ROLE) ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
         AuthAdminUser user = AuthAdminUser.builder().token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).permissions(permissions).build();
         redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return AdminUserLoginRes.builder().token(token)
@@ -122,8 +123,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
         AdminAccountDetailRes res = adminUserRepository.selectAccountDetail(account);
         res.setAvatar(propertiesComponents.getOssUrl() + res.getAvatar());
         res.setLastLogin(IpUtils.longToIp(Long.parseLong(res.getLastLogin())));
-        Set<Long> collect = adminRoleService.getRoles(res.getId()).stream().map(AdminRole::getId).collect(Collectors.toSet());
-        if (collect.size() > 0) res.setRoles(adminRoleService.getRoleLabel(collect));
+        AdminRole roles = adminRoleService.getRoles(res.getId());
+        if (Objects.nonNull(roles)) res.setRoleId(roles.getId() + "");
         return res;
     }
 
@@ -151,6 +152,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
             }
             //复制文件
         }
+        adminRoleService.updateUserRole(valid.getAccount(), valid.getRoleId());
         adminUserRepository.update(user, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, valid.getAccount()));
         AdminUserExtra userExtra = AdminUserExtra.builder()
                 .birth(valid.getBirth())

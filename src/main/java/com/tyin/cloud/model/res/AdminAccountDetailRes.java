@@ -3,14 +3,12 @@ package com.tyin.cloud.model.res;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tyin.cloud.core.utils.DateUtils;
-import com.tyin.cloud.model.bean.RoleLabel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Tyin
@@ -40,6 +38,6 @@ public class AdminAccountDetailRes {
     private String idCardNo;
     private String idCardName;
     private String idCardAddress;
-    private List<RoleLabel> roles;
+    private String roleId;
 
 }
