@@ -5,15 +5,19 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.cloud.core.api.PageResult;
+import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.model.bean.DictLabel;
 import com.tyin.cloud.model.entity.AdminDict;
 import com.tyin.cloud.model.res.AdminDictRes;
+import com.tyin.cloud.model.valid.SaveDictValid;
 import com.tyin.cloud.repository.admin.AdminDictRepository;
+import com.tyin.cloud.repository.admin.AdminDictTypeRepository;
 import com.tyin.cloud.service.admin.IAdminDictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Tyin
@@ -24,10 +28,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminDictServiceImpl implements IAdminDictService {
     private final AdminDictRepository adminDictRepository;
+    private final AdminDictTypeRepository adminDictTypeRepository;
 
     @Override
     public List<DictLabel> getDictLabel() {
-        return adminDictRepository.selectDictLabel();
+        return adminDictTypeRepository.selectDictLabel();
     }
 
     @Override
@@ -37,7 +42,27 @@ public class AdminDictServiceImpl implements IAdminDictService {
                 .eq(StringUtils.isNotBlank(dictType), AdminDict::getDictType, dictType)
                 .and(StringUtils.isNotBlank(keywords), i -> i.apply("INSTR(`dict_label`, {0}) > 0", keywords)
                         .or().apply(" INSTR(`dict_type`, {0}) > 0", keywords)
-                        .or().apply(" INSTR(`dict_key`, {0}) > 0", keywords)));
+                        .or().apply(" INSTR(`dict_key`, {0}) > 0", keywords))
+                .orderByAsc(AdminDict::getDictType)
+                .orderByAsc(AdminDict::getId)
+        );
         return PageResult.buildResult(resPage);
+    }
+
+    @Override
+    public void save(SaveDictValid valid) {
+        AdminDict adminDict = AdminDict.builder()
+                .id(valid.getId())
+                .dictType(valid.getDictType())
+                .dictLabel(adminDictTypeRepository.selectLabelByType(valid.getDictType()))
+                .dictKey(valid.getDictKey())
+                .dictValue(valid.getDictValue())
+                .dictDescription(valid.getDictDescription())
+                .build();
+        if (Objects.nonNull(valid.getId())) {
+            adminDictRepository.updateById(adminDict);
+        } else {
+            Asserts.isTrue(adminDictRepository.insert(adminDict) == 1, "操作失败");
+        }
     }
 }

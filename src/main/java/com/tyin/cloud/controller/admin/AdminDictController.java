@@ -3,12 +3,11 @@ package com.tyin.cloud.controller.admin;
 import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.model.res.AdminDictRes;
+import com.tyin.cloud.model.valid.SaveDictValid;
 import com.tyin.cloud.service.admin.IAdminDictService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Tyin
@@ -30,4 +29,16 @@ public class AdminDictController {
         PageResult<AdminDictRes, ?> res = adminDictService.getDictList(keywords, dictKey, dictType, size, current);
         return Result.success(res);
     }
+
+    @PostMapping("/save")
+    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid) {
+        adminDictService.save(valid);
+        return Result.success();
+    }
+
+    @PostMapping("/type/save")
+    public Result<?> saveDictType() {
+        return Result.success();
+    }
+
 }
