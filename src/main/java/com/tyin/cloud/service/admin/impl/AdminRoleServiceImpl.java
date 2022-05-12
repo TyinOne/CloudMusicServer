@@ -85,7 +85,8 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
         String value = valid.getValue();
         String name = valid.getName();
         Long id = valid.getId();
-        AdminRole adminRole = adminRoleRepository.selectOne(Wrappers.<AdminRole>lambdaQuery().ne(AdminRole::getId, id).and(i -> i.eq(AdminRole::getValue, value).or().eq(AdminRole::getName, name)));
+        Asserts.isTrue(adminRoleRepository.selectCount(Wrappers.<AdminRole>lambdaQuery().ne(AdminRole::getId, id).and(i -> i.eq(AdminRole::getValue, value).or().eq(AdminRole::getName, name))) == 0, ROLE_HAS_EXIST);
+        AdminRole adminRole = adminRoleRepository.selectById(id);
         Asserts.isTrue(Objects.nonNull(adminRole), ROLE_HAS_EXIST);
         AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, id));
         int roleMenuRow = Objects.nonNull(adminRoleMenu) ?
