@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.auth.AuthAdminUser;
+import com.tyin.cloud.core.components.RedisComponents;
 import com.tyin.cloud.core.constants.ResMessageConstants;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.model.bean.RoleLabel;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminRoleMenu;
-import com.tyin.cloud.model.entity.AdminUserRole;
 import com.tyin.cloud.model.res.AdminRoleRes;
 import com.tyin.cloud.model.valid.InsertRoleValid;
 import com.tyin.cloud.model.valid.UpdateRoleValid;
@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.tyin.cloud.core.constants.RedisKeyConstants.ROLE_MENU_PREFIX;
 import static com.tyin.cloud.core.constants.ResMessageConstants.ROLE_HAS_EXIST;
 
 /**
@@ -40,6 +41,7 @@ import static com.tyin.cloud.core.constants.ResMessageConstants.ROLE_HAS_EXIST;
 public class AdminRoleServiceImpl implements IAdminRoleService {
     private final AdminRoleRepository adminRoleRepository;
     private final AdminRoleMenuRepository adminRoleMenuRepository;
+    private final RedisComponents redisComponents;
 
     @Override
     public AdminRole getRoles(Long userId) {
@@ -83,7 +85,8 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
         String value = valid.getValue();
         String name = valid.getName();
         Long id = valid.getId();
-        Asserts.isTrue(adminRoleRepository.selectCount(Wrappers.<AdminRole>lambdaQuery().ne(AdminRole::getId, id).and(i -> i.eq(AdminRole::getValue, value).or().eq(AdminRole::getName, name))) == 0, ROLE_HAS_EXIST);
+        AdminRole adminRole = adminRoleRepository.selectOne(Wrappers.<AdminRole>lambdaQuery().ne(AdminRole::getId, id).and(i -> i.eq(AdminRole::getValue, value).or().eq(AdminRole::getName, name)));
+        Asserts.isTrue(Objects.nonNull(adminRole), ROLE_HAS_EXIST);
         AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, id));
         int roleMenuRow = Objects.nonNull(adminRoleMenu) ?
                 adminRoleMenuRepository.updateById(
@@ -111,6 +114,7 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
                 .disabled(valid.getDisabled())
                 .sort(valid.getSort())
                 .build());
+        redisComponents.deleteKey(ROLE_MENU_PREFIX + adminRole.getValue());
         Asserts.isTrue(roleMenuRow == 1 && roleRow == 1, ResMessageConstants.UPDATE_FAILED);
     }
 
