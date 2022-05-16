@@ -42,6 +42,7 @@ import java.util.Objects;
 import static com.tyin.cloud.core.constants.ParamsConstants.*;
 import static com.tyin.cloud.core.constants.PatternConstants.MAIL_PATTERN;
 import static com.tyin.cloud.core.constants.PatternConstants.TEL_PATTERN;
+import static com.tyin.cloud.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.cloud.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 import static com.tyin.cloud.core.constants.ResMessageConstants.AUTH_FAILED;
@@ -82,13 +83,18 @@ public class AdminUserServiceImpl implements IAdminUserService {
         adminUser.setLastLogin(ipAddress);
         adminUserRepository.updateById(adminUser);
         AdminRole role = adminRoleService.getRoles(adminUser.getId());
-        HashSet<String> permissions = role.getValue().equals(SUPPER_ROLE) ? Sets.newHashSet("*:*:*") : adminMenuService.getMenuPermission(adminUser);
-        AuthAdminUser user = AuthAdminUser.builder().token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).permissions(permissions).build();
-        redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
-        return AdminUserLoginRes.builder().token(token)
-                .nickName(adminUser.getNickName())
-                .avatar(avatar)
+        HashSet<String> permissions = role.getValue().equals(SUPPER_ROLE) ? Sets.newHashSet(ADMIN_SECURITY) : adminMenuService.getMenuPermission(adminUser);
+        AuthAdminUser user = AuthAdminUser.builder()
+                .token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).permissions(permissions).role(role.getValue())
                 .build();
+        redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
+        return new AdminUserLoginRes(token,
+                adminUser.getNickName(),
+                user.getAccount(),
+                avatar,
+                role.getValue(),
+                permissions
+        );
     }
 
     @Override

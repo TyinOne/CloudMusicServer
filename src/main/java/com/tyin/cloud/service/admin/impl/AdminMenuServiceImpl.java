@@ -56,7 +56,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                 List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
                 if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
             } else {
-                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1));
+                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).eq(AdminMenu::getType, 1));
                 adminMenusForUser.addAll(adminMenus);
                 redisComponents.save(key, JsonUtils.toJSONString(adminMenus));
             }
@@ -74,7 +74,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     ids.addAll(Sets.newHashSet(item.getHalfId().split(",")));
                 });
                 if (adminRoleMenus.size() > 0) {
-                    List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids));
+                    List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids).eq(AdminMenu::getType, 1));
                     adminMenusForUser.addAll(adminMenus);
                 }
                 redisComponents.save(key, JsonUtils.toJSONString(adminMenusForUser));

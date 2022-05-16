@@ -1,21 +1,19 @@
 package com.tyin.cloud.model.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import com.tyin.cloud.core.auth.AuthAdminUser;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 /**
  * @author Tyin
  * @date 2022/3/31 13:47
  * @description ...
  */
-@Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AdminUserLoginRes {
-    private String token;
-    private String avatar;
-    private String nickName;
+public class AdminUserLoginRes extends AuthAdminUser {
+
+    public AdminUserLoginRes(String token, String nickName, String account, String avatar, String role, Set<String> permissions) {
+        super(token, nickName, account, avatar, role, permissions);
+    }
 }

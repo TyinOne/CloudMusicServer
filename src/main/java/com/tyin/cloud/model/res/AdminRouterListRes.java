@@ -18,6 +18,7 @@ import java.util.Set;
 public class AdminRouterListRes {
 
     private List<AdminRouterRes> list;
+    private Set<String> permissions;
 
     @EqualsAndHashCode(callSuper = true)
     @Data

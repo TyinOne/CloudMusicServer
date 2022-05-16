@@ -44,9 +44,12 @@ public class AdminUserController {
 
     @GetMapping("/session")
     public Result<AdminUserLoginRes> getSession(@Auth AuthAdminUser user) {
-        return Result.success(AdminUserLoginRes.builder().token(user.getToken())
-                .nickName(user.getNickName())
-                .avatar(user.getAvatar())
-                .build());
+        return Result.success(new AdminUserLoginRes(user.getToken(),
+                user.getNickName(),
+                user.getAccount(),
+                user.getAvatar(),
+                user.getRole(),
+                user.getPermissions()
+        ));
     }
 }

@@ -2,6 +2,7 @@ package com.tyin.cloud.core.components;
 
 import com.tyin.cloud.core.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
  * @date 2022/3/26 3:10
  * @description ...
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisComponents {
@@ -114,10 +116,12 @@ public class RedisComponents {
     }
 
     public void save(String key, String value) {
+        log.info("Redis save key: " + key + ", value: " + value);
         redisTemplate.opsForValue().set(key, value);
     }
 
     public String get(String key) {
+        log.info("Redis get key: " + key);
         return StringUtils.isBlank(key) ? "" : redisTemplate.opsForValue().get(key);
     }
 
