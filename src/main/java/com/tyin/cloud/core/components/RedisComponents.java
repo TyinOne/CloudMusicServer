@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -60,7 +61,7 @@ public class RedisComponents {
      * @param keys keys
      */
     public void deleteKey(String... keys) {
-        Set<String> kSet = Stream.of(keys).map(k -> k).collect(Collectors.toSet());
+        Set<String> kSet = Stream.of(keys).collect(Collectors.toSet());
         redisTemplate.delete(kSet);
     }
 
@@ -70,7 +71,7 @@ public class RedisComponents {
      * @param keys
      */
     public void deleteKey(Collection<String> keys) {
-        Set<String> kSet = keys.stream().map(k -> k).collect(Collectors.toSet());
+        Set<String> kSet = new HashSet<>(keys);
         redisTemplate.delete(kSet);
     }
 

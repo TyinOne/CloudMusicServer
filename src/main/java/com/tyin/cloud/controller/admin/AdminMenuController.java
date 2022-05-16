@@ -3,16 +3,15 @@ package com.tyin.cloud.controller.admin;
 import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.auth.AuthAdminUser;
+import com.tyin.cloud.model.res.MenuDetailRes;
 import com.tyin.cloud.model.res.MenuRes;
+import com.tyin.cloud.model.valid.SaveMenuValid;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,5 +35,16 @@ public class AdminMenuController {
                                       @Parameter(hidden = true) @Auth AuthAdminUser user) {
         List<MenuRes.MenuItem> menuRes = adminMenuService.getMenuRes(keywords, roleId, disabled);
         return Result.success(MenuRes.builder().list(menuRes).build());
+    }
+
+    @GetMapping("/detail")
+    public Result<MenuDetailRes> getDetailRes(@RequestParam Integer id) {
+        MenuDetailRes res = adminMenuService.getMenuDetailRes(id);
+        return Result.success(res);
+    }
+    @PostMapping("/save")
+    public Result<?> saveMenu(@RequestBody SaveMenuValid valid) {
+        adminMenuService.saveMenu(valid);
+        return Result.success();
     }
 }

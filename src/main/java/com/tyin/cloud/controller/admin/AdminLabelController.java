@@ -7,10 +7,7 @@ import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.bean.DictLabel;
 import com.tyin.cloud.model.bean.RegionLabel;
 import com.tyin.cloud.model.bean.RoleLabel;
-import com.tyin.cloud.model.res.DictLabelRes;
-import com.tyin.cloud.model.res.MenuLabelRes;
-import com.tyin.cloud.model.res.RegionLabelRes;
-import com.tyin.cloud.model.res.RoleLabelRes;
+import com.tyin.cloud.model.res.*;
 import com.tyin.cloud.service.admin.IAdminDictService;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRegionService;
@@ -56,6 +53,12 @@ public class AdminLabelController {
     @Open
     public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id, @Parameter(hidden = true) @Auth AuthAdminUser user) {
         MenuLabelRes res = adminMenuService.getMenuLabel(id);
+        return Result.success(res);
+    }
+    @GetMapping("/menu/select")
+    @Open
+    public Result<MenuTreeSelectLabelRes> getMenuTreeSelectLabel(@Parameter(hidden = true) @Auth AuthAdminUser user) {
+        MenuTreeSelectLabelRes res = adminMenuService.getMenuTreeSelectLabel();
         return Result.success(res);
     }
 

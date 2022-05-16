@@ -7,7 +7,7 @@ import lombok.*;
 
 /**
  * @author Tyin
- * @date 2022/5/7 13:50
+ * @date 2022/5/16 16:57
  * @description ...
  */
 @EqualsAndHashCode(callSuper = true)
@@ -15,11 +15,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuLabel extends TreeBase {
+public class MenuTreeSelectLabel extends TreeBase {
     @JsonProperty("value")
     private Long id;
     @JsonIgnore
     private Long parentId;
     @JsonProperty("label")
     private String metaTitle;
+    private Integer type;
 }

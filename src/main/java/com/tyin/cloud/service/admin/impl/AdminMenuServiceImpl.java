@@ -8,12 +8,16 @@ import com.tyin.cloud.core.utils.JsonUtils;
 import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.core.utils.TreeUtils;
 import com.tyin.cloud.model.bean.MenuLabel;
+import com.tyin.cloud.model.bean.MenuTreeSelectLabel;
 import com.tyin.cloud.model.entity.AdminMenu;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminRoleMenu;
 import com.tyin.cloud.model.entity.AdminUser;
+import com.tyin.cloud.model.res.MenuDetailRes;
 import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.MenuRes;
+import com.tyin.cloud.model.res.MenuTreeSelectLabelRes;
+import com.tyin.cloud.model.valid.SaveMenuValid;
 import com.tyin.cloud.repository.admin.AdminMenuRepository;
 import com.tyin.cloud.repository.admin.AdminRoleMenuRepository;
 import com.tyin.cloud.service.admin.IAdminMenuService;
@@ -56,7 +60,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                 List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
                 if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
             } else {
-                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).eq(AdminMenu::getType, 1));
+                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).ne(AdminMenu::getType, 2));
                 adminMenusForUser.addAll(adminMenus);
                 redisComponents.save(key, JsonUtils.toJSONString(adminMenus));
             }
@@ -74,7 +78,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     ids.addAll(Sets.newHashSet(item.getHalfId().split(",")));
                 });
                 if (adminRoleMenus.size() > 0) {
-                    List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids).eq(AdminMenu::getType, 1));
+                    List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids).ne(AdminMenu::getType, 2));
                     adminMenusForUser.addAll(adminMenus);
                 }
                 redisComponents.save(key, JsonUtils.toJSONString(adminMenusForUser));
@@ -110,5 +114,61 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                 .eq(Objects.nonNull(disabled), AdminMenu::getDisabled, disabled)
         );
         return TreeUtils.buildTree(res, 0L, Boolean.TRUE);
+    }
+
+    @Override
+    public MenuTreeSelectLabelRes getMenuTreeSelectLabel() {
+        List<MenuTreeSelectLabel> list = adminMenuRepository.selectTreeSelectLabel();
+        return MenuTreeSelectLabelRes.builder()
+                .list(TreeUtils.buildTree(list, 0L, Boolean.FALSE))
+                .build();
+    }
+
+    @Override
+    public MenuDetailRes getMenuDetailRes(Integer id) {
+        return adminMenuRepository.selectDetailById(id);
+    }
+
+    @Override
+    public void saveMenu(SaveMenuValid valid) {
+        Long id = valid.getId();
+        if (Objects.isNull(id)) {
+            adminMenuRepository.insert(AdminMenu.builder()
+                    .parentId(valid.getParentId())
+                    .component(valid.getComponent())
+                    .name(valid.getName())
+                    .path(valid.getPath())
+                    .redirect(valid.getRedirect())
+                    .type(valid.getType())
+                    .sort(valid.getSort())
+                    .security(valid.getSecurity())
+                    .metaTitle(valid.getMetaTitle())
+                    .metaIcons(valid.getMetaIcons())
+                    .metaIsAffix(valid.getMetaIsAffix())
+                    .metaIsHide(valid.getMetaIsHide())
+                    .metaIsIframe(valid.getMetaIsIframe())
+                    .metaIsKeepAlive(valid.getMetaIsKeepAlive())
+                    .disabled(valid.getDisabled())
+                    .build());
+        } else {
+            adminMenuRepository.updateById(AdminMenu.builder()
+                    .id(valid.getId())
+                    .parentId(valid.getParentId())
+                    .component(valid.getComponent())
+                    .name(valid.getName())
+                    .path(valid.getPath())
+                    .redirect(valid.getRedirect())
+                    .type(valid.getType())
+                    .sort(valid.getSort())
+                    .security(valid.getSecurity())
+                    .metaTitle(valid.getMetaTitle())
+                    .metaIcons(valid.getMetaIcons())
+                    .metaIsAffix(valid.getMetaIsAffix())
+                    .metaIsHide(valid.getMetaIsHide())
+                    .metaIsIframe(valid.getMetaIsIframe())
+                    .metaIsKeepAlive(valid.getMetaIsKeepAlive())
+                    .disabled(valid.getDisabled())
+                    .build());
+        }
     }
 }
