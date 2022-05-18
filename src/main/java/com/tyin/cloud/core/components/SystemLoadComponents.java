@@ -48,7 +48,7 @@ public class SystemLoadComponents {
         ossProperties.setOssServerUri(oss.stream().filter(i -> StringUtils.equals("oss_server_uri", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
         ossProperties.setOssFileUriTmp(oss.stream().filter(i -> StringUtils.equals("oss_file_uri_tmp", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
         ossProperties.setOssFileUriImages(oss.stream().filter(i -> StringUtils.equals("oss_file_uri_images", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
-        redisComponents.save(OSS_PROPERTIES, JsonUtils.toJSONString(ossProperties));
+        redisComponents.saveAsync(OSS_PROPERTIES, JsonUtils.toJSONString(ossProperties));
         return ossProperties;
     }
 }

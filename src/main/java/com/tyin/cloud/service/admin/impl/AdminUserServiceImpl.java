@@ -35,9 +35,11 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.tyin.cloud.core.constants.ParamsConstants.*;
 import static com.tyin.cloud.core.constants.PatternConstants.MAIL_PATTERN;
@@ -45,6 +47,7 @@ import static com.tyin.cloud.core.constants.PatternConstants.TEL_PATTERN;
 import static com.tyin.cloud.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.cloud.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
+import static com.tyin.cloud.core.constants.RedisKeyConstants.ROLE_BUTTON_PREFIX;
 import static com.tyin.cloud.core.constants.ResMessageConstants.AUTH_FAILED;
 import static com.tyin.cloud.core.constants.ResMessageConstants.USER_DISABLED;
 
@@ -83,15 +86,20 @@ public class AdminUserServiceImpl implements IAdminUserService {
         adminUser.setLastLogin(ipAddress);
         adminUserRepository.updateById(adminUser);
         AdminRole role = adminRoleService.getRoles(adminUser.getId());
-        HashSet<String> permissions = role.getValue().equals(SUPPER_ROLE) ? Sets.newHashSet(ADMIN_SECURITY) : adminMenuService.getMenuPermission(adminUser);
+        Set<String> permissions = getPermissionByRole(role.getId(), role.getValue());
         AuthAdminUser user = AuthAdminUser.builder()
+                .id(adminUser.getId())
+                .roleId(role.getId())
                 .token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).permissions(permissions).role(role.getValue())
                 .build();
-        redisComponents.save(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
-        return new AdminUserLoginRes(token,
+        redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
+        return new AdminUserLoginRes(
+                adminUser.getId(),
+                token,
                 adminUser.getNickName(),
                 user.getAccount(),
                 avatar,
+                role.getId(),
                 role.getValue(),
                 permissions
         );
@@ -143,6 +151,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 .mail(valid.getMail())
                 .phone(valid.getPhone())
                 .build();
+        String avatar = userBase.getAvatar();
         if (StringUtils.isNotEmpty(valid.getAvatar().getFileName())) {
             SaveAccountValid.AvatarUpdate avatarUpdate = valid.getAvatar();
             String avatarUri = propertiesComponents.getOssImages() + userBase.getAccount() + "/avatar/";
@@ -152,7 +161,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
             File target = new File(pathDir);
             try {
                 FileUtils.copyFileToDirectory(source, target);
-                user.setAvatar(avatarUri + avatarUpdate.getFileName());
+                avatar = avatarUri + avatarUpdate.getFileName();
+                user.setAvatar(avatar);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -172,16 +182,46 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 AuthAdminUser authAdminUser = JsonUtils.toJavaObject(s, AuthAdminUser.class);
                 if (Objects.nonNull(authAdminUser)) {
                     authAdminUser.setNickName(user.getNickName());
-                    authAdminUser.setAvatar(propertiesComponents.getOssUrl() + user.getAvatar());
-                    redisComponents.save(ADMIN_USER_TOKEN_PREFIX + userBase.getToken(), JsonUtils.toJSONString(authAdminUser));
+                    authAdminUser.setAvatar(propertiesComponents.getOssUrl() + avatar);
+                    redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + userBase.getToken(), JsonUtils.toJSONString(authAdminUser));
                 }
             }
         }
+    }
+
+    @Override
+    public AdminUserLoginRes getUserSession(AuthAdminUser user) {
+        AdminUserLoginRes adminUserLoginRes = new AdminUserLoginRes(
+                user.getId(),
+                user.getToken(),
+                user.getNickName(),
+                user.getAccount(),
+                user.getAvatar(),
+                user.getRoleId(),
+                user.getRole(),
+                getPermissionByRole(user.getRoleId(), user.getRole())
+        );
+        redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + user.getToken(), JsonUtils.toJSONString(adminUserLoginRes));
+        return adminUserLoginRes;
     }
 
     private String getColumns(String username) {
         if (username.matches(TEL_PATTERN)) return PHONE;
         if (username.matches(MAIL_PATTERN)) return MAIL;
         return ACCOUNT;
+    }
+    @Override
+    public Set<String> getPermissionByRole(Long roleId, String roleValue) {
+        Set<String> menuPermission = Sets.newHashSet(ADMIN_SECURITY);
+        if (roleValue.equals(SUPPER_ROLE)) return menuPermission;
+        String permissionCache = redisComponents.get(ROLE_BUTTON_PREFIX + roleValue);
+        if (StringUtils.isEmpty(permissionCache)) {
+            menuPermission = adminMenuService.getButtonPermission(roleId);
+            redisComponents.saveAsync(ROLE_BUTTON_PREFIX + roleValue, JsonUtils.toJSONString(menuPermission));
+        } else {
+            List<Object> objects = JsonUtils.toList(permissionCache);
+            menuPermission = Objects.isNull(objects) ? Sets.newHashSet() : objects.stream().map(Object::toString).collect(Collectors.toSet());
+        }
+        return menuPermission;
     }
 }

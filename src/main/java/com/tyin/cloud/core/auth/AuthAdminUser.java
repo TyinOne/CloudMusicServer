@@ -1,6 +1,5 @@
 package com.tyin.cloud.core.auth;
 
-import com.tyin.cloud.core.auth.resolver.AuthUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +16,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthAdminUser implements AuthUser {
+public class AuthAdminUser {
+    private Long id;
     private String token;
     private String nickName;
     private String account;
     private String avatar;
+    private Long roleId;
     private String role;
     private Set<String> permissions;
 }

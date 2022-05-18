@@ -29,19 +29,19 @@ public class AdminAccountController {
                                                               @RequestParam(required = false, defaultValue = "1") Long current,
                                                               @RequestParam(required = false, defaultValue = "0") Long roleId,
                                                               @RequestParam(required = false, defaultValue = "-1") Long disabled,
-                                                              @Auth AuthAdminUser user) {
+                                                              @Auth("@permission.hasPermission('sys:account:query')") AuthAdminUser user) {
         PageResult<AdminAccountRes, ?> res = userService.getUserList(size, current, name, roleId, disabled);
         return Result.success(res);
     }
 
     @GetMapping("/detail")
-    public Result<AdminAccountDetailRes> getUserDetail(@RequestParam String account, @Auth AuthAdminUser user) {
+    public Result<AdminAccountDetailRes> getUserDetail(@RequestParam String account, @Auth("@permission.hasPermission('sys:account:detail')") AuthAdminUser user) {
         AdminAccountDetailRes res = userService.getAccountDetail(account);
         return Result.success(res);
     }
 
     @PostMapping("/save")
-    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid) {
+    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid, @Auth("@permission.hasPermission('sys:account:save')") AuthAdminUser user) {
         userService.saveAccountInfo(valid);
         return Result.success();
     }

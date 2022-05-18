@@ -30,20 +30,20 @@ public class AdminRoleController {
     public Result<PageResult<AdminRoleRes, ?>> getRoleList(@RequestParam(required = false) String keywords,
                                                            @RequestParam(required = false, defaultValue = "20") Long size,
                                                            @RequestParam(required = false, defaultValue = "1") Long current,
-                                                           @Parameter(hidden = true) @Auth AuthAdminUser user) {
+                                                           @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser user) {
         PageResult<AdminRoleRes, ?> pageResult = adminRoleService.getRolesPageResult(keywords, size, current);
         return Result.success(pageResult);
     }
 
     @PostMapping("/add")
-    public Result<?> addRole(@RequestBody InsertRoleValid valid, @Auth AuthAdminUser user) {
+    public Result<?> addRole(@RequestBody InsertRoleValid valid, @Auth("@permission.hasPermission('sys:role:add')") AuthAdminUser user) {
         Integer row = adminRoleService.addRole(valid, user);
         Asserts.isTrue(row == 1, ADD_FAILED);
         return Result.success();
     }
 
     @PutMapping("/update")
-    public Result<?> updateRole(@RequestBody UpdateRoleValid valid, @Auth AuthAdminUser user) {
+    public Result<?> updateRole(@RequestBody UpdateRoleValid valid, @Auth("@permission.hasPermission('sys:role:update')") AuthAdminUser user) {
         adminRoleService.updateRole(valid, user);
         return Result.success();
     }

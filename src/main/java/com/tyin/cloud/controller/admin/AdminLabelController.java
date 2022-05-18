@@ -1,9 +1,7 @@
 package com.tyin.cloud.controller.admin;
 
-import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
-import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.bean.DictLabel;
 import com.tyin.cloud.model.bean.RegionLabel;
 import com.tyin.cloud.model.bean.RoleLabel;
@@ -12,7 +10,6 @@ import com.tyin.cloud.service.admin.IAdminDictService;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRegionService;
 import com.tyin.cloud.service.admin.IAdminRoleService;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,20 +41,20 @@ public class AdminLabelController {
 
     @GetMapping("/role")
     @Open
-    public Result<RoleLabelRes> getRoleLabel(@Auth AuthAdminUser user) {
+    public Result<RoleLabelRes> getRoleLabel() {
         List<RoleLabel> list = adminRoleService.getRoleLabel();
         return Result.success(RoleLabelRes.builder().list(list).build());
     }
 
     @GetMapping("/menu")
     @Open
-    public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id, @Parameter(hidden = true) @Auth AuthAdminUser user) {
+    public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id) {
         MenuLabelRes res = adminMenuService.getMenuLabel(id);
         return Result.success(res);
     }
     @GetMapping("/menu/select")
     @Open
-    public Result<MenuTreeSelectLabelRes> getMenuTreeSelectLabel(@Parameter(hidden = true) @Auth AuthAdminUser user) {
+    public Result<MenuTreeSelectLabelRes> getMenuTreeSelectLabel() {
         MenuTreeSelectLabelRes res = adminMenuService.getMenuTreeSelectLabel();
         return Result.success(res);
     }

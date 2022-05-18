@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.tyin.cloud.core.constants.RedisKeyConstants.ROLE_BUTTON_PREFIX;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ROLE_MENU_PREFIX;
 import static com.tyin.cloud.core.constants.ResMessageConstants.ROLE_HAS_EXIST;
 
@@ -116,6 +117,7 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
                 .sort(valid.getSort())
                 .build());
         redisComponents.deleteKey(ROLE_MENU_PREFIX + adminRole.getValue());
+        redisComponents.deleteKey(ROLE_BUTTON_PREFIX + adminRole.getValue());
         Asserts.isTrue(roleMenuRow == 1 && roleRow == 1, ResMessageConstants.UPDATE_FAILED);
     }
 
@@ -152,5 +154,10 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     @Override
     public void updateUserRole(String account, Long roleId) {
         adminRoleRepository.updateUserRole(account, roleId);
+    }
+
+    @Override
+    public AdminRole selectById(Long roleId) {
+        return adminRoleRepository.selectById(roleId);
     }
 }

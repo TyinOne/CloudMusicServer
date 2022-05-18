@@ -12,7 +12,6 @@ import com.tyin.cloud.model.bean.MenuTreeSelectLabel;
 import com.tyin.cloud.model.entity.AdminMenu;
 import com.tyin.cloud.model.entity.AdminRole;
 import com.tyin.cloud.model.entity.AdminRoleMenu;
-import com.tyin.cloud.model.entity.AdminUser;
 import com.tyin.cloud.model.res.MenuDetailRes;
 import com.tyin.cloud.model.res.MenuLabelRes;
 import com.tyin.cloud.model.res.MenuRes;
@@ -45,8 +44,10 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
     private final RedisComponents redisComponents;
 
     @Override
-    public HashSet<String> getMenuPermission(AdminUser adminUser) {
-        return Sets.newHashSet();
+    public Set<String> getButtonPermission(Long roleId) {
+        AdminRole role = adminRoleService.selectById(roleId);
+        List<AdminMenu> menus = adminMenuRepository.selectButtonSecurityByRole(role.getId());
+        return menus.stream().map(AdminMenu::getSecurity).collect(Collectors.toSet());
     }
 
     @Override
@@ -62,7 +63,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
             } else {
                 List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).ne(AdminMenu::getType, 2));
                 adminMenusForUser.addAll(adminMenus);
-                redisComponents.save(key, JsonUtils.toJSONString(adminMenus));
+                redisComponents.saveAsync(key, JsonUtils.toJSONString(adminMenus));
             }
         } else {
             String key = ROLE_MENU_PREFIX + role.getValue();
@@ -81,7 +82,7 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids).ne(AdminMenu::getType, 2));
                     adminMenusForUser.addAll(adminMenus);
                 }
-                redisComponents.save(key, JsonUtils.toJSONString(adminMenusForUser));
+                redisComponents.saveAsync(key, JsonUtils.toJSONString(adminMenusForUser));
             }
         }
         adminMenusForUser.add(adminMenuRepository.selectById(1L));

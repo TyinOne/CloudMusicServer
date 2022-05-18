@@ -80,4 +80,14 @@ public interface AdminMenuRepository extends BaseMapper<AdminMenu> {
             WHERE
             \t`deleted` = 0 and `id` = #{id}""")
     MenuDetailRes selectDetailById(@Param("id") Integer id);
+
+    @Select("""
+            SELECT
+            \t*\s
+            FROM
+            \tadmin_menu\s
+            WHERE
+            \ttype = 2
+            \tAND FIND_IN_SET(id,(SELECT menu_id FROM admin_role_menu WHERE role_id = #{id}))""")
+    List<AdminMenu> selectButtonSecurityByRole(@Param("id") Long id);
 }

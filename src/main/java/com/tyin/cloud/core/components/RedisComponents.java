@@ -4,6 +4,7 @@ import com.tyin.cloud.core.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -117,6 +118,12 @@ public class RedisComponents {
     }
 
     public void save(String key, String value) {
+        log.info("Redis save key: " + key + ", value: " + value);
+        redisTemplate.opsForValue().set(key, value);
+    }
+
+    @Async
+    public void saveAsync(String key, String value) {
         log.info("Redis save key: " + key + ", value: " + value);
         redisTemplate.opsForValue().set(key, value);
     }

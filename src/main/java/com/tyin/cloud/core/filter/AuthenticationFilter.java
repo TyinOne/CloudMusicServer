@@ -1,7 +1,7 @@
 package com.tyin.cloud.core.filter;
 
+import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.core.auth.PermissionService;
-import com.tyin.cloud.core.auth.resolver.AuthUser;
 import com.tyin.cloud.core.components.RedisComponents;
 import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.service.common.IUserCacheService;
@@ -16,10 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.tyin.cloud.core.constants.CommonConstants.ENV;
 import static com.tyin.cloud.core.constants.CommonConstants.TOKEN;
-import static com.tyin.cloud.core.utils.EnvUtils.getAuthUserClass;
-import static com.tyin.cloud.core.utils.EnvUtils.getPrefix;
+import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 
 /**
  * @author Tyin
@@ -36,13 +34,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(TOKEN);
-        String env = request.getHeader(ENV);
         if (StringUtils.isNotEmpty(token)) {
-            Class<? extends AuthUser> authUserClass = getAuthUserClass(env);
-            String prefix = getPrefix(env);
-            AuthUser userCache = userCacheService.getUserCache(redisComponents.get(prefix + token), authUserClass);
-            if (Objects.nonNull(userCache) && Objects.isNull(permissionService.getAuthUser())) {
-                permissionService.setAuthUser(userCache);
+            AuthAdminUser userCache = userCacheService.getUserCache(redisComponents.get(ADMIN_USER_TOKEN_PREFIX + token), AuthAdminUser.class);
+            if (Objects.nonNull(userCache) && Objects.isNull(permissionService.getAuthAdminUser())) {
+                permissionService.setAuthAdminUser(userCache);
             }
         }
         filterChain.doFilter(request, response);

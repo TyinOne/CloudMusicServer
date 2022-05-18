@@ -10,6 +10,8 @@ import com.tyin.cloud.model.res.AdminAccountRes;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
 import com.tyin.cloud.model.valid.SaveAccountValid;
 
+import java.util.Set;
+
 /**
  * @author Tyin
  * @date 2022/3/31 13:45
@@ -34,4 +36,8 @@ public interface IAdminUserService {
     AdminAccountDetailRes getAccountDetail(String account);
 
     void saveAccountInfo(SaveAccountValid valid);
+
+    AdminUserLoginRes getUserSession(AuthAdminUser user);
+
+    Set<String> getPermissionByRole(Long roleId, String roleValue);
 }

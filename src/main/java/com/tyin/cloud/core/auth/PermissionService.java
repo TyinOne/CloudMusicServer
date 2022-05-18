@@ -1,6 +1,7 @@
 package com.tyin.cloud.core.auth;
 
-import com.tyin.cloud.core.auth.resolver.AuthUser;
+import com.tyin.cloud.service.admin.IAdminUserService;
+import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +16,18 @@ import static com.tyin.cloud.core.constants.PermissionConstants.PERMISSION_SERVI
  * @description ...
  */
 @Component(PERMISSION_SERVICE)
+@RequiredArgsConstructor
 public class PermissionService {
-    private AuthUser authUser;
+    private final IAdminUserService adminUserService;
+    private AuthAdminUser authUser;
 
     @Synchronized
-    public AuthUser getAuthUser() {
+    public AuthAdminUser getAuthAdminUser() {
         return authUser;
     }
 
     @Synchronized
-    public void setAuthUser(AuthUser authUser) {
+    public void setAuthAdminUser(AuthAdminUser authUser) {
         this.authUser = authUser;
     }
 
@@ -35,8 +38,12 @@ public class PermissionService {
      * @return boolean
      */
     public Boolean hasPermission(String permission) {
-        Set<String> permissions = authUser.getPermissions();
-        if (permissions.contains(ADMIN_SECURITY)) return true;
+        Set<String> permissions = adminUserService.getPermissionByRole(authUser.getRoleId(), authUser.getRole());
+        if (permissions.contains(ADMIN_SECURITY)) {
+            authUser = null;
+            return true;
+        }
+        authUser = null;
         return permissions.contains(permission);
     }
 }

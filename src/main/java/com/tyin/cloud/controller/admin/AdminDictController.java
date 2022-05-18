@@ -1,7 +1,9 @@
 package com.tyin.cloud.controller.admin;
 
+import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.api.PageResult;
 import com.tyin.cloud.core.api.Result;
+import com.tyin.cloud.core.auth.AuthAdminUser;
 import com.tyin.cloud.model.res.AdminDictRes;
 import com.tyin.cloud.model.valid.SaveDictValid;
 import com.tyin.cloud.service.admin.IAdminDictService;
@@ -25,19 +27,19 @@ public class AdminDictController {
                                                            @RequestParam(required = false) String dictKey,
                                                            @RequestParam(required = false) String dictType,
                                                            @RequestParam(required = false, defaultValue = "20") Long size,
-                                                           @RequestParam(required = false, defaultValue = "1") Long current) {
+                                                           @RequestParam(required = false, defaultValue = "1") Long current,
+                                                           @Auth("@permission.hasPermission('sys:dict:query')") AuthAdminUser user) {
         PageResult<AdminDictRes, ?> res = adminDictService.getDictList(keywords, dictKey, dictType, size, current);
         return Result.success(res);
     }
-
     @PostMapping("/save")
-    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid) {
+    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser user) {
         adminDictService.save(valid);
         return Result.success();
     }
 
     @PostMapping("/type/save")
-    public Result<?> saveDictType() {
+    public Result<?> saveDictType(@Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser user) {
         return Result.success();
     }
 

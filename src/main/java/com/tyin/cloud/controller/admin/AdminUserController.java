@@ -9,6 +9,8 @@ import com.tyin.cloud.model.entity.AdminUserDetailRes;
 import com.tyin.cloud.model.params.AdminLoginParams;
 import com.tyin.cloud.model.res.AdminUserLoginRes;
 import com.tyin.cloud.model.valid.sequence.AdminUserLoginValidSequence;
+import com.tyin.cloud.service.admin.IAdminMenuService;
+import com.tyin.cloud.service.admin.IAdminRoleService;
 import com.tyin.cloud.service.admin.IAdminUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${cloud.api.prefix.admin}/user")
 @RequiredArgsConstructor
 public class AdminUserController {
-
     private final IAdminUserService adminUserService;
+    private final IAdminMenuService adminMenuService;
+    private final IAdminRoleService adminRoleService;
 
     @Open
     @PostMapping("/login")
@@ -44,12 +47,7 @@ public class AdminUserController {
 
     @GetMapping("/session")
     public Result<AdminUserLoginRes> getSession(@Auth AuthAdminUser user) {
-        return Result.success(new AdminUserLoginRes(user.getToken(),
-                user.getNickName(),
-                user.getAccount(),
-                user.getAvatar(),
-                user.getRole(),
-                user.getPermissions()
-        ));
+        AdminUserLoginRes res = adminUserService.getUserSession(user);
+        return Result.success(res);
     }
 }

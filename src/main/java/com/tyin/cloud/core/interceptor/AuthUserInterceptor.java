@@ -18,8 +18,6 @@ import java.util.Objects;
 
 import static com.tyin.cloud.core.constants.CommonConstants.*;
 import static com.tyin.cloud.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
-import static com.tyin.cloud.core.constants.RedisKeyConstants.CLIENT_USER_TOKEN_PREFIX;
-import static com.tyin.cloud.core.utils.StringUtils.EMPTY;
 
 /**
  * @author Tyin
@@ -53,18 +51,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
     }
 
     private boolean authentication(String prefix, HttpServletRequest request) {
-        Asserts.isTrue(redisComponents.existsKey(getTokenPrefix(prefix) + request.getHeader(TOKEN)), ResultCode.SIGNATURE_NOT_MATCH);
+        Asserts.isTrue(redisComponents.existsKey(ADMIN_USER_TOKEN_PREFIX + request.getHeader(TOKEN)), ResultCode.SIGNATURE_NOT_MATCH);
         return true;
-    }
-
-    private String getTokenPrefix(String value) {
-        String adminPrefix = properties.getAdminPrefix();
-        String clientPrefix = properties.getClientPrefix();
-        if (value.equals(adminPrefix)) {
-            return ADMIN_USER_TOKEN_PREFIX;
-        } else if (value.equals(clientPrefix)) {
-            return CLIENT_USER_TOKEN_PREFIX;
-        }
-        return EMPTY;
     }
 }

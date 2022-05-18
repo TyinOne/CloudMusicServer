@@ -36,4 +36,6 @@ public interface IAdminRoleService {
     List<RoleLabel> getRoleLabel(Set<Long> ids);
 
     void updateUserRole(String account, Long roleId);
+
+    AdminRole selectById(Long roleId);
 }

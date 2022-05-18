@@ -12,7 +12,7 @@ public enum ResultCode implements BaseErrorInfoInterface {
     SUCCESS(200, "Ok"),
     FAIL(400, "Fail"),
     //permission denied
-    PERMISSION_DENIED(402, "Permission Denied"),
+    PERMISSION_DENIED(402, "权限不足，无法访问！"),
     SIGNATURE_NOT_MATCH(403, "Token Invalid"),
     NOT_FOUND(404, "Not Found"),
     INTERNAL_SERVER_ERROR(500, "Server Error"),

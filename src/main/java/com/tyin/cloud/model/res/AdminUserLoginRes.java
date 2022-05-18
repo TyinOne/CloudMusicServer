@@ -12,8 +12,7 @@ import java.util.Set;
  */
 @NoArgsConstructor
 public class AdminUserLoginRes extends AuthAdminUser {
-
-    public AdminUserLoginRes(String token, String nickName, String account, String avatar, String role, Set<String> permissions) {
-        super(token, nickName, account, avatar, role, permissions);
+    public AdminUserLoginRes(Long id, String token, String nickName, String account, String avatar, Long roleId, String role, Set<String> permissions) {
+        super(id, token, nickName, account, avatar, roleId, role, permissions);
     }
 }
