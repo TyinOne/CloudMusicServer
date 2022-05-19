@@ -21,10 +21,10 @@ public class AdminUpdateController {
     @GetMapping("/check")
     public Result<AdminUpdateRes> checkUpdate() {
         return Result.success(AdminUpdateRes.builder()
-                .version("1.0.1")
-                .name("6eb17.zip")
-                .path("https://file.tyin.vip/downloads/hotUpdate/6eb17.zip")
-                .hash("e19a39e6eb17f641be8d26ac1a839c8abab159cf90be3e23d0ee165b0d05a572")
+                .version("1.0.2")
+                .name("0a503.zip")
+                .path("https://file.tyin.vip/downloads/hotUpdate/0a503.zip")
+                .hash("1a05a850a503d41adc2688bf0626bfa0860431747db3023b944253ae242d0760")
                 .build());
     }
 }
