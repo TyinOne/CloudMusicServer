@@ -35,10 +35,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tyin.cloud.core.constants.ParamsConstants.*;
@@ -84,6 +81,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
             adminUser.setToken(token);
         }
         adminUser.setLastLogin(ipAddress);
+        adminUser.setLastLoginTime(new Date());
         adminUserRepository.updateById(adminUser);
         AdminRole role = adminRoleService.getRoles(adminUser.getId());
         Set<String> permissions = getPermissionByRole(role.getId(), role.getValue());
