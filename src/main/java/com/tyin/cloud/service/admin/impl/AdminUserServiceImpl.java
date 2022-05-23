@@ -222,4 +222,12 @@ public class AdminUserServiceImpl implements IAdminUserService {
         }
         return menuPermission;
     }
+
+    @Override
+    public void logout(AuthAdminUser user) {
+        String token = user.getToken();
+        AdminUser adminUser = AdminUser.builder().token("").build();
+        adminUserRepository.update(adminUser, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, user.getAccount()));
+        redisComponents.deleteKey(ADMIN_USER_TOKEN_PREFIX + token);
+    }
 }

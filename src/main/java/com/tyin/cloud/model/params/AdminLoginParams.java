@@ -2,6 +2,7 @@ package com.tyin.cloud.model.params;
 
 import com.tyin.cloud.model.valid.sequence.PasswordCheck;
 import com.tyin.cloud.model.valid.sequence.UsernameCheck;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -15,8 +16,10 @@ import java.io.Serializable;
 @Data
 public class AdminLoginParams implements Serializable {
 
+    @ApiModelProperty("用户名/邮箱/号码")
     @NotBlank(message = "请输入用户名", groups = UsernameCheck.class)
     private String account;
+    @ApiModelProperty("密码")
     @NotBlank(message = "请输入密码", groups = PasswordCheck.class)
     private String password;
 }

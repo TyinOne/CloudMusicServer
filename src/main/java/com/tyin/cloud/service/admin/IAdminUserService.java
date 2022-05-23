@@ -40,4 +40,6 @@ public interface IAdminUserService {
     AdminUserLoginRes getUserSession(AuthAdminUser user);
 
     Set<String> getPermissionByRole(Long roleId, String roleValue);
+
+    void logout(AuthAdminUser user);
 }
