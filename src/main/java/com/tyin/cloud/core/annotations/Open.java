@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * @date 2022/3/26 3:22
  * @description ...
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Open {

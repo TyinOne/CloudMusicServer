@@ -5,8 +5,6 @@ import com.tyin.cloud.core.components.RedisComponents;
 import com.tyin.cloud.core.configs.properties.PropertiesComponents;
 import com.tyin.cloud.core.enums.ResultCode;
 import com.tyin.cloud.core.utils.Asserts;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 import static com.tyin.cloud.core.constants.CommonConstants.*;
@@ -39,8 +39,10 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
-        Open open = handlerMethod.getMethodAnnotation(Open.class);
-        if (Objects.nonNull(open)) {
+        Class<?> declaringClass = handlerMethod.getMethod().getDeclaringClass();
+        Open openClass = declaringClass.getAnnotation(Open.class);
+        Open openMethod = handlerMethod.getMethodAnnotation(Open.class);
+        if (Objects.nonNull(openClass) || Objects.nonNull(openMethod)) {
             return true;
         }
         String requestURI = request.getRequestURI();

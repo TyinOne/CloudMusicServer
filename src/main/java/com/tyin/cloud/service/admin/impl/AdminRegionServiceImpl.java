@@ -5,14 +5,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tyin.cloud.core.components.HttpComponents;
+import com.tyin.cloud.core.components.SystemLoader;
 import com.tyin.cloud.core.configs.api.res.TencentMapDistrictRes;
 import com.tyin.cloud.core.configs.properties.PropertiesComponents;
+import com.tyin.cloud.core.configs.properties.models.TencentMapConfig;
 import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.JsonUtils;
+import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.core.utils.TreeUtils;
 import com.tyin.cloud.model.bean.RegionLabel;
 import com.tyin.cloud.model.entity.AdminRegion;
+import com.tyin.cloud.model.res.AdminRegionRes;
 import com.tyin.cloud.repository.admin.AdminRegionRepository;
+import com.tyin.cloud.service.admin.IAdminDictService;
 import com.tyin.cloud.service.admin.IAdminRegionService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -24,7 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.tyin.cloud.core.constants.SDKConstants.DISTRICT_API;
+import static com.tyin.cloud.core.configs.properties.models.TencentMapConfig.TYPE;
+import static com.tyin.cloud.core.configs.properties.models.TencentMapConfig.VERSION;
 
 /**
  * @author Tyin
@@ -37,21 +43,26 @@ public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, A
     private final HttpComponents httpComponents;
     private final PropertiesComponents propertiesComponents;
     private final AdminRegionRepository adminRegionRepository;
+    private final IAdminDictService adminDictService;
+    private final SystemLoader systemLoader;
 
     @Override
     @Async
     public void getAreaForTencent() {
-        String key = propertiesComponents.getTencentMapKey();
-        String secretKey = propertiesComponents.getTencentSecretKey();
+        TencentMapConfig tencentMapConfig = propertiesComponents.getTencentMapConfig();
+        String key = tencentMapConfig.getKey();
+        String secretKey = tencentMapConfig.getSecretKey();
         Map<String, String> params = Maps.newHashMap();
         params.put("key", key);
-        params.put("sig", DigestUtils.md5Hex(("/ws/district/v1/list?key=" + key + secretKey).getBytes(StandardCharsets.UTF_8)));
-        String str = httpComponents.doGet(DISTRICT_API, params);
+        params.put("sig", DigestUtils.md5Hex((tencentMapConfig.getMapApiUri() + "?key=" + key + secretKey).getBytes(StandardCharsets.UTF_8)));
+        String str = httpComponents.doGet(tencentMapConfig.getMapApiHost() + tencentMapConfig.getMapApiUri(), params);
         TencentMapDistrictRes res = JsonUtils.toJavaObject(str.replaceAll("\r|\n*", "").replaceAll("\\s", ""), TencentMapDistrictRes.class);
         Asserts.isTrue(Objects.nonNull(res) && Objects.nonNull(res.getResult()), Objects.isNull(Objects.requireNonNull(res).getMessage()) ? "" : res.getMessage());
         //检查更新
-        Long dataVersion = res.getDataVersion();
-        Asserts.isTrue(false, "最新版本！");
+        String dataVersion = res.getDataVersion();
+        Asserts.isTrue(!dataVersion.equals(propertiesComponents.getTencentMapDistrictDataVersion()), "暂无更新！");
+        adminDictService.updateValueBy(TYPE, VERSION, dataVersion);
+        systemLoader.initMap();
         List<List<TencentMapDistrictRes.DistrictResultItem>> result = res.getResult();
         //省市区
         List<TencentMapDistrictRes.DistrictResultItem> provinces = result.get(0);
@@ -126,5 +137,16 @@ public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, A
     public List<RegionLabel> getRegionLabel(Long rootId) {
         List<RegionLabel> list = adminRegionRepository.selectLabel(Wrappers.<AdminRegion>lambdaQuery().ge(AdminRegion::getParentId, rootId));
         return TreeUtils.buildTree(list, rootId, false);
+    }
+
+    @Override
+    public List<AdminRegionRes> selectListBy(Long parentId, String keywords, Integer level) {
+        return adminRegionRepository.selectResList(Wrappers.<AdminRegion>lambdaQuery()
+                .eq(StringUtils.isEmpty(keywords), AdminRegion::getParentId, parentId)
+                .eq(level != 0, AdminRegion::getLevel, level)
+                .and(StringUtils.isNotEmpty(keywords), i -> i
+                        .or().apply("INSTR(`name`, {0}) > 0", keywords)
+                        .or().apply("INSTR(`full_name`, {0}) > 0", keywords))
+        );
     }
 }

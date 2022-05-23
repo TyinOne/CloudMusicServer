@@ -2,9 +2,11 @@ package com.tyin.cloud.controller;
 
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
-import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
+import static com.tyin.cloud.core.constants.CommonConstants.ERROR_URI;
 
 /**
  * @author Tyin
@@ -12,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @description ...
  */
 @RestController
-@Hidden
+@ApiIgnore
 public class ErrorController {
     @Open
-    @GetMapping("/error")
+    @GetMapping(ERROR_URI)
     public Result<?> error() {
         return Result.failed();
     }

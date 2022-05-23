@@ -10,6 +10,9 @@ import com.tyin.cloud.service.admin.IAdminDictService;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRegionService;
 import com.tyin.cloud.service.admin.IAdminRoleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,8 @@ import java.util.List;
  * @date 2022/5/7 13:40
  * @description ...
  */
+@Open
+@Api(tags = "Open-各种Options/Label接口")
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/label")
 @RequiredArgsConstructor
@@ -33,34 +38,34 @@ public class AdminLabelController {
     private final IAdminDictService adminDictService;
 
     @GetMapping("/region")
-    @Open
-    public Result<RegionLabelRes> getRegionLabel(@RequestParam(required = false, defaultValue = "0") Long rootId) {
+    @ApiOperation("区域树形数据接口")
+    public Result<RegionLabelRes> getRegionLabel(@ApiParam(value = "根级", defaultValue = "0s") @RequestParam(required = false, defaultValue = "0") Long rootId) {
         List<RegionLabel> list = adminRegionService.getRegionLabel(rootId);
         return Result.success(RegionLabelRes.builder().list(list).build());
     }
 
     @GetMapping("/role")
-    @Open
+    @ApiOperation("角色列表Label接口")
     public Result<RoleLabelRes> getRoleLabel() {
         List<RoleLabel> list = adminRoleService.getRoleLabel();
         return Result.success(RoleLabelRes.builder().list(list).build());
     }
 
     @GetMapping("/menu")
-    @Open
+    @ApiOperation("菜单树形Label数据接口(勾选)")
     public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id) {
         MenuLabelRes res = adminMenuService.getMenuLabel(id);
         return Result.success(res);
     }
     @GetMapping("/menu/select")
-    @Open
+    @ApiOperation("菜单树形Label数据接口(选择)")
     public Result<MenuTreeSelectLabelRes> getMenuTreeSelectLabel() {
         MenuTreeSelectLabelRes res = adminMenuService.getMenuTreeSelectLabel();
         return Result.success(res);
     }
 
     @GetMapping("/dict")
-    @Open
+    @ApiOperation("字典Options接口)")
     public Result<DictLabelRes> getDictLabel() {
         List<DictLabel> list = adminDictService.getDictLabel();
         return Result.success(DictLabelRes.builder().list(list).build());

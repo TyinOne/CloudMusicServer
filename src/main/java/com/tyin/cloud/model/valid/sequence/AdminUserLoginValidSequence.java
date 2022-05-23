@@ -1,6 +1,6 @@
 package com.tyin.cloud.model.valid.sequence;
 
-import jakarta.validation.GroupSequence;
+import javax.validation.GroupSequence;
 
 /**
  * @author Tyin

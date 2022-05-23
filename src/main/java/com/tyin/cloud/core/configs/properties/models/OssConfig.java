@@ -1,7 +1,6 @@
 package com.tyin.cloud.core.configs.properties.models;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Tyin
@@ -10,8 +9,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Data
-@Component
-public class OssProperties {
+public class OssConfig {
     private String ossFileHost;
     private String ossServerUri;
     private String ossFileUriTmp;

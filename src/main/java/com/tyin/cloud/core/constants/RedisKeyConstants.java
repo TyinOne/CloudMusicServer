@@ -14,4 +14,6 @@ public class RedisKeyConstants {
     public final static String ROLE_BUTTON_PREFIX = "role:button:";
 
     public final static String OSS_PROPERTIES = "admin:properties:oss";
+
+    public final static String TENCENT_MAP_PROPERTIES = "admin:properties:tencent_map";
 }

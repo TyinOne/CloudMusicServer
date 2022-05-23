@@ -9,7 +9,6 @@ import com.tyin.cloud.core.utils.IpUtils;
 import com.tyin.cloud.core.utils.JsonUtils;
 import com.tyin.cloud.model.entity.RequestLog;
 import com.tyin.cloud.service.common.IRequestLogService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +51,9 @@ public class RequestLogAop implements Ordered {
     public Object requestLog(ProceedingJoinPoint joinPoint) throws ApiException {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method classMethod = signature.getMethod();
-        if (Objects.nonNull(classMethod.getAnnotation(NoLog.class))) {
+        NoLog classNoLog = classMethod.getDeclaringClass().getAnnotation(NoLog.class);
+        NoLog methodNoLog = classMethod.getAnnotation(NoLog.class);
+        if (Objects.nonNull(classNoLog) || Objects.nonNull(methodNoLog)) {
             try {
                 return joinPoint.proceed();
             } catch (Throwable e) {
@@ -104,8 +106,6 @@ public class RequestLogAop implements Ordered {
         log.info("ELAPSED      :" + elapsed + " ms");
         log.info("=====================================Method  End====================================");
         RequestLog requestLog = builder.build();
-        //查询日志相关接口  不记录日志
-        if (requestLog.getUri().startsWith("/admin/log")) return;
         requestLogService.save(requestLog);
     }
 

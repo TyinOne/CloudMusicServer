@@ -2,9 +2,9 @@ package com.tyin.cloud.model.params;
 
 import com.tyin.cloud.model.valid.sequence.PasswordCheck;
 import com.tyin.cloud.model.valid.sequence.UsernameCheck;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**

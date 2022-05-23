@@ -9,7 +9,6 @@ import com.tyin.cloud.model.res.AdminRoleRes;
 import com.tyin.cloud.model.valid.InsertRoleValid;
 import com.tyin.cloud.model.valid.UpdateRoleValid;
 import com.tyin.cloud.service.admin.IAdminRoleService;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class AdminRoleController {
     public Result<PageResult<AdminRoleRes, ?>> getRoleList(@RequestParam(required = false) String keywords,
                                                            @RequestParam(required = false, defaultValue = "20") Long size,
                                                            @RequestParam(required = false, defaultValue = "1") Long current,
-                                                           @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser user) {
+                                                           @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser user) {
         PageResult<AdminRoleRes, ?> pageResult = adminRoleService.getRolesPageResult(keywords, size, current);
         return Result.success(pageResult);
     }

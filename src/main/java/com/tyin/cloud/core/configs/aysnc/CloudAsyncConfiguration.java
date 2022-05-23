@@ -47,7 +47,7 @@ public class CloudAsyncConfiguration implements AsyncConfigurer {
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (ex, method, params) -> {
-            log.error(String.format("异步任务异常：%s", method.getName()), ex);
+            log.warn(String.format("异步任务异常：%s", method.getName()), ex);
         };
     }
 }

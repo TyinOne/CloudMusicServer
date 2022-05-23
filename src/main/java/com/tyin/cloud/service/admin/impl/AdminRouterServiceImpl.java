@@ -57,9 +57,10 @@ public class AdminRouterServiceImpl implements IAdminRouterService {
                     .build();
             build.setId(i.getId());
             build.setParentId(i.getParentId());
+            build.setSort(i.getSort());
             resList.add(build);
         });
 
-        return AdminRouterListRes.builder().list(TreeUtils.buildTree(resList, 0L, Boolean.FALSE)).build();
+        return AdminRouterListRes.builder().list(TreeUtils.buildTree(resList, 0L, Boolean.TRUE)).build();
     }
 }

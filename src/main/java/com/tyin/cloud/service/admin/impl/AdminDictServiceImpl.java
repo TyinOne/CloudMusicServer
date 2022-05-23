@@ -65,4 +65,15 @@ public class AdminDictServiceImpl implements IAdminDictService {
             Asserts.isTrue(adminDictRepository.insert(adminDict) == 1, "操作失败");
         }
     }
+
+    @Override
+    public void updateValueBy(String type, String key, String value) {
+        AdminDict adminDict = AdminDict.builder()
+                .dictValue(value)
+                .build();
+        adminDictRepository.update(adminDict, Wrappers.<AdminDict>lambdaQuery()
+                .eq(AdminDict::getDictType, type)
+                .eq(AdminDict::getDictKey, key)
+        );
+    }
 }

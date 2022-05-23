@@ -16,7 +16,9 @@ spring:
     url: jdbc:mysql://rds.tyin.vip:3306/cloud_music?useUnicode=true&characterEncoding=utf-8&relaxAutoCommit=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: tyinzero
-  #    druid:
+    filters: stat
+    use-global-data-source-stat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
   #      # 初始连接数
   #      initialSize: 5
   #      # 最小连接池数量
@@ -72,6 +74,10 @@ logging:
       max-file-size: 500MB
       max-history: 20
       file-name-pattern: /data/logs/cloud-music.%d{yyyy-MM-dd}.%i.log
-springdoc:
-  swagger-ui:
-    path: /doc.html
+# ===== 自定义swagger配置 ===== #
+swagger:
+  enable: true
+  application-name: ${spring.application.name}
+  application-version: 1.0
+  application-description: CloudMuisicAPI
+  try-host: http://localhost:${server.port}

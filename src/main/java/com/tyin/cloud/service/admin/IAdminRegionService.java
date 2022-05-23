@@ -1,6 +1,7 @@
 package com.tyin.cloud.service.admin;
 
 import com.tyin.cloud.model.bean.RegionLabel;
+import com.tyin.cloud.model.res.AdminRegionRes;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface IAdminRegionService {
     void getAreaForTencent();
 
     List<RegionLabel> getRegionLabel(Long rootId);
+
+    List<AdminRegionRes> selectListBy(Long parentId, String keywords, Integer level);
 }

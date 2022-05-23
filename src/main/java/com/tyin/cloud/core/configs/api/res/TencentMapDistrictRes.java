@@ -16,7 +16,7 @@ public class TencentMapDistrictRes {
     private Integer status;
     private String message;
     @JsonProperty("data_version")
-    private Long dataVersion;
+    private String dataVersion;
     private List<List<DistrictResultItem>> result;
 
     @Data

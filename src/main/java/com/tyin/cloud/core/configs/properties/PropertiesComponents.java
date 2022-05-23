@@ -2,7 +2,7 @@ package com.tyin.cloud.core.configs.properties;
 
 import com.tyin.cloud.core.configs.properties.models.ApiPrefixConfig;
 import com.tyin.cloud.core.configs.properties.models.OkHttpConfig;
-import com.tyin.cloud.core.configs.properties.models.OssProperties;
+import com.tyin.cloud.core.configs.properties.models.OssConfig;
 import com.tyin.cloud.core.configs.properties.models.TencentMapConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PropertiesComponents {
-    private static OssProperties oss;
+    private static OssConfig oss;
     private final OkHttpConfig okHttpConfig;
     private final ApiPrefixConfig apiPrefixConfig;
-    private final TencentMapConfig tencentMapConfig;
+    private static TencentMapConfig tencentMapConfig;
 
     public String getOssUrl() {
         return oss.getOssFileHost();
@@ -56,7 +56,19 @@ public class PropertiesComponents {
         return tencentMapConfig.getSecretKey();
     }
 
-    public void setOss(OssProperties properties) {
-        oss = properties;
+    public String getTencentMapDistrictDataVersion() {
+        return tencentMapConfig.getMapDistrictDataVersion();
+    }
+
+    public TencentMapConfig getTencentMapConfig() {
+        return tencentMapConfig;
+    }
+
+    public void setTencentMap(TencentMapConfig config) {
+        tencentMapConfig = config;
+    }
+
+    public void setOss(OssConfig config) {
+        oss = config;
     }
 }

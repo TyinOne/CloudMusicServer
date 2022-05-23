@@ -19,4 +19,6 @@ public interface IAdminDictService {
     PageResult<AdminDictRes, ?> getDictList(String keywords, String dictKey, String dictType, Long size, Long current);
 
     void save(SaveDictValid valid);
+
+    void updateValueBy(String type, String key, String value);
 }

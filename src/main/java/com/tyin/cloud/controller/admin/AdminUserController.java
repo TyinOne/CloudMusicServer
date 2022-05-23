@@ -12,10 +12,11 @@ import com.tyin.cloud.model.valid.sequence.AdminUserLoginValidSequence;
 import com.tyin.cloud.service.admin.IAdminMenuService;
 import com.tyin.cloud.service.admin.IAdminRoleService;
 import com.tyin.cloud.service.admin.IAdminUserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Tyin
