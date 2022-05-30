@@ -1,5 +1,6 @@
 package com.tyin.cloud.service.admin.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -71,9 +72,17 @@ public class AdminDictServiceImpl implements IAdminDictService {
         AdminDict adminDict = AdminDict.builder()
                 .dictValue(value)
                 .build();
-        adminDictRepository.update(adminDict, Wrappers.<AdminDict>lambdaQuery()
-                .eq(AdminDict::getDictType, type)
-                .eq(AdminDict::getDictKey, key)
+        adminDictRepository.update(adminDict, getTypeKeyWrappers(type, key)
         );
+    }
+
+    @Override
+    public String selectValueByTypeKey(String type, String key) {
+        return adminDictRepository.selectOne(getTypeKeyWrappers(type, key)).getDictValue();
+    }
+
+    private LambdaQueryWrapper<AdminDict> getTypeKeyWrappers(String type, String key) {
+        return Wrappers.<AdminDict>lambdaQuery().eq(AdminDict::getDictType, type)
+                .eq(AdminDict::getDictKey, key);
     }
 }

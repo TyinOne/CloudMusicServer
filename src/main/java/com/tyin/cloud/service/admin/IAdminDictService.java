@@ -21,4 +21,6 @@ public interface IAdminDictService {
     void save(SaveDictValid valid);
 
     void updateValueBy(String type, String key, String value);
+
+    String selectValueByTypeKey(String type, String key);
 }

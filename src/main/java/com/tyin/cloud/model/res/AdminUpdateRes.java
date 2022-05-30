@@ -20,5 +20,4 @@ public class AdminUpdateRes {
     private String name;
     private String path;
     private String hash;
-
 }

@@ -2,11 +2,16 @@ package com.tyin.cloud.controller.admin;
 
 import com.tyin.cloud.core.annotations.Open;
 import com.tyin.cloud.core.api.Result;
+import com.tyin.cloud.core.utils.Asserts;
+import com.tyin.cloud.core.utils.JsonUtils;
 import com.tyin.cloud.model.res.AdminUpdateRes;
+import com.tyin.cloud.service.admin.IAdminDictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 /**
  * @author Tyin
@@ -17,14 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${cloud.api.prefix.admin}/update")
 @RequiredArgsConstructor
 public class AdminUpdateController {
+    private final IAdminDictService adminDictService;
+    /**
+     * path = oss_file_host + oss_update_uri + name
+     */
     @Open
     @GetMapping("/check")
     public Result<AdminUpdateRes> checkUpdate() {
-        return Result.success(AdminUpdateRes.builder()
-                .version("1.0.2")
-                .name("0a503.zip")
-                .path("https://file.tyin.vip/downloads/hotUpdate/0a503.zip")
-                .hash("1a05a850a503d41adc2688bf0626bfa0860431747db3023b944253ae242d0760")
-                .build());
+        String value = adminDictService.selectValueByTypeKey("hotUpdate", "update:latest");
+        AdminUpdateRes adminUpdateRes = JsonUtils.toJavaObject(value, AdminUpdateRes.class);
+        Asserts.isTrue(Objects.nonNull(adminUpdateRes), "获取版本信息失败");
+        String ossFileHost = adminDictService.selectValueByTypeKey("oss", "oss_file_host");
+        String ossUpdateUri = adminDictService.selectValueByTypeKey("oss", "oss_update_uri");
+        adminUpdateRes.setPath(ossFileHost + ossUpdateUri + adminUpdateRes.getName());
+        return Result.success(adminUpdateRes);
     }
 }
