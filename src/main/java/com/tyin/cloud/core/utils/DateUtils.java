@@ -1,6 +1,7 @@
 package com.tyin.cloud.core.utils;
 
 import java.lang.management.ManagementFactory;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * @date 2022/3/26 2:45
  * @description ...
  */
-public class DateUtils {
+public class DateUtils extends org.apache.commons.lang3.time.DateUtils{
 
     public final static String YYYY = "yyyy";
     public final static String YYYY_MM = "yyyy-MM";
@@ -51,4 +52,14 @@ public class DateUtils {
     public static String parseDateToStr(final String format, final Date date) {
         return new SimpleDateFormat(format).format(date);
     }
+
+    public static Date parseStrToDate(final String format, final String ts) {
+        try {
+            return new SimpleDateFormat(format).parse(ts);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

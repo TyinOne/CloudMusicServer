@@ -37,12 +37,21 @@ spring:
     host: redis.tyin.vip
     port: 6379
     password: tyinzero
-    connect-timeout: 3000
+    jedis:
+      pool:
+        max-active:  30
+        max-wait: 200
+        min-idle: 10
+        max-idle: 30
   jackson:
     default-property-inclusion: NON_NULL
     time-zone: GMT+8
   mvc:
     static-path-pattern: /**
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
 #  mvc:
 #    pathmatch:
 #      matching-strategy: ant_path_matcher
@@ -51,9 +60,6 @@ mybatis-plus:
     #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     log-impl: com.tyin.cloud.core.configs.mybatis.logs.CloudMyBatisLog
 cloud:
-  map:
-    key: FTRBZ-TK4CV-GR4PG-U3JFQ-7WHCQ-LSFNU
-    secret-key: nqsh444578AIJQDjAIMQkZtLpjvCpuwT
   ok-http:
     connect-timeout: 30
     read-timeout: 30
@@ -79,5 +85,5 @@ swagger:
   enable: true
   application-name: ${spring.application.name}
   application-version: 1.0
-  application-description: CloudMuisicAPI
+  application-description: CloudMusicAPI
   try-host: http://localhost:${server.port}

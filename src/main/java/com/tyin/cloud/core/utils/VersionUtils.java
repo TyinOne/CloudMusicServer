@@ -19,4 +19,8 @@ public class VersionUtils {
         String[] version = v.split("\\.");
         return (Long.parseLong(version[0]) << 16) + (Long.parseLong(version[1]) << 8) + Integer.parseInt(version[2]);
     }
+
+    public static void main(String[] args) {
+        System.out.println("88a0f943de6faf4be5d5a144c32b3932e6bc7c4b5ce060def64abb20539f9d00".length());
+    }
 }

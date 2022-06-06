@@ -23,4 +23,6 @@ public class UploadTmpRes {
     private String uri;
     @ApiModelProperty("文件名")
     private String fileName;
+    @ApiModelProperty("md5")
+    private String md5;
 }

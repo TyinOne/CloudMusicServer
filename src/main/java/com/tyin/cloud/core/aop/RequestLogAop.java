@@ -67,7 +67,12 @@ public class RequestLogAop implements Ordered {
         RequestLog.RequestLogBuilder builder = RequestLog.builder();
         Object[] args = joinPoint.getArgs();
         List<Object> collect = Arrays.stream(args).filter(i -> !(i instanceof HttpServletRequest)).collect(Collectors.toList());
-        String params = JsonUtils.toJSONString(collect);
+        String params = "";
+        try {
+            params = JsonUtils.toJSONString(collect);
+        } catch (Exception e) {
+            log.warn("Json序列化失败：" + e.getMessage());
+        }
         String uri = request.getRequestURI();
         String ip = getIpAddress(request);
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();

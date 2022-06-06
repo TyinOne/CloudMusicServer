@@ -6,6 +6,7 @@ import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.core.utils.StringUtils;
 import com.tyin.cloud.model.res.UploadTmpRes;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 /**
  * @author Tyin
@@ -25,14 +25,22 @@ import java.util.Objects;
 public class UploadComponents {
     private final PropertiesComponents propertiesComponents;
 
-    public UploadTmpRes upload(MultipartFile file, AuthAdminUser user) {
+    public UploadTmpRes uploadTmp(MultipartFile file, AuthAdminUser user) {
+        return uploadTmp(file);
+    }
+
+    public UploadTmpRes uploadPackageTmp(MultipartFile updatePackage, AuthAdminUser user) {
+        return uploadTmp(updatePackage);
+    }
+    private UploadTmpRes uploadTmp(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
-        originalFilename = Objects.isNull(originalFilename) ? "file.jpeg" : originalFilename;
         String suffix = originalFilename.split("\\.")[1];
         String fileName = System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + suffix;
         String serverTmpPath = propertiesComponents.getOssServer() + propertiesComponents.getOssTmp();
         String absolutePath;
+        String md5 = "";
         try {
+            md5 = DigestUtils.md5Hex(file.getBytes());
             File abFile = new File(serverTmpPath);
             Path path = abFile.toPath();
             Files.createDirectories(path);
@@ -47,6 +55,7 @@ public class UploadComponents {
                 .src(propertiesComponents.getOssUrl() + propertiesComponents.getOssTmp() + fileName)
                 .uri(propertiesComponents.getOssTmp())
                 .fileName(fileName)
+                .md5(md5)
                 .build();
     }
 }

@@ -26,8 +26,9 @@ import java.util.List;
  * @date 2022/5/7 13:40
  * @description ...
  */
+
+@Api(tags = "Open-各种Options-Label接口")
 @Open
-@Api(tags = "Open-各种Options/Label接口")
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/label")
 @RequiredArgsConstructor
