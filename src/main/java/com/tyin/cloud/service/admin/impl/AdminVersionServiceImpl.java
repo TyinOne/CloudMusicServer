@@ -42,6 +42,9 @@ public class AdminVersionServiceImpl implements IAdminVersionService {
                 .between(Objects.nonNull(startTime) && Objects.nonNull(stopTime), AdminVersion::getReleaseTime, startTime, stopTime)
                 .orderByDesc(AdminVersion::getReleaseTime)
         );
+        iPage.getRecords().forEach(i -> {
+            i.setSrc(propertiesComponents.getOssUrl() + i.getSrc());
+        });
         return PageResult.buildResult(iPage);
     }
 

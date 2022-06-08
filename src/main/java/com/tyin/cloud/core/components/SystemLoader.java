@@ -40,6 +40,8 @@ public class SystemLoader {
         ossConfig.setOssServerUri(oss.stream().filter(i -> StringUtils.equals("oss_server_uri", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
         ossConfig.setOssFileUriTmp(oss.stream().filter(i -> StringUtils.equals("oss_file_uri_tmp", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
         ossConfig.setOssFileUriImages(oss.stream().filter(i -> StringUtils.equals("oss_file_uri_images", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
+        ossConfig.setOssFileHotDownloads(oss.stream().filter(i -> StringUtils.equals("oss_update_uri", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
+        ossConfig.setOssFilePackageDownloads(oss.stream().filter(i -> StringUtils.equals("oss_package_uri", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""));
         redisComponents.saveAsync(OSS_PROPERTIES, JsonUtils.toJSONString(ossConfig));
         propertiesComponents.setOss(ossConfig);
     }
