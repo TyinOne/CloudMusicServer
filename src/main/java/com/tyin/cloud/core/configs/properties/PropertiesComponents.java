@@ -36,6 +36,13 @@ public class PropertiesComponents {
         return oss.getOssFileUriImages();
     }
 
+    public String getOssHotDownloads() {
+        return oss.getOssFileHotDownloads();
+    }
+    public String getOssPackageDownloads() {
+        return oss.getOssFilePackageDownloads();
+    }
+
     public String getAdminPrefix() {
         return this.apiPrefixConfig.getAdmin();
     }

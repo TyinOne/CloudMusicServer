@@ -14,4 +14,6 @@ public class OssConfig {
     private String ossServerUri;
     private String ossFileUriTmp;
     private String ossFileUriImages;
+    private String ossFileHotDownloads;
+    private String ossFilePackageDownloads;
 }

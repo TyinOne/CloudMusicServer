@@ -18,6 +18,8 @@ import lombok.Data;
 public class InsertVersionValid {
     private String name;
     private String src;
+    private String fileName;
+    private String uri;
     private String version;
     private String hash;
     private String md5;
