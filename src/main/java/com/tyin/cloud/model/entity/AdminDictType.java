@@ -22,4 +22,5 @@ public class AdminDictType extends BaseEntity implements Serializable {
     private Long id;
     private String dictType;
     private String dictLabel;
+    private String dictDescription;
 }
