@@ -18,7 +18,7 @@ public class AdminDictTypeRes {
     private String dictType;
     private String dictLabel;
     private String dictDescription;
-    @JsonFormat(pattern = DateUtils.YYYY_MM_DD)
+    @JsonFormat(pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
     private Date created;
     @ApiModelProperty("字典状态")
     private Boolean deleted;
