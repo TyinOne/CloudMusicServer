@@ -24,7 +24,10 @@ import com.tyin.cloud.service.admin.IAdminRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tyin.cloud.core.constants.PermissionConstants.SUPPER_ROLE;
@@ -131,10 +134,11 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
     }
 
     @Override
-    public void saveMenu(SaveMenuValid valid) {
+    public Integer saveMenu(SaveMenuValid valid) {
+        int row;
         Long id = valid.getId();
         if (Objects.isNull(id)) {
-            adminMenuRepository.insert(AdminMenu.builder()
+            AdminMenu build = AdminMenu.builder()
                     .parentId(valid.getParentId())
                     .component(valid.getComponent())
                     .name(valid.getName())
@@ -150,10 +154,12 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     .metaIsIframe(valid.getMetaIsIframe())
                     .metaIsKeepAlive(valid.getMetaIsKeepAlive())
                     .disabled(valid.getDisabled())
-                    .build());
+                    .build();
+            row = adminMenuRepository.insert(build);
+            id = build.getId();
         } else {
-            adminMenuRepository.updateById(AdminMenu.builder()
-                    .id(valid.getId())
+            row = adminMenuRepository.updateById(AdminMenu.builder()
+                    .id(id)
                     .parentId(valid.getParentId())
                     .component(valid.getComponent())
                     .name(valid.getName())
@@ -171,5 +177,10 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     .disabled(valid.getDisabled())
                     .build());
         }
+        //删除Menu缓存
+        List<String> roles = adminMenuRepository.selectRoleByMenuId(id);
+        redisComponents.deleteKey(roles.stream().map(i -> ROLE_MENU_PREFIX + i).collect(Collectors.toList()));
+        redisComponents.deleteKey(ROLE_MENU_PREFIX + SUPPER_ROLE);
+        return row;
     }
 }

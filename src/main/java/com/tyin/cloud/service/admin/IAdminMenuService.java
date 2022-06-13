@@ -29,5 +29,5 @@ public interface IAdminMenuService {
 
     MenuDetailRes getMenuDetailRes(Integer id);
 
-    void saveMenu(SaveMenuValid valid);
+    Integer saveMenu(SaveMenuValid valid);
 }

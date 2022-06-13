@@ -3,6 +3,7 @@ package com.tyin.cloud.controller.admin;
 import com.tyin.cloud.core.annotations.Auth;
 import com.tyin.cloud.core.api.Result;
 import com.tyin.cloud.core.auth.AuthAdminUser;
+import com.tyin.cloud.core.utils.Asserts;
 import com.tyin.cloud.model.res.MenuDetailRes;
 import com.tyin.cloud.model.res.MenuRes;
 import com.tyin.cloud.model.valid.SaveMenuValid;
@@ -43,10 +44,11 @@ public class AdminMenuController {
         MenuDetailRes res = adminMenuService.getMenuDetailRes(id);
         return Result.success(res);
     }
+
     @PostMapping("/save")
     @ApiOperation("保存目录/菜单/按钮信息")
     public Result<?> saveMenu(@RequestBody SaveMenuValid valid, @Auth("@permission.hasPermission('sys:menu:save')") AuthAdminUser user) {
-        adminMenuService.saveMenu(valid);
+        Asserts.isTrue(adminMenuService.saveMenu(valid) > 0, "保存失败");
         return Result.success();
     }
 }
