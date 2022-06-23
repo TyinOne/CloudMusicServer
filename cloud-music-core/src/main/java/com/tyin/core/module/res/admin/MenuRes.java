@@ -1,0 +1,34 @@
+package com.tyin.core.module.res.admin;
+
+
+import com.tyin.core.module.base.TreeBase;
+import lombok.*;
+
+import java.util.List;
+
+/**
+ * @author Tyin
+ * @date 2022/4/11 22:05
+ * @description ...
+ */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class MenuRes {
+    private List<MenuItem> list;
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class MenuItem extends TreeBase {
+        private String name;
+        private String path;
+        private String component;
+        private String metaRoles;
+        private String metaIcons;
+        private String metaTitle;
+        private String security;
+        private Integer sort;
+        private Integer type;
+    }
+}
