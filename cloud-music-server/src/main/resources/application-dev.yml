@@ -10,20 +10,15 @@ spring:
   datasource:
     url: jdbc:mysql://rds.tyin.vip:3306/cloud_music?useUnicode=true&characterEncoding=utf-8&relaxAutoCommit=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=Asia/Shanghai
 
-mybatis-plus:
-  configuration:
-    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    log-impl: com.tyin.server.config.mybatis.logs.CloudMyBatisLog
+
 logging:
-  level:
-    com.tyin: debug
   file:
-    name: /data/logs/cloud-music.log
+    name: /data/logs/server/cloud-music.log
   logback:
     rollingpolicy:
       max-file-size: 500MB
       max-history: 20
-      file-name-pattern: /data/logs/cloud-music.%d{yyyy-MM-dd}.%i.log
+      file-name-pattern: /data/logs/server/cloud-music.%d{yyyy-MM-dd}.%i.log
 # ===== 自定义swagger配置 ===== #
 swagger:
   enable: true

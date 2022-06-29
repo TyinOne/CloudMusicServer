@@ -54,3 +54,10 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
+mybatis-plus:
+  configuration:
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: com.tyin.core.config.mybatis.logs.CloudMyBatisLog
+logging:
+  level:
+    com.tyin: debug

@@ -13,15 +13,11 @@
         <version>2.5.14</version>
         <relativePath/>
     </parent>
-<!--    <modules>-->
-<!--        <module>cloud-music-core</module>-->
-<!--        <module>cloud-music-server</module>-->
-<!--    </modules>-->
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <jackson.version>2.13.0-rc1</jackson.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger.ui.version>3.0.2</swagger.ui.version>
