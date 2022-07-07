@@ -148,7 +148,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 .mail(valid.getMail())
                 .phone(valid.getPhone())
                 .build();
-        String avatar = userBase.getAvatar();
+        String avatar;
         if (StringUtils.isNotEmpty(valid.getAvatar().getFileName())) {
             SaveAccountValid.AvatarUpdate avatarUpdate = valid.getAvatar();
             String avatarUri = propertiesComponents.getOssImages() + userBase.getAccount() + "/avatar/";
@@ -172,17 +172,9 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 .region(valid.getRegion())
                 .build();
         adminUserExtraRepository.update(userExtra, Wrappers.<AdminUserExtra>lambdaQuery().eq(AdminUserExtra::getUserId, userBase.getId()));
-        //更新登录缓存
+        //强制下线 TODO 可重新调用登录接口保存最新信息
         if (StringUtils.isNotEmpty(userBase.getToken())) {
-            if (redisComponents.existsKey(ADMIN_USER_TOKEN_PREFIX + userBase.getToken())) {
-                String s = redisComponents.get(ADMIN_USER_TOKEN_PREFIX + userBase.getToken());
-                AuthAdminUser authAdminUser = JsonUtils.toJavaObject(s, AuthAdminUser.class);
-                if (Objects.nonNull(authAdminUser)) {
-                    authAdminUser.setNickName(user.getNickName());
-                    authAdminUser.setAvatar(propertiesComponents.getOssUrl() + avatar);
-                    redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + userBase.getToken(), JsonUtils.toJSONString(authAdminUser));
-                }
-            }
+            redisComponents.deleteKey(ADMIN_USER_TOKEN_PREFIX + userBase.getToken());
         }
     }
 
