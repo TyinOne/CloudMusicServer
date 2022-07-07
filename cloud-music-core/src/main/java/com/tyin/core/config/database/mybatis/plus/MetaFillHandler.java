@@ -1,4 +1,4 @@
-package com.tyin.core.config.mybatis.plus;
+package com.tyin.core.config.database.mybatis.plus;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

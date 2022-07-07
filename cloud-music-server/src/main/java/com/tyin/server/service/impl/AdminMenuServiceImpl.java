@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 import static com.tyin.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.core.constants.RedisKeyConstants.ROLE_MENU_PREFIX;
+import static com.tyin.core.constants.RedisKeyConstants.SUPPER_MENU_PREFIX;
 
 /**
  * @author Tyin
@@ -58,35 +59,39 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
     public List<AdminMenu> getRouterByPermission(Long userId) {
         List<AdminMenu> adminMenusForUser = Lists.newArrayList();
         AdminRole role = adminRoleService.getRoles(userId);
+        String allMenuKey = SUPPER_MENU_PREFIX + SUPPER_ROLE;
+        String menuArrayStr = redisComponents.get(allMenuKey);
+        List<AdminMenu> adminMenus;
+        if (StringUtils.isEmpty(menuArrayStr)) {
+            adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).ne(AdminMenu::getType, 2));
+        } else {
+            List<AdminMenu> jsonArray = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
+            adminMenus = Objects.isNull(jsonArray) ? Lists.newArrayList() : jsonArray;
+        }
+
         if (role.getValue().equals(SUPPER_ROLE)) {
-            String key = ROLE_MENU_PREFIX + SUPPER_ROLE;
-            String menuArrayStr = redisComponents.get(key);
-            if (StringUtils.isNotEmpty(menuArrayStr)) {
-                List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
-                if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
-            } else {
-                List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).ne(AdminMenu::getType, 2));
-                adminMenusForUser.addAll(adminMenus);
-                redisComponents.saveAsync(key, JsonUtils.toJSONString(adminMenus));
-            }
+            adminMenusForUser.addAll(adminMenus);
+            redisComponents.saveAsync(allMenuKey, JsonUtils.toJSONString(adminMenus));
         } else {
             String key = ROLE_MENU_PREFIX + role.getValue();
-            String menuArrayStr = redisComponents.get(key);
-            Set<String> ids = Sets.newHashSet();
+            menuArrayStr = redisComponents.get(key);
+            List<String> idArray = Objects.isNull(menuArrayStr) ? Lists.newArrayList() : JsonUtils.toJavaObjectList(menuArrayStr, String.class);
+            List<String> strings = Objects.isNull(idArray) ? Lists.newArrayList() : idArray;
             if (StringUtils.isNotEmpty(menuArrayStr)) {
-                List<AdminMenu> adminMenusForRole = JsonUtils.toJavaObjectList(menuArrayStr, AdminMenu.class);
-                if (Objects.nonNull(adminMenusForRole)) adminMenusForUser.addAll(adminMenusForRole);
+                adminMenus = adminMenus.stream().filter(i -> strings.contains(i.getId().toString())).collect(Collectors.toList());
+                adminMenusForUser.addAll(adminMenus);
             } else {
+                Set<String> ids = Sets.newHashSet();
                 List<AdminRoleMenu> adminRoleMenus = adminRoleMenuRepository.selectList(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, role.getId()));
                 adminRoleMenus.forEach(item -> {
                     ids.addAll(Sets.newHashSet(item.getMenuId().split(",")));
                     ids.addAll(Sets.newHashSet(item.getHalfId().split(",")));
                 });
                 if (adminRoleMenus.size() > 0) {
-                    List<AdminMenu> adminMenus = adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().in(AdminMenu::getId, ids).ne(AdminMenu::getType, 2));
+                    adminMenus = adminMenus.stream().filter(i -> ids.contains(i.getId().toString())).collect(Collectors.toList());
                     adminMenusForUser.addAll(adminMenus);
                 }
-                redisComponents.saveAsync(key, JsonUtils.toJSONString(adminMenusForUser));
+                redisComponents.saveAsync(key, JsonUtils.toJSONString(ids));
             }
         }
         adminMenusForUser.add(adminMenuRepository.selectById(1L));
@@ -153,11 +158,11 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     .metaIsAffix(valid.getMetaIsAffix())
                     .metaIsHide(valid.getMetaIsHide())
                     .metaIsIframe(valid.getMetaIsIframe())
+                    .metaIsLink(valid.getMetaIsLink())
                     .metaIsKeepAlive(valid.getMetaIsKeepAlive())
                     .disabled(valid.getDisabled())
                     .build();
             row = adminMenuRepository.insert(build);
-            id = build.getId();
         } else {
             row = adminMenuRepository.updateById(AdminMenu.builder()
                     .id(id)
@@ -174,14 +179,13 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
                     .metaIsAffix(valid.getMetaIsAffix())
                     .metaIsHide(valid.getMetaIsHide())
                     .metaIsIframe(valid.getMetaIsIframe())
+                    .metaIsLink(valid.getMetaIsLink())
                     .metaIsKeepAlive(valid.getMetaIsKeepAlive())
                     .disabled(valid.getDisabled())
                     .build());
         }
-        //删除Menu缓存
-        List<String> roles = adminMenuRepository.selectRoleByMenuId(id);
-        redisComponents.deleteKey(roles.stream().map(i -> ROLE_MENU_PREFIX + i).collect(Collectors.toList()));
-        redisComponents.deleteKey(ROLE_MENU_PREFIX + SUPPER_ROLE);
+        //更新Menu缓存
+        redisComponents.save(SUPPER_MENU_PREFIX + SUPPER_ROLE, JsonUtils.toJSONString(adminMenuRepository.selectList(Wrappers.<AdminMenu>lambdaQuery().gt(AdminMenu::getId, 1).ne(AdminMenu::getType, 2))));
         return row;
     }
 }

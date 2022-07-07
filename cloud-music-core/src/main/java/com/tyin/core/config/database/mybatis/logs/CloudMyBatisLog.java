@@ -1,4 +1,4 @@
-package com.tyin.core.config.mybatis.logs;
+package com.tyin.core.config.database.mybatis.logs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.logging.Log;

@@ -3,6 +3,7 @@ package com.tyin.server.config.druid;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.tyin.core.config.database.druid.DruidConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -15,17 +16,18 @@ import java.util.Map;
 
 /**
  * @author Tyin
- * @date 2022/5/22 1:29
+ * @date 2022/7/7 10:23
  * @description ...
  */
-
 @Configuration
-public class DruidConfig {
+public class ServerDruidConfig extends DruidConfig {
     @ConfigurationProperties(prefix = "spring.datasource")
     @Bean
-    public DataSource druid(){
-        return  new DruidDataSource();
+    @Override
+    public DataSource druid() {
+        return new DruidDataSource();
     }
+
     @Bean
     public ServletRegistrationBean<StatViewServlet> statViewServlet() {
         ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
@@ -49,12 +51,12 @@ public class DruidConfig {
         bean.setInitParameters(initParams);
         return bean;
     }
+
     @Bean
     public FilterRegistrationBean<WebStatFilter> webStaticFilter() {
         FilterRegistrationBean<WebStatFilter> bean = new FilterRegistrationBean<>();
         bean.setFilter(new WebStatFilter());
         Map<String, String> initParams = new HashMap<>(100);
-//        这些东西不进行统计
         initParams.put("exclusions", "*.js,*.css,/druid/*");
         bean.setInitParameters(initParams);
         return bean;

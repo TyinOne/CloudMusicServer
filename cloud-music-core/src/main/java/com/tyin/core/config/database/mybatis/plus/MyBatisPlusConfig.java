@@ -1,4 +1,4 @@
-package com.tyin.core.config.mybatis.plus;
+package com.tyin.core.config.database.mybatis.plus;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
