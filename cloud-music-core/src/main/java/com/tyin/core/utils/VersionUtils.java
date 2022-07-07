@@ -15,6 +15,7 @@ public class VersionUtils {
         }
         return String.join(".", ipArr);
     }
+
     public static long stringToInt(String v) {
         String[] version = v.split("\\.");
         return (Long.parseLong(version[0]) << 16) + (Long.parseLong(version[1]) << 8) + Integer.parseInt(version[2]);

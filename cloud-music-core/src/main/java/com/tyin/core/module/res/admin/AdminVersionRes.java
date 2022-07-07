@@ -23,7 +23,7 @@ public class AdminVersionRes {
     private Boolean forced;
     private Boolean latest;
     private String hash;
-    private String  md5;
+    private String md5;
     private String updateLog;
 
     public void setVersion(Long version) {

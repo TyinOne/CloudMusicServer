@@ -24,8 +24,7 @@ public interface AdminRegionRepository extends BaseMapper<AdminRegion> {
             \t`parent_id`,
             \t`id` `value`,
             \t`full_name` `label`
-            FROM
-            \t`admin_region` ${ew.customSqlSegment}""")
+            FROM \t`admin_region` ${ew.customSqlSegment}""")
     List<RegionLabel> selectLabel(@Param("ew") LambdaQueryWrapper<AdminRegion> wrapper);
 
     @Select(value = """
@@ -37,9 +36,7 @@ public interface AdminRegionRepository extends BaseMapper<AdminRegion> {
             \t`lat`,
             \t`lng`,
             \t`level`,
-            \t(SELECT count(1) FROM `admin_region` WHERE `parent_id` = `region`.`id` limit 1) > 0 hasChildren
-            FROM `admin_region` `region`
-            ${ew.customSqlSegment}
-            """)
-    List<AdminRegionRes> selectResList(@Param("ew")LambdaQueryWrapper<AdminRegion> wrapper);
+            \t(SELECT count(1) FROM `admin_region` WHERE `parent_id` = `admin_region`.`id` limit 1) > 0 hasChildren
+            FROM \t`admin_region` ${ew.customSqlSegment}""")
+    List<AdminRegionRes> selectResList(@Param("ew") LambdaQueryWrapper<AdminRegion> wrapper);
 }

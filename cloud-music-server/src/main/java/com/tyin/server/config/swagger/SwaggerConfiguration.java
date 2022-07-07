@@ -84,7 +84,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
                         .securityReferences(Collections.singletonList(new SecurityReference("Authentication", new AuthorizationScope[]{new AuthorizationScope("global", "")})))
                         .operationSelector(i -> PathSelectors.regex("^(?!login).*$").test(i.requestMappingPattern()))
                         .build())
-        ;
+                ;
     }
 
     @SafeVarargs

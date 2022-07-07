@@ -50,6 +50,7 @@ public class AdminCommonController {
         UploadTmpRes tmpRes = uploadComponents.uploadTmp(file, user);
         return Result.success(tmpRes);
     }
+
     @NoLog
     @ApiOperation("上传更新包至临时目录")
     @PostMapping("/package/upload/tmp")
@@ -57,6 +58,7 @@ public class AdminCommonController {
         UploadTmpRes tmpRes = uploadComponents.uploadPackageTmp(updatePackage, user);
         return Result.success(tmpRes);
     }
+
     @NoLog
     @ApiOperation("解析更新Json文件")
     @PostMapping("/parse/update")

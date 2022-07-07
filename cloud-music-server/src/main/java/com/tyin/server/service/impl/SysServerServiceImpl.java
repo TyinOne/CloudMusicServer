@@ -3,11 +3,10 @@ package com.tyin.server.service.impl;
 
 import com.google.common.collect.Lists;
 import com.tyin.core.module.res.admin.SysInfoRes;
-import com.tyin.core.module.res.admin.SysInfoRes.*;
 import com.tyin.core.module.res.admin.SysRedisRes;
-import com.tyin.core.utils.IpUtils;
 import com.tyin.core.utils.math.Ardith;
 import com.tyin.server.service.ISysServerService;
+import com.tyin.server.utils.IpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-import static com.tyin.core.module.res.admin.SysInfoRes.OSHI_WAIT_SECOND;
+import static com.tyin.core.module.res.admin.SysInfoRes.*;
 
 /**
  * @author Tyin

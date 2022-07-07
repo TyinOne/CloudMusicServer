@@ -38,6 +38,7 @@ public class AdminAccountController {
         PageResult<AdminAccountRes, ?> res = userService.getUserList(size, current, name, roleId, disabled);
         return Result.success(res);
     }
+
     @ApiOperation("用户详情")
     @GetMapping("/detail")
     public Result<AdminAccountDetailRes> getUserDetail(@ApiParam("用户名") @RequestParam String account, @Auth("@permission.hasPermission('sys:account:detail')") AuthAdminUser user) {

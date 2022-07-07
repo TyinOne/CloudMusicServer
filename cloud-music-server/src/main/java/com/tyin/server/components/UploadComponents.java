@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * @author Tyin
@@ -33,9 +34,10 @@ public class UploadComponents {
     public UploadTmpRes uploadPackageTmp(MultipartFile updatePackage, AuthAdminUser user) {
         return uploadTmp(updatePackage);
     }
+
     private UploadTmpRes uploadTmp(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
-        String suffix = originalFilename.split("\\.")[1];
+        String suffix = Objects.isNull(originalFilename) ? "" : originalFilename.split("\\.")[1];
         String fileName = System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + suffix;
         String serverTmpPath = propertiesComponents.getOssServer() + propertiesComponents.getOssTmp();
         String absolutePath;

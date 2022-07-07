@@ -1,4 +1,4 @@
-package com.tyin.core.utils;
+package com.tyin.server.utils;
 
 import com.google.common.collect.Maps;
 
@@ -13,19 +13,23 @@ import java.util.Map;
  * @description ...
  */
 public class IpUtils {
+    private static final String UNKNOWN = "unknown";
+
+    private static final String LOCAL = "127.0.0.1";
+
     public static String getIpAddress(HttpServletRequest request) {
         String ipAddress;
         try {
             ipAddress = request.getHeader("x-forwarded-for");
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getHeader("Proxy-Client-IP");
             }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getHeader("WL-Proxy-Client-IP");
             }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getRemoteAddr();
-                if ("127.0.0.1".equals(ipAddress)) {
+                if (LOCAL.equals(ipAddress)) {
                     // 根据网卡取本机配置的IP
                     InetAddress inet;
                     try {
@@ -48,8 +52,6 @@ public class IpUtils {
         } catch (Exception e) {
             ipAddress = "";
         }
-        // ipAddress = this.getRequest().getRemoteAddr();
-
         return ipAddress;
     }
 

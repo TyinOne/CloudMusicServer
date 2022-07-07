@@ -59,6 +59,7 @@ public class AdminLabelController {
         MenuLabelRes res = adminMenuService.getMenuLabel(id);
         return Result.success(res);
     }
+
     @GetMapping("/menu/select")
     @ApiOperation("菜单树形Label数据接口(选择)")
     public Result<MenuTreeSelectLabelRes> getMenuTreeSelectLabel() {

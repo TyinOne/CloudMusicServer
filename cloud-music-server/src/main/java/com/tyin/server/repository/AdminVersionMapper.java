@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Select;
  */
 public interface AdminVersionMapper extends BaseMapper<AdminVersion> {
     /**
-     * @param page 分页数据
+     * @param page               分页数据
      * @param lambdaQueryWrapper wrappers
      * @return iPage
      */

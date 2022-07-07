@@ -3,11 +3,11 @@ package com.tyin.server.components;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tyin.core.components.RedisComponents;
+import com.tyin.core.components.properties.models.OssConfig;
+import com.tyin.core.components.properties.models.TencentMapConfig;
 import com.tyin.core.module.entity.AdminDict;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.server.components.properties.PropertiesComponents;
-import com.tyin.core.components.properties.models.OssConfig;
-import com.tyin.core.components.properties.models.TencentMapConfig;
 import com.tyin.server.repository.AdminDictRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +47,7 @@ public class SystemLoader {
         redisComponents.saveAsync(OSS_PROPERTIES, JsonUtils.toJSONString(ossConfig));
         propertiesComponents.setOss(ossConfig);
     }
+
     @Async
     public void initMap() {
         log.info("tencentMap is loading!");

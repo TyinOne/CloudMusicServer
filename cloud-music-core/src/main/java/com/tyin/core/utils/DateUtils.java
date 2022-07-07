@@ -10,7 +10,7 @@ import java.util.Date;
  * @date 2022/3/26 2:45
  * @description ...
  */
-public class DateUtils extends org.apache.commons.lang3.time.DateUtils{
+public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public final static String YYYY = "yyyy";
     public final static String YYYY_MM = "yyyy-MM";

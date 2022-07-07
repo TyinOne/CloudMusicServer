@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 public abstract class DruidConfig {
     /**
      * 实例化Druid数据源
+     *
      * @return DruidDataSource
      */
     public abstract DataSource druid();

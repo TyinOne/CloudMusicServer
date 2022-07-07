@@ -15,8 +15,10 @@ import com.tyin.core.module.entity.AdminUserExtra;
 import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
-import com.tyin.core.utils.*;
-import com.tyin.core.utils.IpUtils;
+import com.tyin.core.utils.Asserts;
+import com.tyin.core.utils.DateUtils;
+import com.tyin.core.utils.JsonUtils;
+import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.params.valid.AdminLoginParams;
@@ -26,6 +28,7 @@ import com.tyin.server.repository.AdminUserRepository;
 import com.tyin.server.service.IAdminMenuService;
 import com.tyin.server.service.IAdminRoleService;
 import com.tyin.server.service.IAdminUserService;
+import com.tyin.server.utils.IpUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -34,7 +37,10 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tyin.core.constants.ParamsConstants.*;
@@ -199,6 +205,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
         if (username.matches(MAIL_PATTERN)) return MAIL;
         return ACCOUNT;
     }
+
     @Override
     public Set<String> getPermissionByRole(Long roleId, String roleValue) {
         Set<String> menuPermission = Sets.newHashSet(ADMIN_SECURITY);
