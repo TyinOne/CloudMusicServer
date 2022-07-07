@@ -6,7 +6,7 @@ import com.tyin.core.enums.ResultCode;
 import com.tyin.core.exception.ApiException;
 import com.tyin.core.module.entity.RequestLog;
 import com.tyin.core.utils.Asserts;
-import com.tyin.core.utils.IpUtils;
+import com.tyin.server.utils.IpUtils;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.server.api.Result;
 import com.tyin.server.service.IRequestLogService;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.tyin.core.utils.IpUtils.getIpAddress;
+import static com.tyin.server.utils.IpUtils.getIpAddress;
 
 
 /**

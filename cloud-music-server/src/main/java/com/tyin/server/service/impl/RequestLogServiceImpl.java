@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.core.module.entity.RequestLog;
 import com.tyin.core.module.res.admin.AdminLogRes;
-import com.tyin.core.utils.IpUtils;
+import com.tyin.server.utils.IpUtils;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.repository.RequestLogRepository;
 import com.tyin.server.service.IRequestLogService;
@@ -36,7 +36,7 @@ public class RequestLogServiceImpl implements IRequestLogService {
     @Override
     public PageResult<AdminLogRes, ?> queryLog(Long size, Long current) {
         IPage<AdminLogRes> resPage = requestLogRepository.selectLogPage(new Page<>(current, size),
-                Wrappers.<RequestLog>lambdaQuery()
+                Wrappers.lambdaQuery()
         );
         List<AdminLogRes> records = resPage.getRecords();
         for (AdminLogRes item : records) {

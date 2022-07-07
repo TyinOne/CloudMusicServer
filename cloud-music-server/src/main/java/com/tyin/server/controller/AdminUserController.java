@@ -5,7 +5,7 @@ import com.tyin.core.annotations.Open;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.entity.AdminUserDetailRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
-import com.tyin.core.utils.IpUtils;
+import com.tyin.server.utils.IpUtils;
 import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.AdminLoginParams;
 import com.tyin.server.params.valid.sequence.AdminUserLoginValidSequence;

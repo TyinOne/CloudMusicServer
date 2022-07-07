@@ -154,7 +154,7 @@ public class IpUtils {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ignored) {
         }
-        return "127.0.0.1";
+        return LOCAL;
     }
 
     public static String getHostName() {
@@ -162,6 +162,6 @@ public class IpUtils {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException ignored) {
         }
-        return "未知";
+        return UNKNOWN;
     }
 }
