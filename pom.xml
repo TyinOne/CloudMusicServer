@@ -17,15 +17,15 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <jackson.version>2.13.0-rc1</jackson.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger.ui.version>3.0.2</swagger.ui.version>
         <knife4j.ui.version>2.0.8</knife4j.ui.version>
         <commons-codec.version>1.13</commons-codec.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
-        <guava.version>27.0.1-android</guava.version>
+        <guava.version>30.0-android</guava.version>
         <validation.version>8.0.0.Alpha2</validation.version>
         <log4j.version>2.17.0</log4j.version>
         <druid.version>1.2.9</druid.version>
@@ -33,6 +33,7 @@
         <mybatis-spring.version>2.2.2</mybatis-spring.version>
         <openapi.version>2.0.0-M2</openapi.version>
         <okhttp.version>4.9.3</okhttp.version>
+        <quartz.version>2.3.0</quartz.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -83,11 +84,6 @@
                 <version>${oshi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.hibernate.validator</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>${validation.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring.version}</version>
@@ -118,7 +114,6 @@
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 </project>

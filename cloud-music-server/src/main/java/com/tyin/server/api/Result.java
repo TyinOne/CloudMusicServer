@@ -43,7 +43,7 @@ public class Result<T> {
      * 成功返回空对象
      */
 
-    public static Result<String> success() {
+    public static <T>Result<T> success() {
         return success(ResultCode.SUCCESS.getMessage(), null);
     }
 

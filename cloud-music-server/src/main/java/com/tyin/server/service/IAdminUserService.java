@@ -1,13 +1,15 @@
 package com.tyin.server.service;
 
 import com.tyin.core.module.bean.AuthAdminUser;
+import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.entity.AdminUser;
 import com.tyin.core.module.entity.AdminUserDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.server.api.PageResult;
-import com.tyin.server.params.valid.AdminLoginParams;
+import com.tyin.server.params.valid.AdminLoginValid;
+import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 
 import java.util.Set;
@@ -21,11 +23,11 @@ public interface IAdminUserService {
     /**
      * 用户登录
      *
-     * @param adminLoginParams 登录参数
+     * @param adminLoginValid 登录参数
      * @param ipAddress        登录IP
      * @return token
      */
-    AdminUserLoginRes login(AdminLoginParams adminLoginParams, Long ipAddress);
+    AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress);
 
     AdminUserDetailRes getUserInfo(AuthAdminUser user);
 
@@ -42,4 +44,8 @@ public interface IAdminUserService {
     Set<String> getPermissionByRole(Long roleId, String roleValue);
 
     void logout(AuthAdminUser user);
+
+    InviteCodeBean generateInviteCode(Long id, AuthAdminUser user);
+
+    void register(AdminRegisterValid adminRegisterValid);
 }

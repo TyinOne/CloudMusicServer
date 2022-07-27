@@ -15,7 +15,7 @@ import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.core.utils.TreeUtils;
-import com.tyin.server.components.SystemLoader;
+import com.tyin.server.loader.SystemLoader;
 import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.repository.AdminRegionRepository;
 import com.tyin.server.service.IAdminDictService;

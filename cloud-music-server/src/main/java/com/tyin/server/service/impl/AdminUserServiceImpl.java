@@ -7,11 +7,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Sets;
 import com.tyin.core.components.RedisComponents;
+import com.tyin.core.constants.ResMessageConstants;
 import com.tyin.core.module.bean.AuthAdminUser;
-import com.tyin.core.module.entity.AdminRole;
-import com.tyin.core.module.entity.AdminUser;
-import com.tyin.core.module.entity.AdminUserDetailRes;
-import com.tyin.core.module.entity.AdminUserExtra;
+import com.tyin.core.module.bean.InviteCodeBean;
+import com.tyin.core.module.entity.*;
 import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
@@ -21,10 +20,12 @@ import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.components.properties.PropertiesComponents;
-import com.tyin.server.params.valid.AdminLoginParams;
+import com.tyin.server.params.valid.AdminLoginValid;
+import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 import com.tyin.server.repository.AdminUserExtraRepository;
 import com.tyin.server.repository.AdminUserRepository;
+import com.tyin.server.service.IAdminInviteCodeService;
 import com.tyin.server.service.IAdminMenuService;
 import com.tyin.server.service.IAdminRoleService;
 import com.tyin.server.service.IAdminUserService;
@@ -33,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,11 +70,12 @@ public class AdminUserServiceImpl implements IAdminUserService {
     private final PropertiesComponents propertiesComponents;
     private final IAdminRoleService adminRoleService;
     private final IAdminMenuService adminMenuService;
+    private final IAdminInviteCodeService adminInviteCodeService;
 
     @Override
-    public AdminUserLoginRes login(AdminLoginParams adminLoginParams, Long ipAddress) {
-        String username = adminLoginParams.getAccount();
-        String password = adminLoginParams.getPassword();
+    public AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress) {
+        String username = adminLoginValid.getAccount();
+        String password = adminLoginValid.getPassword();
         password = StringUtils.sha256Encode(DigestUtils.md5Hex(password.getBytes(StandardCharsets.UTF_8))).toUpperCase(Locale.ROOT);
         AdminUser adminUser = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda().eq(AdminUser::getPassword, password));
         Asserts.isTrue(Objects.nonNull(adminUser), AUTH_FAILED);
@@ -227,5 +230,38 @@ public class AdminUserServiceImpl implements IAdminUserService {
         AdminUser adminUser = AdminUser.builder().token("").build();
         adminUserRepository.update(adminUser, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, user.getAccount()));
         redisComponents.deleteKey(ADMIN_USER_TOKEN_PREFIX + token);
+    }
+
+    @Override
+    public InviteCodeBean generateInviteCode(Long id, AuthAdminUser user) {
+        return adminInviteCodeService.generateInviteCode(id, user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void register(AdminRegisterValid adminRegisterValid) {
+        String code = adminRegisterValid.getCode();
+        //验证邀请码是否有效
+        AdminInviteCode adminInviteCode = adminInviteCodeService.getInviteCode(code);
+        Asserts.isTrue(Objects.nonNull(adminInviteCode), ResMessageConstants.INVALID_CODE);
+        String account = adminRegisterValid.getAccount();
+        String password = adminRegisterValid.getPassword();
+        password = StringUtils.sha256Encode(DigestUtils.md5Hex(password.getBytes(StandardCharsets.UTF_8))).toUpperCase(Locale.ROOT);
+        Long aLong = adminUserRepository.selectCount(Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, account));
+        Asserts.isTrue(aLong == 0, ResMessageConstants.ACCOUNT_REPEAT);
+        String defaultAvatar = propertiesComponents.getAdminConfig().getDefaultAvatar();
+        AdminUser adminUser = AdminUser.builder()
+                .account(account)
+                .nickName(account)
+                .password(password)
+                .avatar(defaultAvatar)
+                .build();
+        AdminUserExtra adminUserExtra = AdminUserExtra.builder()
+                .userId(adminUser.getId())
+                .build();
+        Asserts.isTrue(adminUserRepository.insert(adminUser) == 1 &&
+                adminUserExtraRepository.insert(adminUserExtra) == 1 &&
+                adminRoleService.addUserRole(adminUser.getId(), adminInviteCode.getRoleId()) == 1, ResMessageConstants.REGISTER_FAILED);
+        adminInviteCodeService.handleInviteCodeUse(code, account);
     }
 }

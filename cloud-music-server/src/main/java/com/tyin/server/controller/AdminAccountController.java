@@ -2,10 +2,12 @@ package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
 import com.tyin.core.module.bean.AuthAdminUser;
+import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.api.Result;
+import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 import com.tyin.server.service.IAdminUserService;
 import io.swagger.annotations.Api;
@@ -14,6 +16,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author Tyin
@@ -52,4 +56,13 @@ public class AdminAccountController {
         userService.saveAccountInfo(valid);
         return Result.success();
     }
+
+    @ApiOperation("生成邀请码")
+    @PutMapping("/generate/invite")
+    public Result<?> generateInviteCode(@ApiParam("角色ID") @Valid IdValid valid, @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
+        InviteCodeBean code = userService.generateInviteCode(valid.getId(), user);
+        return Result.success(String.format("已生成邀请码：%s，有效期 %s 分钟", code.getCode(), code.getExpiration() / 1000 / 60));
+
+    }
+
 }

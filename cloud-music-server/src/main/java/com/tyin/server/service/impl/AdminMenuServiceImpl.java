@@ -75,8 +75,8 @@ public class AdminMenuServiceImpl implements IAdminMenuService {
         } else {
             String key = ROLE_MENU_PREFIX + role.getValue();
             menuArrayStr = redisComponents.get(key);
-            List<String> idArray = Objects.isNull(menuArrayStr) ? Lists.newArrayList() : JsonUtils.toJavaObjectList(menuArrayStr, String.class);
-            List<String> strings = Objects.isNull(idArray) ? Lists.newArrayList() : idArray;
+            List<String> idArray = Objects.isNull(menuArrayStr) || StringUtils.isEmpty(menuArrayStr) ? Lists.newArrayList() : JsonUtils.toJavaObjectList(menuArrayStr, String.class);
+            List<String> strings = Objects.isNull(idArray) || idArray.isEmpty() ? Lists.newArrayList() : idArray;
             if (StringUtils.isNotEmpty(menuArrayStr)) {
                 adminMenus = adminMenus.stream().filter(i -> strings.contains(i.getId().toString())).collect(Collectors.toList());
                 adminMenusForUser.addAll(adminMenus);

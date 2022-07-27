@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static com.tyin.core.constants.ResMessageConstants.UPLOAD_FAILED;
+
 /**
  * @author Tyin
  * @date 2022/5/11 2:08
@@ -52,7 +54,7 @@ public class UploadComponents {
             newFile = new File(absolutePath);
             file.transferTo(newFile);
         } catch (IOException e) {
-            Asserts.fail("上传文件失败:" + e.getMessage());
+            Asserts.fail(UPLOAD_FAILED);
         }
         return UploadTmpRes.builder()
                 .src(propertiesComponents.getOssUrl() + propertiesComponents.getOssTmp() + fileName)

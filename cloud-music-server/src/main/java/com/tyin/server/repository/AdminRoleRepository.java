@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.core.module.bean.RoleLabel;
 import com.tyin.core.module.entity.AdminRole;
+import com.tyin.core.module.entity.AdminUserRole;
 import com.tyin.core.module.res.admin.AdminRoleRes;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -57,4 +59,7 @@ public interface AdminRoleRepository extends BaseMapper<AdminRole> {
             WHERE `user_id` = (SELECT `id` FROM `admin_user` WHERE `account` = #{account})
             """)
     void updateUserRole(@Param("account") String account, @Param("roleId") Long roleId);
+
+    @Insert("INSERT INTO admin_user_role (user_id, role_id, deleted, created, modified) VALUES (#{adminUserRole.userId}, #{adminUserRole.roleId}, 0, sysdate(), sysdate())")
+    Integer insertUserRole(@Param("adminUserRole") AdminUserRole adminUserRole);
 }

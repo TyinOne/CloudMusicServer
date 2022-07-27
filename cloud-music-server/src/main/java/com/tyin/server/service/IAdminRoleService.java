@@ -26,6 +26,8 @@ public interface IAdminRoleService {
 
     Integer addRole(InsertRoleValid valid, AuthAdminUser user);
 
+    Integer addUserRole(Long userId, Long roleId);
+
     void updateRole(UpdateRoleValid valid, AuthAdminUser user);
 
     List<Long> getRoleMenuSelectedLabel(Integer rowId);

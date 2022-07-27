@@ -11,6 +11,7 @@ import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.RoleLabel;
 import com.tyin.core.module.entity.AdminRole;
 import com.tyin.core.module.entity.AdminRoleMenu;
+import com.tyin.core.module.entity.AdminUserRole;
 import com.tyin.core.module.res.admin.AdminRoleRes;
 import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.StringUtils;
@@ -80,6 +81,12 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
                 .disabled(valid.getDisabled())
                 .sort(valid.getSort())
                 .build());
+    }
+
+    @Override
+    public Integer addUserRole(Long userId, Long roleId) {
+        AdminUserRole adminUserRole = AdminUserRole.builder().userId(userId).roleId(roleId).build();
+        return adminRoleRepository.insertUserRole(adminUserRole);
     }
 
     @Override

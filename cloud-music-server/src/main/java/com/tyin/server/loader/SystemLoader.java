@@ -1,24 +1,33 @@
-package com.tyin.server.components;
+package com.tyin.server.loader;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.collect.Lists;
+import com.tyin.core.components.CloudTimerTaskComponents;
 import com.tyin.core.components.RedisComponents;
+import com.tyin.core.components.ScheduledComponents;
+import com.tyin.core.components.properties.models.AdminConfig;
 import com.tyin.core.components.properties.models.OssConfig;
 import com.tyin.core.components.properties.models.TencentMapConfig;
+import com.tyin.core.module.base.TimerTaskState;
 import com.tyin.core.module.entity.AdminDict;
+import com.tyin.core.module.entity.AdminInviteCode;
+import com.tyin.core.module.entity.AdminScheduled;
+import com.tyin.core.utils.DateUtils;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.repository.AdminDictRepository;
+import com.tyin.server.repository.AdminInviteCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.quartz.SchedulerException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.tyin.core.constants.RedisKeyConstants.OSS_PROPERTIES;
-import static com.tyin.core.constants.RedisKeyConstants.TENCENT_MAP_PROPERTIES;
+import static com.tyin.core.constants.RedisKeyConstants.*;
 
 /**
  * @author Tyin
@@ -30,8 +39,11 @@ import static com.tyin.core.constants.RedisKeyConstants.TENCENT_MAP_PROPERTIES;
 @Slf4j
 public class SystemLoader {
     private final PropertiesComponents propertiesComponents;
-    private final AdminDictRepository adminDictRepository;
     private final RedisComponents redisComponents;
+    private final ScheduledComponents scheduledComponents;
+    private final CloudTimerTaskComponents timerTaskComponents;
+    private final AdminDictRepository adminDictRepository;
+    private final AdminInviteCodeRepository adminInviteCodeRepository;
 
     @Async
     public void initOss() {
@@ -61,4 +73,32 @@ public class SystemLoader {
         redisComponents.saveAsync(TENCENT_MAP_PROPERTIES, JsonUtils.toJSONString(tencentMapConfig));
         propertiesComponents.setTencentMap(tencentMapConfig);
     }
+
+    @Async
+    public void initAdminConfig() {
+        List<AdminDict> adminConfigDict = adminDictRepository.selectList(Wrappers.<AdminDict>lambdaQuery().eq(AdminDict::getDictType, "admin_config"));
+        AdminConfig adminConfig = AdminConfig.builder()
+                .defaultAvatar(adminConfigDict.stream().filter(i -> StringUtils.equals("default_avatar", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""))
+                .build();
+        propertiesComponents.setAdminConfig(adminConfig);
+        redisComponents.saveAsync(ADMIN_CONFIG_PROPERTIES, JsonUtils.toJSONString(adminConfig));
+    }
+
+    @Async
+    public void initScheduled() throws SchedulerException {
+        List<AdminScheduled> scheduledList = Lists.newArrayList();
+        scheduledComponents.init(scheduledList);
+    }
+
+    @Async
+    public void startTimerTask() {
+        List<TimerTaskState> list = Lists.newArrayList();
+        //把数据库已使用或者已过期的状态改为失效
+        //AdminInviteCode任务
+        adminInviteCodeRepository.update(AdminInviteCode.builder().status(1).build(), Wrappers.<AdminInviteCode>lambdaUpdate().le(AdminInviteCode::getExpirationTime, DateUtils.getNowDate()));
+        List<AdminInviteCode> adminInviteCode = adminInviteCodeRepository.selectList(Wrappers.<AdminInviteCode>lambdaQuery().eq(AdminInviteCode::getStatus, 0).eq(AdminInviteCode::getUsed, Boolean.FALSE));
+        list.addAll(adminInviteCode);
+        timerTaskComponents.init(list);
+    }
+
 }

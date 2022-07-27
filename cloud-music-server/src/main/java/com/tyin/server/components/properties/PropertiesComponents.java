@@ -1,9 +1,6 @@
 package com.tyin.server.components.properties;
 
-import com.tyin.core.components.properties.models.ApiPrefixConfig;
-import com.tyin.core.components.properties.models.OkHttpConfig;
-import com.tyin.core.components.properties.models.OssConfig;
-import com.tyin.core.components.properties.models.TencentMapConfig;
+import com.tyin.core.components.properties.models.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class PropertiesComponents {
     private static OssConfig oss;
     private static TencentMapConfig tencentMapConfig;
+    private AdminConfig adminConfig;
     private final OkHttpConfig okHttpConfig;
     private final ApiPrefixConfig apiPrefixConfig;
 
@@ -78,5 +76,13 @@ public class PropertiesComponents {
 
     public void setOss(OssConfig config) {
         oss = config;
+    }
+
+    public AdminConfig getAdminConfig() {
+        return adminConfig;
+    }
+
+    public void setAdminConfig(AdminConfig adminConfig) {
+        this.adminConfig = adminConfig;
     }
 }

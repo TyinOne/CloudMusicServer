@@ -41,7 +41,7 @@ public class AdminLabelController {
 
     @GetMapping("/region")
     @ApiOperation("区域树形数据接口")
-    public Result<RegionLabelRes> getRegionLabel(@ApiParam(value = "根级", defaultValue = "0s") @RequestParam(required = false, defaultValue = "0") Long rootId) {
+    public Result<RegionLabelRes> getRegionLabel(@ApiParam(value = "根级", defaultValue = "0") @RequestParam(required = false, defaultValue = "0") Long rootId) {
         List<RegionLabel> list = adminRegionService.getRegionLabel(rootId);
         return Result.success(RegionLabelRes.builder().list(list).build());
     }

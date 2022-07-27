@@ -1,10 +1,12 @@
 package com.tyin.server.components;
 
+import com.tyin.server.loader.SystemLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Calendar;
 
 /**
  * @author Tyin
@@ -20,9 +22,21 @@ public class SystemLoadComponents {
     @PostConstruct
     public void onLoad() {
         //加载字典
-        systemLoader.initOss();
-        systemLoader.initMap();
-        log.info("System Start success!");
+        try {
+            systemLoader.initAdminConfig();
+            systemLoader.initOss();
+            systemLoader.initMap();
+            systemLoader.initScheduled();
+            systemLoader.startTimerTask();
+            log.info("System Start success!");
+            Calendar calendar = Calendar.getInstance();
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
+                throw new ClassNotFoundException("hey guy, Crazy Thursday VMe 50$");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
     }
 
 }
