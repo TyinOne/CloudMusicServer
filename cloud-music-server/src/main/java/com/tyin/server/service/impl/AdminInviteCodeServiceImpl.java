@@ -1,20 +1,26 @@
 package com.tyin.server.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.core.components.CloudTimerTaskComponents;
 import com.tyin.core.components.RedisComponents;
+import com.tyin.core.components.properties.models.AdminConfig;
 import com.tyin.core.constants.RedisKeyConstants;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.entity.AdminInviteCode;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
+import com.tyin.server.api.PageResult;
+import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.repository.AdminInviteCodeRepository;
 import com.tyin.server.service.IAdminInviteCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Tyin
@@ -30,10 +36,15 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
 
     private final CloudTimerTaskComponents cloudTimerTaskComponents;
 
+    private final PropertiesComponents propertiesComponents;
+
     @Override
     public InviteCodeBean generateInviteCode(Long id, AuthAdminUser user) {
-        int configExpire = 2;
-        String code = StringUtils.sha256Encode(StringUtils.getUuid() + user.getAccount() + System.currentTimeMillis()).substring(4, 10).toUpperCase();
+        AdminConfig adminConfig = propertiesComponents.getAdminConfig();
+        Integer configExpire = adminConfig.getInviteCodeExpiration();
+        int subStart = (int) (Math.random() * 24) + 1;
+        int subEnd = subStart + 6;
+        String code = StringUtils.sha256Encode(StringUtils.getUuid() + user.getAccount() + System.currentTimeMillis()).substring(subStart, subEnd).toUpperCase();
         String inviteCodeKey = RedisKeyConstants.INVITE_CODE_EXPIRE + user.getAccount() + ":" + id + ":" + code;
         long expiration = System.currentTimeMillis() + configExpire * 60 * 1000;
         Date expirationDate = new Date(expiration);
@@ -43,7 +54,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
         AdminInviteCode adminInviteCode = AdminInviteCode.builder()
                 .roleId(id)
                 .code(code)
-                .status(0)
+                .invalid(Boolean.FALSE)
                 .used(Boolean.FALSE)
                 .createBy(user.getAccount())
                 .expirationTime(expirationDate)
@@ -55,17 +66,17 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
 
     @Override
     public void handleInviteCodeExpire(String code) {
-        adminInviteCodeRepository.update(AdminInviteCode.builder().status(1).build(), Wrappers.<AdminInviteCode>lambdaUpdate()
-                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getStatus, 0));
+        adminInviteCodeRepository.update(AdminInviteCode.builder().invalid(Boolean.TRUE).build(), Wrappers.<AdminInviteCode>lambdaUpdate()
+                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getInvalid, Boolean.FALSE));
         System.out.println("code:" + code);
     }
 
     @Override
     public void handleInviteCodeUse(String code, String account) {
         AdminInviteCode adminInviteCode = adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaUpdate()
-                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getStatus, 0));
+                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getInvalid, 0));
         adminInviteCode.setUsed(Boolean.TRUE);
-        adminInviteCode.setStatus(1);
+        adminInviteCode.setInvalid(Boolean.TRUE);
         adminInviteCode.setUseBy(account);
         adminInviteCodeRepository.updateById(adminInviteCode);
         cloudTimerTaskComponents.remove(code);
@@ -77,7 +88,28 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
         return adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaQuery()
                 .eq(AdminInviteCode::getCode, code)
                 .eq(AdminInviteCode::getUsed, Boolean.FALSE)
-                .eq(AdminInviteCode::getStatus, 0)
+                .eq(AdminInviteCode::getInvalid, Boolean.FALSE)
         );
+    }
+
+    @Override
+    public PageResult<AdminInviteCodeRes, ?> getList(String useBy, String createBy, Boolean invalid, Boolean isUsed, Long current, Long size) {
+        IPage<AdminInviteCodeRes> res = adminInviteCodeRepository.selectResList(new Page<>(current, size),
+                Wrappers.<AdminInviteCode>lambdaQuery()
+                        .apply(StringUtils.isNotEmpty(useBy), "INSTR(`use_by`, {0}) > 0", useBy)
+                        .apply(StringUtils.isNotEmpty(createBy), "INSTR(`create_by`, {0}) > 0", createBy)
+                        .eq(Objects.nonNull(invalid), AdminInviteCode::getInvalid, invalid)
+                        .eq(Objects.nonNull(isUsed), AdminInviteCode::getUsed, isUsed)
+                        .eq(AdminInviteCode::getDeleted, Boolean.FALSE)
+        );
+        return PageResult.buildResult(res);
+    }
+
+    @Override
+    public Integer remove(Long id) {
+        AdminInviteCode adminInviteCode = adminInviteCodeRepository.selectById(id);
+        int row = adminInviteCodeRepository.deleteById(id);
+        handleInviteCodeExpire(adminInviteCode.getCode());
+        return row;
     }
 }

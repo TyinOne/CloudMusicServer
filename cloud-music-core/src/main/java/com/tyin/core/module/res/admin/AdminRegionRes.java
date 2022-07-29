@@ -20,6 +20,6 @@ public class AdminRegionRes {
     private BigDecimal lat;
     private BigDecimal lng;
     private Integer level;
-    private Boolean hasChildren = true;
+    private Boolean hasChildren;
     private List<AdminRegionRes> children = Lists.newArrayList();
 }

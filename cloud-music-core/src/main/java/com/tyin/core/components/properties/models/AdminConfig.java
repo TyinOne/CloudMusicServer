@@ -15,5 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminConfig {
+
     private String defaultAvatar;
+
+    private Integer inviteCodeExpiration;
 }

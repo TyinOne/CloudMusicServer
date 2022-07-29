@@ -36,7 +36,9 @@ public interface AdminRegionRepository extends BaseMapper<AdminRegion> {
             \t`lat`,
             \t`lng`,
             \t`level`,
-            \t(SELECT count(1) FROM `admin_region` WHERE `parent_id` = `admin_region`.`id` limit 1) > 0 hasChildren
-            FROM \t`admin_region` ${ew.customSqlSegment}""")
+            \t(SELECT count(id) FROM `admin_region` WHERE `parent_id` = `region`.`id` limit 1) > 0 hasChildren
+            FROM admin_region AS `region`
+            WHERE ${ew.sqlSegment}
+            """)
     List<AdminRegionRes> selectResList(@Param("ew") LambdaQueryWrapper<AdminRegion> wrapper);
 }

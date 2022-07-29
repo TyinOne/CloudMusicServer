@@ -31,7 +31,7 @@ public class SystemLoadComponents {
             log.info("System Start success!");
             Calendar calendar = Calendar.getInstance();
             if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
-                throw new ClassNotFoundException("hey guy, Crazy Thursday VMe 50$");
+                throw new ClassNotFoundException("Hey guy,I need Crazy Thursday & VMe 50$");
             }
         } catch (Exception e) {
             e.printStackTrace();

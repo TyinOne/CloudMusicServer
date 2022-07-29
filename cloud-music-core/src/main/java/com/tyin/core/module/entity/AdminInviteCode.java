@@ -29,11 +29,12 @@ public class AdminInviteCode extends BaseEntity implements AdminInviteCodeTaskSt
     @Setter
     private String code;
     /**
-     * 0 有效， 1 过期的
+     * 是否无效
+     * 0 有效， 1 无效
      */
     @Getter
     @Setter
-    private Integer status;
+    private Boolean invalid;
     @Setter
     private Date expirationTime;
     /**

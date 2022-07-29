@@ -17,7 +17,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <jackson.version>2.13.0-rc1</jackson.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger.ui.version>3.0.2</swagger.ui.version>
@@ -33,7 +33,7 @@
         <mybatis-spring.version>2.2.2</mybatis-spring.version>
         <openapi.version>2.0.0-M2</openapi.version>
         <okhttp.version>4.9.3</okhttp.version>
-        <quartz.version>2.3.0</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -113,6 +113,12 @@
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <type>pom</type>
+                <version>${quartz.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

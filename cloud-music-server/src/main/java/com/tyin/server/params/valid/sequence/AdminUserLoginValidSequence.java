@@ -7,6 +7,6 @@ import javax.validation.GroupSequence;
  * @date 2022/3/31 11:34
  * @description ...
  */
-@GroupSequence({UsernameCheck.class, PasswordCheck.class})
+@GroupSequence({UsernameBankCheck.class, UsernameLengthCheck.class, PasswordBankCheck.class, PasswordLengthCheck.class})
 public interface AdminUserLoginValidSequence {
 }

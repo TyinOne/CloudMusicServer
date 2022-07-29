@@ -5,5 +5,5 @@ package com.tyin.server.params.valid.sequence;
  * @date 2022/3/31 11:39
  * @description ...
  */
-public interface PasswordCheck {
+public interface PasswordBankCheck {
 }

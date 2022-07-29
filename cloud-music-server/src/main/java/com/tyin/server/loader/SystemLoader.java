@@ -79,6 +79,7 @@ public class SystemLoader {
         List<AdminDict> adminConfigDict = adminDictRepository.selectList(Wrappers.<AdminDict>lambdaQuery().eq(AdminDict::getDictType, "admin_config"));
         AdminConfig adminConfig = AdminConfig.builder()
                 .defaultAvatar(adminConfigDict.stream().filter(i -> StringUtils.equals("default_avatar", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse(""))
+                .inviteCodeExpiration(Integer.valueOf(adminConfigDict.stream().filter(i -> StringUtils.equals("invite_code_expiration", i.getDictKey())).map(AdminDict::getDictValue).findFirst().orElse("")))
                 .build();
         propertiesComponents.setAdminConfig(adminConfig);
         redisComponents.saveAsync(ADMIN_CONFIG_PROPERTIES, JsonUtils.toJSONString(adminConfig));
@@ -95,8 +96,8 @@ public class SystemLoader {
         List<TimerTaskState> list = Lists.newArrayList();
         //把数据库已使用或者已过期的状态改为失效
         //AdminInviteCode任务
-        adminInviteCodeRepository.update(AdminInviteCode.builder().status(1).build(), Wrappers.<AdminInviteCode>lambdaUpdate().le(AdminInviteCode::getExpirationTime, DateUtils.getNowDate()));
-        List<AdminInviteCode> adminInviteCode = adminInviteCodeRepository.selectList(Wrappers.<AdminInviteCode>lambdaQuery().eq(AdminInviteCode::getStatus, 0).eq(AdminInviteCode::getUsed, Boolean.FALSE));
+        adminInviteCodeRepository.update(AdminInviteCode.builder().invalid(Boolean.TRUE).build(), Wrappers.<AdminInviteCode>lambdaUpdate().le(AdminInviteCode::getExpirationTime, DateUtils.getNowDate()));
+        List<AdminInviteCode> adminInviteCode = adminInviteCodeRepository.selectList(Wrappers.<AdminInviteCode>lambdaQuery().eq(AdminInviteCode::getInvalid, Boolean.FALSE).eq(AdminInviteCode::getUsed, Boolean.FALSE));
         list.addAll(adminInviteCode);
         timerTaskComponents.init(list);
     }
