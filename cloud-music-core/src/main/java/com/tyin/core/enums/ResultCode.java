@@ -10,14 +10,13 @@ import com.tyin.core.exception.handle.BaseErrorInfoInterface;
  */
 public enum ResultCode implements BaseErrorInfoInterface {
     // 数据操作错误定义
-    SUCCESS(200, "Ok"),
-    FAIL(400, "Fail"),
-    //permission denied
-    PERMISSION_DENIED(402, "权限不足，无法访问！"),
-    SIGNATURE_NOT_MATCH(403, "Token Invalid"),
-    NOT_FOUND(404, "Not Found"),
-    INTERNAL_SERVER_ERROR(500, "Server Error"),
-    SERVER_BUSY(503, "Server Busyness");
+    SUCCESS(200, "成功!"),
+    FAIL(400, "失败!"),
+    PERMISSION_DENIED(402, "权限不足，无法访问!"),
+    SIGNATURE_NOT_MATCH(403, "认证失败, 请重新登录!"),
+    NOT_FOUND(404, "未找到资源!"),
+    INTERNAL_SERVER_ERROR(500, "服务器异常!"),
+    SERVER_BUSY(503, "服务器繁忙!");
     /**
      * 错误码
      */

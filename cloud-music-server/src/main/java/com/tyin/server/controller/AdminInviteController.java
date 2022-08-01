@@ -3,13 +3,14 @@ package com.tyin.server.controller;
 import com.tyin.core.annotations.Auth;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
+import com.tyin.core.module.res.admin.GenerateInviteRes;
 import com.tyin.core.utils.Asserts;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.service.IAdminInviteCodeService;
 import com.tyin.server.service.IAdminUserService;
-import com.tyin.server.service.impl.AdminInviteCodeRes;
+import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -49,7 +50,12 @@ public class AdminInviteController {
     @PutMapping("/generate")
     public Result<?> generateInviteCode(@ApiParam("角色ID") @Valid @RequestBody IdValid valid, @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
         InviteCodeBean code = userService.generateInviteCode(valid.getId(), user);
-        return Result.success(String.format("已生成邀请码：%s，有效期 %s 分钟", code.getCode(), code.getExpiration() / 1000 / 60));
+        GenerateInviteRes build = GenerateInviteRes.builder()
+                .code(code.getCode())
+                .time(code.getExpiration() / 1000 / 60  + "")
+                .message(String.format("已生成邀请码：%s，有效期 %s 分钟", code.getCode(), code.getExpiration() / 1000 / 60))
+                .build();
+        return Result.success(build);
     }
 
     @ApiOperation("清除邀请码")

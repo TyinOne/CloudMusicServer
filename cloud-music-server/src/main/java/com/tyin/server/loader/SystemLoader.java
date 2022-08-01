@@ -97,7 +97,7 @@ public class SystemLoader {
         //把数据库已使用或者已过期的状态改为失效
         //AdminInviteCode任务
         adminInviteCodeRepository.update(AdminInviteCode.builder().invalid(Boolean.TRUE).build(), Wrappers.<AdminInviteCode>lambdaUpdate().le(AdminInviteCode::getExpirationTime, DateUtils.getNowDate()));
-        List<AdminInviteCode> adminInviteCode = adminInviteCodeRepository.selectList(Wrappers.<AdminInviteCode>lambdaQuery().eq(AdminInviteCode::getInvalid, Boolean.FALSE).eq(AdminInviteCode::getUsed, Boolean.FALSE));
+        List<AdminInviteCode> adminInviteCode = adminInviteCodeRepository.selectList(Wrappers.<AdminInviteCode>lambdaQuery().eq(AdminInviteCode::getInvalid, Boolean.FALSE));
         list.addAll(adminInviteCode);
         timerTaskComponents.init(list);
     }

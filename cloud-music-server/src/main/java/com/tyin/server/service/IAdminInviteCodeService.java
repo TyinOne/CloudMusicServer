@@ -4,7 +4,7 @@ import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.entity.AdminInviteCode;
 import com.tyin.server.api.PageResult;
-import com.tyin.server.service.impl.AdminInviteCodeRes;
+import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 
 /**
  * @author Tyin

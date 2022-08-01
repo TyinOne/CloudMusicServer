@@ -10,6 +10,7 @@ import com.tyin.core.constants.RedisKeyConstants;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.entity.AdminInviteCode;
+import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
@@ -66,15 +67,21 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
 
     @Override
     public void handleInviteCodeExpire(String code) {
-        adminInviteCodeRepository.update(AdminInviteCode.builder().invalid(Boolean.TRUE).build(), Wrappers.<AdminInviteCode>lambdaUpdate()
-                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getInvalid, Boolean.FALSE));
-        System.out.println("code:" + code);
+        AdminInviteCode inviteCode = selectInviteCode(code);
+        inviteCode.setInvalid(Boolean.TRUE);
+        adminInviteCodeRepository.deleteById(inviteCode);
+        String inviteCodeKey = RedisKeyConstants.INVITE_CODE_EXPIRE + inviteCode.getCreateBy() + ":" + inviteCode.getRoleId() + ":" + code;
+        redisComponents.deleteKey(inviteCodeKey);
+    }
+    private AdminInviteCode selectInviteCode(String code) {
+        return adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaUpdate()
+                .eq(AdminInviteCode::getCode, code));
     }
 
     @Override
     public void handleInviteCodeUse(String code, String account) {
         AdminInviteCode adminInviteCode = adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaUpdate()
-                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getInvalid, 0));
+                .eq(AdminInviteCode::getCode, code).eq(AdminInviteCode::getInvalid, Boolean.FALSE));
         adminInviteCode.setUsed(Boolean.TRUE);
         adminInviteCode.setInvalid(Boolean.TRUE);
         adminInviteCode.setUseBy(account);

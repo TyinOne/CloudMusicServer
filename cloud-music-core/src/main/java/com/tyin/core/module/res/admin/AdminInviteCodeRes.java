@@ -1,4 +1,4 @@
-package com.tyin.server.service.impl;
+package com.tyin.core.module.res.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tyin.core.utils.DateUtils;

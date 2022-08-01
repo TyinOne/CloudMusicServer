@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.core.module.entity.AdminInviteCode;
-import com.tyin.server.service.impl.AdminInviteCodeRes;
+import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
