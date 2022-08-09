@@ -62,6 +62,7 @@ import static com.tyin.core.constants.ResMessageConstants.USER_DISABLED;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminUserServiceImpl implements IAdminUserService {
 
     private final AdminUserRepository adminUserRepository;

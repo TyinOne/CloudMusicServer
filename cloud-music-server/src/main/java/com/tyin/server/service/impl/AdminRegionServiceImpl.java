@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -40,6 +41,7 @@ import static com.tyin.core.components.properties.models.TencentMapConfig.VERSIO
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, AdminRegion> implements IAdminRegionService {
     private final HttpComponents httpComponents;
     private final PropertiesComponents propertiesComponents;

@@ -8,6 +8,7 @@ import com.tyin.core.module.res.admin.AdminDictTypeRes;
 import com.tyin.core.utils.Asserts;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.api.Result;
+import com.tyin.server.components.SystemLoadComponents;
 import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.params.valid.SaveDictTypeValid;
 import com.tyin.server.params.valid.SaveDictValid;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminDictController {
     private final IAdminDictService adminDictService;
+    private final SystemLoadComponents systemLoadComponents;
 
     @GetMapping("/list")
     @ApiOperation("字典列表")
@@ -38,7 +40,7 @@ public class AdminDictController {
                                                            @ApiParam("字典type") @RequestParam(required = false) String dictType,
                                                            @ApiParam("分页长度") @RequestParam(required = false, defaultValue = "20") Long size,
                                                            @ApiParam("当前页") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                           @Auth("@permission.hasPermission('sys:dict:query')") AuthAdminUser user) {
+                                                           @Auth("@permission.hasPermission('sys:dict:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminDictRes, ?> res = adminDictService.getDictList(keywords, dictKey, dictType, size, current);
         return Result.success(res);
     }
@@ -55,7 +57,7 @@ public class AdminDictController {
 
     @PostMapping("/save")
     @ApiOperation("保存字典")
-    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser user) {
+    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
         Integer row = adminDictService.saveDict(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.SAVE_FAILED);
         return Result.success();
@@ -71,7 +73,7 @@ public class AdminDictController {
 
     @PostMapping("/type/save")
     @ApiOperation("保存字典分类")
-    public Result<?> saveDictType(@RequestBody SaveDictTypeValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser user) {
+    public Result<?> saveDictType(@RequestBody SaveDictTypeValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
         Integer row = adminDictService.saveDictType(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.SAVE_FAILED);
         return Result.success();
@@ -85,4 +87,10 @@ public class AdminDictController {
         return Result.success();
     }
 
+    @PutMapping("/update/cache")
+    @ApiOperation("更新字典缓存")
+    public Result<?> updateDictCache(@Auth AuthAdminUser ignoredUser) {
+        systemLoadComponents.onLoad();
+        return Result.success();
+    }
 }

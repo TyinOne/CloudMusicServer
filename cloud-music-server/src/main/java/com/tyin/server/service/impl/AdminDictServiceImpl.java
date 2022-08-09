@@ -19,6 +19,7 @@ import com.tyin.server.repository.AdminDictTypeRepository;
 import com.tyin.server.service.IAdminDictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminDictServiceImpl implements IAdminDictService {
     private final AdminDictRepository adminDictRepository;
     private final AdminDictTypeRepository adminDictTypeRepository;

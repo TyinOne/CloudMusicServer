@@ -41,7 +41,7 @@ public class AdminInviteController {
                                                                        @ApiParam("是否使用") @RequestParam(required = false) Boolean used,
                                                                        @ApiParam(value = "页长度", defaultValue = "20") @RequestParam(required = false, defaultValue = "20") Long size,
                                                                        @ApiParam(value = "当前页", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                                       @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
+                                                                       @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser ignoredUser) {
         PageResult<AdminInviteCodeRes, ?> resPageResult = adminInviteCodeService.getList(useBy, createBy, invalid, used, current, size);
         return Result.success(resPageResult);
     }
@@ -60,7 +60,7 @@ public class AdminInviteController {
 
     @ApiOperation("清除邀请码")
     @PutMapping("/remove")
-    public Result<?> removeInviteCode(@ApiParam("邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser user) {
+    public Result<?> removeInviteCode(@ApiParam("邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser ignoredUser) {
         Integer row = adminInviteCodeService.remove(valid.getId());
         Asserts.isTrue(row == 1, "清理失败");
         return Result.success();

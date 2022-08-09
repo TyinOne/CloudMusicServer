@@ -18,6 +18,7 @@ import com.tyin.server.service.IAdminVersionService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminVersionServiceImpl implements IAdminVersionService {
     private final AdminVersionMapper adminVersionMapper;
     private final PropertiesComponents propertiesComponents;
@@ -43,9 +45,7 @@ public class AdminVersionServiceImpl implements IAdminVersionService {
                 .between(Objects.nonNull(startTime) && Objects.nonNull(stopTime), AdminVersion::getReleaseTime, startTime, stopTime)
                 .orderByDesc(AdminVersion::getReleaseTime)
         );
-        iPage.getRecords().forEach(i -> {
-            i.setSrc(propertiesComponents.getOssUrl() + i.getSrc());
-        });
+        iPage.getRecords().forEach(i -> i.setSrc(propertiesComponents.getOssUrl() + i.getSrc()));
         return PageResult.buildResult(iPage);
     }
 

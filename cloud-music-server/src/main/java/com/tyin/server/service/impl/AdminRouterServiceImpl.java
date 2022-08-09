@@ -14,6 +14,7 @@ import com.tyin.server.service.IAdminRouterService;
 import com.tyin.server.service.IAdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,7 @@ import static com.tyin.core.constants.ResMessageConstants.USER_NOT_FOUND;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminRouterServiceImpl implements IAdminRouterService {
     private final IAdminMenuService adminMenuService;
     private final IAdminUserService adminUserService;

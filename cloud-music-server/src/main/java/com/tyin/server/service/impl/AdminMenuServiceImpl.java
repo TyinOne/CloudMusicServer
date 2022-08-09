@@ -24,6 +24,7 @@ import com.tyin.server.service.IAdminMenuService;
 import com.tyin.server.service.IAdminRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +43,7 @@ import static com.tyin.core.constants.RedisKeyConstants.SUPPER_MENU_PREFIX;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminMenuServiceImpl implements IAdminMenuService {
     private final IAdminRoleService adminRoleService;
     private final AdminMenuRepository adminMenuRepository;

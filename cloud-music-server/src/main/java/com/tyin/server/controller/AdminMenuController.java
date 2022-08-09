@@ -33,21 +33,21 @@ public class AdminMenuController {
     public Result<MenuRes> getMenuRes(@ApiParam("关键词") @RequestParam(required = false) String keywords,
                                       @ApiParam("角色ID") @RequestParam(required = false) Integer roleId,
                                       @ApiParam("是否禁用") @RequestParam(required = false) Boolean disabled,
-                                      @Auth("@permission.hasPermission('sys:menu:query')") AuthAdminUser user) {
+                                      @Auth("@permission.hasPermission('sys:menu:query')") AuthAdminUser ignoredUser) {
         List<MenuRes.MenuItem> menuRes = adminMenuService.getMenuRes(keywords, roleId, disabled);
         return Result.success(MenuRes.builder().list(menuRes).build());
     }
 
     @GetMapping("/detail")
     @ApiOperation("菜单详情")
-    public Result<MenuDetailRes> getDetailRes(@RequestParam Integer id, @Auth("@permission.hasPermission('sys:menu:detail')") AuthAdminUser user) {
+    public Result<MenuDetailRes> getDetailRes(@RequestParam Integer id, @Auth("@permission.hasPermission('sys:menu:detail')") AuthAdminUser ignoredUser) {
         MenuDetailRes res = adminMenuService.getMenuDetailRes(id);
         return Result.success(res);
     }
 
     @PostMapping("/save")
     @ApiOperation("保存目录/菜单/按钮信息")
-    public Result<?> saveMenu(@RequestBody SaveMenuValid valid, @Auth("@permission.hasPermission('sys:menu:save')") AuthAdminUser user) {
+    public Result<?> saveMenu(@RequestBody SaveMenuValid valid, @Auth("@permission.hasPermission('sys:menu:save')") AuthAdminUser ignoredUser) {
         Asserts.isTrue(adminMenuService.saveMenu(valid) > 0, "保存失败");
         return Result.success();
     }

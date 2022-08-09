@@ -19,6 +19,7 @@ import com.tyin.server.repository.AdminInviteCodeRepository;
 import com.tyin.server.service.IAdminInviteCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
     private final RedisComponents redisComponents;
 

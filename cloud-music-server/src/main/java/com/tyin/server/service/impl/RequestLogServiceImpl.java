@@ -13,6 +13,7 @@ import com.tyin.server.service.IRequestLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class RequestLogServiceImpl implements IRequestLogService {
 
     private final RequestLogRepository requestLogRepository;
