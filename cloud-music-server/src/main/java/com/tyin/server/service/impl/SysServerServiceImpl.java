@@ -46,13 +46,15 @@ public class SysServerServiceImpl implements ISysServerService {
     public SysInfoRes getSysInfo() {
         SystemInfo systemInfo = new SystemInfo();
         HardwareAbstractionLayer hardware = systemInfo.getHardware();
-        return SysInfoRes.builder()
+        SysInfoRes build = builder()
                 .cpu(getCpuRes(hardware.getProcessor()))
                 .mem(getMemRes(hardware.getMemory()))
                 .sys(getSysRes())
                 .jvm(getJvmRes())
                 .disks(getDisksRes(systemInfo.getOperatingSystem()))
                 .build();
+        System.gc();
+        return build;
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysInfoRes {
-    public static final int OSHI_WAIT_SECOND = 1000;
+    public static final int OSHI_WAIT_SECOND = 500;
     private CpuRes cpu;
     private MemRes mem;
     private JvmRes jvm;

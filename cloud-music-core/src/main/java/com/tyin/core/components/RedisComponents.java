@@ -129,7 +129,6 @@ public class RedisComponents {
     }
 
     public String get(String key) {
-        log.info("Redis get key: " + key);
         return StringUtils.isBlank(key) ? "" : redisTemplate.opsForValue().get(key);
     }
 

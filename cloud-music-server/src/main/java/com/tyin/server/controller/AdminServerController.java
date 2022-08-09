@@ -1,6 +1,7 @@
 package com.tyin.server.controller;
 
 
+import com.tyin.core.annotations.NoLog;
 import com.tyin.core.annotations.Open;
 import com.tyin.core.module.res.admin.SysInfoRes;
 import com.tyin.core.module.res.admin.SysRedisRes;
@@ -24,6 +25,7 @@ public class AdminServerController {
 
     @Open
     @GetMapping("/server/config")
+    @NoLog
     public Result<SysInfoRes> getServerConfig() {
         return Result.success(sysServerService.getSysInfo());
     }
