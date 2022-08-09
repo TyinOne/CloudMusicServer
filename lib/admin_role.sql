@@ -21,18 +21,23 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for admin_role
 -- ----------------------------
 DROP TABLE IF EXISTS `admin_role`;
-CREATE TABLE `admin_role`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `value` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
-  `description` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
-  `disabled` tinyint(1) NOT NULL DEFAULT 0,
-  `sort` int(11) NOT NULL DEFAULT 0,
-  `created` datetime(0) NOT NULL,
-  `modified` datetime(0) NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `key`(`value`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+CREATE TABLE `admin_role`
+(
+    `id`          bigint(20)                                                   NOT NULL AUTO_INCREMENT,
+    `value`       varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+    `name`        varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+    `description` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+    `disabled`    tinyint(1)                                                   NOT NULL DEFAULT 0,
+    `sort`        int(11)                                                      NOT NULL DEFAULT 0,
+    `created`     datetime(0)                                                  NOT NULL,
+    `modified`    datetime(0)                                                  NOT NULL,
+    `deleted`     tinyint(1)                                                   NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `key` (`value`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 5
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci
+  ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -3,6 +3,8 @@ package com.tyin.server.api;
 import com.tyin.core.enums.ResultCode;
 import com.tyin.core.exception.handle.BaseErrorInfoInterface;
 import lombok.Data;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Tyin
@@ -43,7 +45,7 @@ public class Result<T> {
      * 成功返回空对象
      */
 
-    public static <T>Result<T> success() {
+    public static <T> Result<T> success() {
         return success(ResultCode.SUCCESS.getMessage(), null);
     }
 
@@ -57,6 +59,8 @@ public class Result<T> {
         return new Result<>(ResultCode.SUCCESS.getCode(), message, result);
     }
 
+    @NotNull
+    @Contract(" -> new")
     public static Result<String> failed() {
         return failed(ResultCode.INTERNAL_SERVER_ERROR);
     }

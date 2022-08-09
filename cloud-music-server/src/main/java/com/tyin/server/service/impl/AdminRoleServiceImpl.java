@@ -23,6 +23,7 @@ import com.tyin.server.repository.AdminRoleRepository;
 import com.tyin.server.service.IAdminRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +42,7 @@ import static com.tyin.core.constants.ResMessageConstants.ROLE_HAS_EXIST;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminRoleServiceImpl implements IAdminRoleService {
     private final AdminRoleRepository adminRoleRepository;
     private final AdminRoleMenuRepository adminRoleMenuRepository;

@@ -9,6 +9,7 @@ import com.tyin.server.service.IAdminScheduledService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Tyin
@@ -17,10 +18,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminScheduledServiceImpl implements IAdminScheduledService {
     private final AdminScheduledLogRepository adminScheduledLogRepository;
 
     private final AdminScheduledRepository adminScheduledRepository;
+
     @Override
     public void addLog(AdminScheduledLog adminScheduledLog) {
         adminScheduledLogRepository.insert(adminScheduledLog);

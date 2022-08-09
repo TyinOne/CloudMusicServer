@@ -1,6 +1,8 @@
 package com.tyin.server.controller;
 
 
+import com.tyin.core.annotations.Auth;
+import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminRegionListRes;
 import com.tyin.core.module.res.admin.AdminRegionRes;
 import com.tyin.server.api.Result;
@@ -29,7 +31,8 @@ public class AdminRegionController {
     @GetMapping(value = {"/list/{parentId}"})
     public Result<AdminRegionListRes> getRegionList(@ApiParam("父级ID") @PathVariable(name = "parentId") Long parentId,
                                                     @ApiParam("关键词") @RequestParam(required = false) String keywords,
-                                                    @ApiParam("查询级别") @RequestParam(required = false, defaultValue = "0") Integer level) {
+                                                    @ApiParam("查询级别") @RequestParam(required = false, defaultValue = "0") Integer level,
+                                                    @Auth AuthAdminUser ignoredUser) {
         List<AdminRegionRes> list = regionService.selectListBy(parentId, keywords, level);
         return Result.success(AdminRegionListRes.builder().list(list).build());
     }

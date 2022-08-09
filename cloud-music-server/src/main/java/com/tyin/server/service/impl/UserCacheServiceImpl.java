@@ -4,6 +4,7 @@ package com.tyin.server.service.impl;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.server.service.IUserCacheService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
  * @description ...
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserCacheServiceImpl implements IUserCacheService {
 
     @Override

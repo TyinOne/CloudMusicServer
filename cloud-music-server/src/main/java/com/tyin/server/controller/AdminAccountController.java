@@ -34,21 +34,21 @@ public class AdminAccountController {
                                                               @ApiParam("是否禁用") @RequestParam(required = false, defaultValue = "-1") Long disabled,
                                                               @ApiParam(value = "页长度", defaultValue = "20") @RequestParam(required = false, defaultValue = "20") Long size,
                                                               @ApiParam(value = "当前页", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                              @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:query')") AuthAdminUser user) {
+                                                              @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminAccountRes, ?> res = userService.getUserList(size, current, name, roleId, disabled);
         return Result.success(res);
     }
 
     @ApiOperation("用户详情")
     @GetMapping("/detail")
-    public Result<AdminAccountDetailRes> getUserDetail(@ApiParam("用户名") @RequestParam String account, @Auth("@permission.hasPermission('sys:account:detail')") AuthAdminUser user) {
+    public Result<AdminAccountDetailRes> getUserDetail(@ApiParam("用户名") @RequestParam String account, @Auth("@permission.hasPermission('sys:account:detail')") AuthAdminUser ignoredUser) {
         AdminAccountDetailRes res = userService.getAccountDetail(account);
         return Result.success(res);
     }
 
     @ApiOperation("保存用户信息")
     @PostMapping("/save")
-    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid, @Auth("@permission.hasPermission('sys:account:save')") AuthAdminUser user) {
+    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid, @Auth("@permission.hasPermission('sys:account:save')") AuthAdminUser ignoredUser) {
         userService.saveAccountInfo(valid);
         return Result.success();
     }

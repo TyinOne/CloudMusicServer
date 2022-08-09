@@ -20,11 +20,6 @@ public class SpringUtils implements BeanFactoryPostProcessor {
      */
     private static ConfigurableListableBeanFactory beanFactory;
 
-    @Override
-    public void postProcessBeanFactory(@NotNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        SpringUtils.beanFactory = beanFactory;
-    }
-
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
         return (T) beanFactory.getBean(name);
@@ -35,7 +30,7 @@ public class SpringUtils implements BeanFactoryPostProcessor {
      *
      * @param clz clazz
      * @return T
-     * @throws BeansException
+     * @throws BeansException bean获取异常
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
         return beanFactory.getBean(clz);
@@ -56,7 +51,7 @@ public class SpringUtils implements BeanFactoryPostProcessor {
      *
      * @param name bean 名字
      * @return boolean
-     * @throws   org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException bean获取异常
      */
     public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return beanFactory.isSingleton(name);
@@ -65,7 +60,7 @@ public class SpringUtils implements BeanFactoryPostProcessor {
     /**
      * @param name bean 名字
      * @return Class 注册对象的类型
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException bean获取异常
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return beanFactory.getType(name);
@@ -76,7 +71,7 @@ public class SpringUtils implements BeanFactoryPostProcessor {
      *
      * @param name bean 名字
      * @return 别名
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException bean获取异常
      */
     public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return beanFactory.getAliases(name);
@@ -85,11 +80,15 @@ public class SpringUtils implements BeanFactoryPostProcessor {
     /**
      * 获取aop代理对象
      *
-     * @param invoker invoker
      * @return T
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getAopProxy(T invoker) {
+    public static <T> T getAopProxy() {
         return (T) AopContext.currentProxy();
+    }
+
+    @Override
+    public void postProcessBeanFactory(@NotNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringUtils.beanFactory = beanFactory;
     }
 }

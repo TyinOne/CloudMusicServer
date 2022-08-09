@@ -1,6 +1,8 @@
 package com.tyin.server.controller;
 
+import com.tyin.core.annotations.Auth;
 import com.tyin.core.annotations.Open;
+import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminUpdateRes;
 import com.tyin.core.module.res.admin.AdminVersionRes;
 import com.tyin.core.utils.Asserts;
@@ -51,7 +53,8 @@ public class AdminVersionController {
     public Result<PageResult<AdminVersionRes, ?>> getVersionList(@RequestParam(required = false) @DateTimeFormat(pattern = DateUtils.YYYY_MM_DD) Date startTime,
                                                                  @RequestParam(required = false) @DateTimeFormat(pattern = DateUtils.YYYY_MM_DD) Date stopTime,
                                                                  @RequestParam(required = false, defaultValue = "1") Long current,
-                                                                 @RequestParam(required = false, defaultValue = "20") Long size) {
+                                                                 @RequestParam(required = false, defaultValue = "20") Long size,
+                                                                 @Auth AuthAdminUser ignoredUser) {
         PageResult<AdminVersionRes, ?> pageResult = adminVersionService.getVersionList(startTime, stopTime, current, size);
         return Result.success(pageResult);
     }

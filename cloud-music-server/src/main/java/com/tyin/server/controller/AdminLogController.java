@@ -33,7 +33,7 @@ public class AdminLogController {
     @GetMapping("/list")
     public Result<PageResult<AdminLogRes, ?>> queryLog(@ApiParam(value = "分页长度", defaultValue = "20") @RequestParam(required = false, defaultValue = "20") Long size,
                                                        @ApiParam(value = "当前页", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                       @Auth("@permission.hasPermission('sys:log:query')") AuthAdminUser user) {
+                                                       @Auth("@permission.hasPermission('sys:log:query')") AuthAdminUser ignoredUser) {
 
         PageResult<AdminLogRes, ?> pageResult = requestLogService.queryLog(size, current);
         return Result.success(pageResult);

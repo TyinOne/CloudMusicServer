@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.CentralProcessor.TickType;
@@ -37,6 +38,7 @@ import static com.tyin.core.module.res.admin.SysInfoRes.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class SysServerServiceImpl implements ISysServerService {
     private final RedisTemplate<String, String> redisTemplate;
 

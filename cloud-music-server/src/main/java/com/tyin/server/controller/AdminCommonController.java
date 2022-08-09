@@ -62,7 +62,7 @@ public class AdminCommonController {
     @NoLog
     @ApiOperation("解析更新Json文件")
     @PostMapping("/parse/update")
-    public Result<UpdateJsonUploadRes> parseUpdateJson(@ApiParam("文件参数") @RequestParam MultipartFile updateJson, @Auth AuthAdminUser user) {
+    public Result<UpdateJsonUploadRes> parseUpdateJson(@ApiParam("文件参数") @RequestParam MultipartFile updateJson, @Auth AuthAdminUser ignoredUser) {
         StringBuilder stringBuilder;
         String json = "";
         try {

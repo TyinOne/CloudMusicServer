@@ -15,8 +15,8 @@ import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.core.utils.TreeUtils;
-import com.tyin.server.loader.SystemLoader;
 import com.tyin.server.components.properties.PropertiesComponents;
+import com.tyin.server.loader.SystemLoader;
 import com.tyin.server.repository.AdminRegionRepository;
 import com.tyin.server.service.IAdminDictService;
 import com.tyin.server.service.IAdminRegionService;
@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -38,8 +39,10 @@ import static com.tyin.core.components.properties.models.TencentMapConfig.VERSIO
  * @date 2022/4/22 13:56
  * @description ...
  */
+@SuppressWarnings("ALL")
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, AdminRegion> implements IAdminRegionService {
     private final HttpComponents httpComponents;
     private final PropertiesComponents propertiesComponents;
@@ -51,8 +54,8 @@ public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, A
     @Async
     public void getAreaForTencent() {
         TencentMapConfig tencentMapConfig = propertiesComponents.getTencentMapConfig();
-        String key = tencentMapConfig.getKey();
-        String secretKey = tencentMapConfig.getSecretKey();
+        String key = propertiesComponents.getTencentMapKey();
+        String secretKey = propertiesComponents.getTencentSecretKey();
         Map<String, String> params = Maps.newHashMap();
         params.put("key", key);
         params.put("sig", DigestUtils.md5Hex((tencentMapConfig.getMapApiUri() + "?key=" + key + secretKey).getBytes(StandardCharsets.UTF_8)));

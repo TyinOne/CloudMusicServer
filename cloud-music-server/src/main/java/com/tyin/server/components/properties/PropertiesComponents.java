@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 public class PropertiesComponents {
     private static OssConfig oss;
     private static TencentMapConfig tencentMapConfig;
-    private AdminConfig adminConfig;
     private final OkHttpConfig okHttpConfig;
     private final ApiPrefixConfig apiPrefixConfig;
+    private AdminConfig adminConfig;
 
     public String getOssUrl() {
         return oss.getOssFileHost();

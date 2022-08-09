@@ -8,7 +8,6 @@ import com.tyin.core.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 

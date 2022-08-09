@@ -21,14 +21,19 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for admin_user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `admin_user_role`;
-CREATE TABLE `admin_user_role`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL,
-  `created` datetime(0) NOT NULL,
-  `modified` datetime(0) NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+CREATE TABLE `admin_user_role`
+(
+    `id`       bigint(20)  NOT NULL AUTO_INCREMENT,
+    `user_id`  bigint(20)  NOT NULL,
+    `role_id`  bigint(20)  NOT NULL,
+    `created`  datetime(0) NOT NULL,
+    `modified` datetime(0) NOT NULL,
+    `deleted`  tinyint(1)  NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci
+  ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -32,7 +32,7 @@ public class AdminRoleController {
     public Result<PageResult<AdminRoleRes, ?>> getRoleList(@RequestParam(required = false) String keywords,
                                                            @RequestParam(required = false, defaultValue = "20") Long size,
                                                            @RequestParam(required = false, defaultValue = "1") Long current,
-                                                           @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser user) {
+                                                           @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminRoleRes, ?> pageResult = adminRoleService.getRolesPageResult(keywords, size, current);
         return Result.success(pageResult);
     }

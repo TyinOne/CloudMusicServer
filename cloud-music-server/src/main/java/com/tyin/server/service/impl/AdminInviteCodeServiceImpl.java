@@ -19,6 +19,7 @@ import com.tyin.server.repository.AdminInviteCodeRepository;
 import com.tyin.server.service.IAdminInviteCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
     private final RedisComponents redisComponents;
 
@@ -43,7 +45,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
     public InviteCodeBean generateInviteCode(Long id, AuthAdminUser user) {
         AdminConfig adminConfig = propertiesComponents.getAdminConfig();
         Integer configExpire = adminConfig.getInviteCodeExpiration();
-        int subStart = (int) (Math.random() * 24) + 1;
+        int subStart = (int) (Math.random() * 2.4) * 10 + 1;
         int subEnd = subStart + 6;
         String code = StringUtils.sha256Encode(StringUtils.getUuid() + user.getAccount() + System.currentTimeMillis()).substring(subStart, subEnd).toUpperCase();
         String inviteCodeKey = RedisKeyConstants.INVITE_CODE_EXPIRE + user.getAccount() + ":" + id + ":" + code;
@@ -73,6 +75,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
         String inviteCodeKey = RedisKeyConstants.INVITE_CODE_EXPIRE + inviteCode.getCreateBy() + ":" + inviteCode.getRoleId() + ":" + code;
         redisComponents.deleteKey(inviteCodeKey);
     }
+
     private AdminInviteCode selectInviteCode(String code) {
         return adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaUpdate()
                 .eq(AdminInviteCode::getCode, code));

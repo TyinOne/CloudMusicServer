@@ -3,6 +3,7 @@ package com.tyin.server.controller;
 import com.tyin.core.annotations.Auth;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
+import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 import com.tyin.core.module.res.admin.GenerateInviteRes;
 import com.tyin.core.utils.Asserts;
 import com.tyin.server.api.PageResult;
@@ -10,7 +11,6 @@ import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.service.IAdminInviteCodeService;
 import com.tyin.server.service.IAdminUserService;
-import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,7 +41,7 @@ public class AdminInviteController {
                                                                        @ApiParam("是否使用") @RequestParam(required = false) Boolean used,
                                                                        @ApiParam(value = "页长度", defaultValue = "20") @RequestParam(required = false, defaultValue = "20") Long size,
                                                                        @ApiParam(value = "当前页", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                                       @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
+                                                                       @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser ignoredUser) {
         PageResult<AdminInviteCodeRes, ?> resPageResult = adminInviteCodeService.getList(useBy, createBy, invalid, used, current, size);
         return Result.success(resPageResult);
     }
@@ -52,7 +52,7 @@ public class AdminInviteController {
         InviteCodeBean code = userService.generateInviteCode(valid.getId(), user);
         GenerateInviteRes build = GenerateInviteRes.builder()
                 .code(code.getCode())
-                .time(code.getExpiration() / 1000 / 60  + "")
+                .time(code.getExpiration() / 1000 / 60 + "")
                 .message(String.format("已生成邀请码：%s，有效期 %s 分钟", code.getCode(), code.getExpiration() / 1000 / 60))
                 .build();
         return Result.success(build);
@@ -60,7 +60,7 @@ public class AdminInviteController {
 
     @ApiOperation("清除邀请码")
     @PutMapping("/remove")
-    public Result<?> removeInviteCode(@ApiParam("邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser user) {
+    public Result<?> removeInviteCode(@ApiParam("邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser ignoredUser) {
         Integer row = adminInviteCodeService.remove(valid.getId());
         Asserts.isTrue(row == 1, "清理失败");
         return Result.success();

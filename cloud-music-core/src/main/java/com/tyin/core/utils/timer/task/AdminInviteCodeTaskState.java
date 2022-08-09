@@ -16,6 +16,7 @@ public interface AdminInviteCodeTaskState extends TimerTaskState {
 
     /**
      * 任务所在组件名称
+     *
      * @return 名称
      */
     @Override
@@ -25,6 +26,7 @@ public interface AdminInviteCodeTaskState extends TimerTaskState {
 
     /**
      * 任务方法名称
+     *
      * @return 名称
      */
     @Override
@@ -34,6 +36,7 @@ public interface AdminInviteCodeTaskState extends TimerTaskState {
 
     /**
      * 任务执行方法参数
+     *
      * @return 参数列表
      */
     @Override

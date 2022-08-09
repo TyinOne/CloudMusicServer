@@ -6,13 +6,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyin.core.module.entity.RequestLog;
 import com.tyin.core.module.res.admin.AdminLogRes;
-import com.tyin.server.utils.IpUtils;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.repository.RequestLogRepository;
 import com.tyin.server.service.IRequestLogService;
+import com.tyin.server.utils.IpUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class RequestLogServiceImpl implements IRequestLogService {
 
     private final RequestLogRepository requestLogRepository;
