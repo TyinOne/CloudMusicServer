@@ -22,12 +22,12 @@ public class AdminPermissionService {
     private final IAdminUserService adminUserService;
     private AuthAdminUser authUser;
 
-    @Synchronized
+//    @Synchronized
     public AuthAdminUser getAuthAdminUser() {
         return authUser;
     }
 
-    @Synchronized
+    //    @Synchronized
     public void setAuthAdminUser(AuthAdminUser authUser) {
         this.authUser = authUser;
     }
@@ -41,10 +41,8 @@ public class AdminPermissionService {
     public Boolean hasPermission(String permission) {
         Set<String> permissions = adminUserService.getPermissionByRole(authUser.getRoleId(), authUser.getRole());
         if (permissions.contains(ADMIN_SECURITY)) {
-            authUser = null;
             return true;
         }
-        authUser = null;
         return permissions.contains(permission);
     }
 }
