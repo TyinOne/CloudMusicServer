@@ -1,6 +1,7 @@
 package com.tyin.server.config.swagger;
 
 import com.google.common.collect.Lists;
+import com.tyin.core.components.properties.models.SwaggerConfig;
 import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -33,17 +34,17 @@ import java.util.*;
 @Configuration
 @RequiredArgsConstructor
 public class SwaggerConfiguration implements WebMvcConfigurer {
-    private final SwaggerProperties swaggerProperties;
+    private final SwaggerConfig swaggerConfig;
 
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.OAS_30).pathMapping("/")
                 // 定义是否开启swagger，false为关闭，可以通过变量控制
-                .enable(swaggerProperties.getEnable())
+                .enable(swaggerConfig.getEnable())
                 // 将api的元信息设置为包含在json ResourceListing响应中。
                 .apiInfo(apiInfo())
                 // 接口调试地址
-                .host(swaggerProperties.getTryHost())
+                .host(swaggerConfig.getTryHost())
                 // 选择哪些接口作为swagger的doc发布
                 .select()
                 .apis(RequestHandlerSelectors.any())
@@ -61,9 +62,9 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
      * API 页面上半部分展示信息
      */
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title(swaggerProperties.getApplicationName() + " Api Doc")
-                .description(swaggerProperties.getApplicationDescription())
-                .version("Application Version: " + swaggerProperties.getApplicationVersion() + ", Spring Boot Version: " + SpringBootVersion.getVersion())
+        return new ApiInfoBuilder().title(swaggerConfig.getApplicationName() + " Api Doc")
+                .description(swaggerConfig.getApplicationDescription())
+                .version("Application Version: " + swaggerConfig.getApplicationVersion() + ", Spring Boot Version: " + SpringBootVersion.getVersion())
                 .build();
     }
 

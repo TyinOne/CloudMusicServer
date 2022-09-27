@@ -1,0 +1,9 @@
+spring:
+  redis:
+    host: redis.tyin.vip
+    port: 6379
+    password: tyinzero
+  datasource:
+    url: jdbc:mysql://rds.tyin.vip:3306/cloud_music?useUnicode=true&characterEncoding=utf-8&relaxAutoCommit=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: tyinzero

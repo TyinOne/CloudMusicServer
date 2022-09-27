@@ -14,6 +14,8 @@ public class ApiPrefixConfig {
     private String admin;
     private String client;
 
+    private String app;
+
     public String getAdmin() {
         return admin;
     }
@@ -28,5 +30,13 @@ public class ApiPrefixConfig {
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
     }
 }
