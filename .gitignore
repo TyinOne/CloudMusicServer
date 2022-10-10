@@ -23,5 +23,5 @@
 hs_err_pid*
 .idea
 target
-*/src/test/*
+*/src/test/java/com/tyin
 *.iml
