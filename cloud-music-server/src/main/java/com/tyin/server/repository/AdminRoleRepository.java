@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Tyin
@@ -55,11 +56,22 @@ public interface AdminRoleRepository extends BaseMapper<AdminRole> {
 
     @Update("""
             UPDATE `admin_user_role`
-            \t SET `role_id` = #{roleId}
+             SET `role_id` = #{roleId}
             WHERE `user_id` = (SELECT `id` FROM `admin_user` WHERE `account` = #{account})
             """)
     void updateUserRole(@Param("account") String account, @Param("roleId") Long roleId);
 
-    @Insert("INSERT INTO admin_user_role (user_id, role_id, deleted, created, modified) VALUES (#{adminUserRole.userId}, #{adminUserRole.roleId}, 0, sysdate(), sysdate())")
+    @Insert("""
+            INSERT INTO
+             admin_user_role
+             (user_id, role_id, deleted, created, modified)
+            VALUES
+             (#{adminUserRole.userId}, #{adminUserRole.roleId}, 0, sysdate(), sysdate())
+            """)
     Integer insertUserRole(@Param("adminUserRole") AdminUserRole adminUserRole);
+
+    @Select("""
+            SELECT value FROM admin_role WHERE id IN(SELECT role_id FROM admin_user_role WHERE user_id = #{id} AND admin_user_role.deleted = 0)
+            """)
+    Set<String> selectRolesByUserId(@Param("id") Long id);
 }

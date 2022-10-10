@@ -12,6 +12,7 @@ import com.tyin.server.params.valid.AdminLoginValid;
 import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,7 +28,7 @@ public interface IAdminUserService {
      * @param ipAddress       登录IP
      * @return token
      */
-    AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress);
+//    AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress);
 
     /**
      * 用户登出
@@ -101,7 +102,7 @@ public interface IAdminUserService {
      * @param roleValue 角色权限标识
      * @return Set 权限字符集
      */
-    Set<String> getPermissionByRole(Long roleId, String roleValue);
+    Set<String> getPermissionByRole(Set<String> roles);
 
     /**
      * 生成用户注册邀请码
@@ -111,5 +112,4 @@ public interface IAdminUserService {
      * @return 邀请码Bean
      */
     InviteCodeBean generateInviteCode(Long id, AuthAdminUser user);
-
 }

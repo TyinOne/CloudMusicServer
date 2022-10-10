@@ -4,7 +4,6 @@ package com.tyin.server.config.web;
 import com.google.common.collect.Lists;
 import com.tyin.server.auth.resolver.AuthUserMethodArgumentResolver;
 import com.tyin.server.components.properties.PropertiesComponents;
-import com.tyin.server.interceptor.AuthUserInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -21,8 +20,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
-
-    private final AuthUserInterceptor authUserInterceptor;
     private final AuthUserMethodArgumentResolver authUserMethodArgumentResolver;
     private final PropertiesComponents properties;
 
@@ -48,7 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
         excludeList.add("/v3/**");
 //        excludeList.add(properties.getAdminPrefix() + "/user/login");
 //        excludeList.add(properties.getAdminPrefix() + "/user/register");
-        registry.addInterceptor(authUserInterceptor).addPathPatterns("/**").excludePathPatterns(excludeList);
+//        registry.addInterceptor(authUserInterceptor).addPathPatterns("/**").excludePathPatterns(excludeList);
     }
 
     @Override

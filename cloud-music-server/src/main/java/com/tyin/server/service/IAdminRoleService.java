@@ -18,7 +18,7 @@ import java.util.Set;
  * @description ...
  */
 public interface IAdminRoleService {
-    AdminRole getRoles(Long id);
+    List<AdminRole> getRoles(Long id);
 
     AdminRole getRoleById(Long roleId);
 

@@ -1,7 +1,6 @@
 package com.tyin.server.controller;
 
 
-import com.tyin.core.annotations.Open;
 import com.tyin.core.module.bean.DictLabel;
 import com.tyin.core.module.bean.RegionLabel;
 import com.tyin.core.module.bean.RoleLabel;
@@ -29,7 +28,6 @@ import java.util.List;
  */
 
 @Api(tags = "Open-各种Options-Label接口")
-@Open
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/label")
 @RequiredArgsConstructor

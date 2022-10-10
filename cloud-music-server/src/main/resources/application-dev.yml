@@ -14,3 +14,7 @@ logging:
       max-file-size: 500MB
       max-history: 20
       file-name-pattern: /data/logs/server/cloud-music.%d{yyyy-MM-dd}.%i.log
+#token:
+#    header: Authorization
+#    secret: abcdefghijklmnopqrstuvwxyz
+#    expireTime: 180

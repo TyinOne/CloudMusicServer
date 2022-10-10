@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tyin.core.components.RedisComponents;
 import com.tyin.core.constants.ResMessageConstants;
@@ -33,6 +34,9 @@ import com.tyin.server.utils.IpUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,7 +77,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     private final IAdminMenuService adminMenuService;
     private final IAdminInviteCodeService adminInviteCodeService;
 
-    @Override
+    //    @Override
     public AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress) {
         String username = adminLoginValid.getAccount();
         String password = adminLoginValid.getPassword();
@@ -92,13 +96,19 @@ public class AdminUserServiceImpl implements IAdminUserService {
         adminUser.setLastLogin(ipAddress);
         adminUser.setLastLoginTime(DateUtils.getNowDate());
         adminUserRepository.updateById(adminUser);
-        AdminRole role = adminRoleService.getRoles(adminUser.getId());
-        Set<String> permissions = getPermissionByRole(role.getId(), role.getValue());
-        AuthAdminUser user = AuthAdminUser.builder()
-                .id(adminUser.getId())
-                .roleId(role.getId())
-                .token(token).nickName(adminUser.getNickName()).account(adminUser.getAccount()).avatar(avatar).permissions(permissions).role(role.getValue())
-                .build();
+        List<AdminRole> adminRoles = adminRoleService.getRoles(adminUser.getId());
+        Set<String> roles = adminRoles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
+        Set<String> permissions = getPermissionByRole(roles);
+        AuthAdminUser user =
+                AuthAdminUser.builder()
+                        .id(adminUser.getId())
+                        .token(token)
+                        .nickName(adminUser.getNickName())
+                        .account(adminUser.getAccount())
+                        .avatar(avatar)
+                        .roles(roles)
+                        .permissions(permissions)
+                        .build();
         redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
         return new AdminUserLoginRes(
                 adminUser.getId(),
@@ -106,9 +116,9 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 adminUser.getNickName(),
                 user.getAccount(),
                 avatar,
-                role.getId(),
-                role.getValue(),
-                permissions
+                roles,
+                permissions,
+                user.getDisabled()
         );
     }
 
@@ -144,8 +154,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
         AdminAccountDetailRes res = adminUserRepository.selectAccountDetail(account);
         res.setAvatar(propertiesComponents.getOssUrl() + res.getAvatar());
         res.setLastLogin(IpUtils.longToIp(Long.parseLong(res.getLastLogin())));
-        AdminRole roles = adminRoleService.getRoles(res.getId());
-        if (Objects.nonNull(roles)) res.setRoleId(roles.getId() + "");
+        List<AdminRole> roles = adminRoleService.getRoles(res.getId());
+        if (Objects.nonNull(roles)) res.setRoles(roles.stream().map(AdminRole::getValue).collect(Collectors.toSet()));
         return res;
     }
 
@@ -196,9 +206,9 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 user.getNickName(),
                 user.getAccount(),
                 user.getAvatar(),
-                user.getRoleId(),
-                user.getRole(),
-                getPermissionByRole(user.getRoleId(), user.getRole())
+                user.getRoles(),
+                getPermissionByRole(user.getRoles()),
+                user.getDisabled()
         );
         redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + user.getToken(), JsonUtils.toJSONString(adminUserLoginRes));
         return adminUserLoginRes;
@@ -211,16 +221,26 @@ public class AdminUserServiceImpl implements IAdminUserService {
     }
 
     @Override
-    public Set<String> getPermissionByRole(Long roleId, String roleValue) {
+    public Set<String> getPermissionByRole(Set<String> roles) {
         Set<String> menuPermission = Sets.newHashSet(ADMIN_SECURITY);
-        if (roleValue.equals(SUPPER_ROLE)) return menuPermission;
-        String permissionCache = redisComponents.get(ROLE_BUTTON_PREFIX + roleValue);
-        if (StringUtils.isEmpty(permissionCache)) {
-            menuPermission = adminMenuService.getButtonPermission(roleId);
-            redisComponents.saveAsync(ROLE_BUTTON_PREFIX + roleValue, JsonUtils.toJSONString(menuPermission));
+        if (roles.contains(SUPPER_ROLE)) return menuPermission;
+        List<String> permissionCaches = Lists.newArrayList();
+        for (String roleValue : roles) {
+            String cacheItem = redisComponents.get(ROLE_BUTTON_PREFIX + roleValue);
+            if (StringUtils.isNotEmpty(cacheItem)) {
+                permissionCaches.add(cacheItem);
+            }
+        }
+        if (permissionCaches.isEmpty()) {
+            for (String roleValue : roles) {
+                menuPermission.addAll(adminMenuService.getButtonPermission(roleValue));
+                redisComponents.saveAsync(ROLE_BUTTON_PREFIX + roleValue, JsonUtils.toJSONString(menuPermission));
+            }
         } else {
-            List<Object> objects = JsonUtils.toList(permissionCache);
-            menuPermission = Objects.isNull(objects) ? Sets.newHashSet() : objects.stream().map(Object::toString).collect(Collectors.toSet());
+            for (String permissionCache : permissionCaches) {
+                List<Object> objects = JsonUtils.toList(permissionCache);
+                menuPermission.addAll(Objects.isNull(objects) ? Sets.newHashSet() : objects.stream().map(Object::toString).collect(Collectors.toSet()));
+            }
         }
         return menuPermission;
     }
@@ -237,6 +257,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     public InviteCodeBean generateInviteCode(Long id, AuthAdminUser user) {
         return adminInviteCodeService.generateInviteCode(id, user);
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

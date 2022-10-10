@@ -1,7 +1,6 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
-import com.tyin.core.annotations.Open;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminUpdateRes;
 import com.tyin.core.module.res.admin.AdminVersionRes;
@@ -35,7 +34,6 @@ public class AdminVersionController {
     private final IAdminDictService adminDictService;
     private final IAdminVersionService adminVersionService;
 
-    @Open
     @GetMapping("/check")
     @ApiOperation("检查更新-热更新")
     public Result<AdminUpdateRes> checkUpdate() {

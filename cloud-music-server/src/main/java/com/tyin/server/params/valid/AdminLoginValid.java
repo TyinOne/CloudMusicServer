@@ -1,5 +1,6 @@
 package com.tyin.server.params.valid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tyin.server.params.valid.sequence.PasswordBankCheck;
 import com.tyin.server.params.valid.sequence.PasswordLengthCheck;
 import com.tyin.server.params.valid.sequence.UsernameBankCheck;
@@ -28,4 +29,8 @@ public class AdminLoginValid implements Serializable {
     @NotBlank(message = "请输入密码", groups = PasswordBankCheck.class)
     @Length(min = 8, max = 12, message = "请输入8 ~ 12位密码", groups = PasswordLengthCheck.class)
     private String password;
+
+    @ApiModelProperty(hidden = true)
+    @JsonIgnore
+    private Long ipAddress;
 }

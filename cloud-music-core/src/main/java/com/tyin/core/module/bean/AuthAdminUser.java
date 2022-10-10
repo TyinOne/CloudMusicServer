@@ -1,5 +1,6 @@
 package com.tyin.core.module.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +30,15 @@ public class AuthAdminUser {
     @ApiParam(hidden = true)
     private String avatar;
     @ApiParam(hidden = true)
-    private Long roleId;
-    @ApiParam(hidden = true)
-    private String role;
+    private Set<String> roles;
     @ApiParam(hidden = true)
     private Set<String> permissions;
+
+    @JsonIgnore
+    @ApiParam(hidden = true)
+    private Boolean disabled;
+
+    @JsonIgnore
+    @ApiParam(hidden = true)
+    private String password;
 }

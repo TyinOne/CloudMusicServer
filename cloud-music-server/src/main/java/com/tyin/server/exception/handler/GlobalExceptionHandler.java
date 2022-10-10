@@ -5,6 +5,7 @@ import com.tyin.core.exception.ApiException;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     public Result<?> handle(Exception e) {
         log.error(e.getMessage(), e.fillInStackTrace());
         return Result.failed(ResultCode.INTERNAL_SERVER_ERROR);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = AuthenticationException.class)
+    public Result<?> handle(AuthenticationException e) {
+        log.error(e.getMessage(), e.fillInStackTrace());
+        return Result.failed(ResultCode.SIGNATURE_NOT_MATCH);
     }
 
     @ResponseBody

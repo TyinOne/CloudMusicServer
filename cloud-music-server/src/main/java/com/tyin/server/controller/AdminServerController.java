@@ -2,7 +2,6 @@ package com.tyin.server.controller;
 
 
 import com.tyin.core.annotations.NoLog;
-import com.tyin.core.annotations.Open;
 import com.tyin.core.module.res.admin.SysInfoRes;
 import com.tyin.core.module.res.admin.SysRedisRes;
 import com.tyin.server.api.Result;
@@ -23,14 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminServerController {
     private final ISysServerService sysServerService;
 
-    @Open
     @GetMapping("/server/config")
     @NoLog
     public Result<SysInfoRes> getServerConfig() {
         return Result.success(sysServerService.getSysInfo());
     }
 
-    @Open
     @GetMapping("/server/redis")
     public Result<SysRedisRes> getServerRedis() {
         return Result.success(sysServerService.getSysRedisInfo());

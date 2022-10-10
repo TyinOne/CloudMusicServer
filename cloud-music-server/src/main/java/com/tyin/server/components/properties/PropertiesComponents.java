@@ -1,7 +1,9 @@
 package com.tyin.server.components.properties;
 
+import com.tyin.core.components.properties.PropertiesEnum;
 import com.tyin.core.components.properties.models.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,12 +13,36 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PropertiesComponents {
     private static OssConfig oss;
     private static TencentMapConfig tencentMapConfig;
+    private static AdminConfig adminConfig;
     private final OkHttpConfig okHttpConfig;
     private final ApiPrefixConfig apiPrefixConfig;
-    private AdminConfig adminConfig;
+
+
+    public void setModules(PropertiesEnum propertiesEnum, Object obj) {
+        switch (propertiesEnum) {
+            case OSS -> setOss((OssConfig) obj);
+            case MAP -> setTencentMap((TencentMapConfig) obj);
+            case ADMIN -> setAdminConfig((AdminConfig) obj);
+            default -> log.warn("UnKnown propertiesEnumType : {}", propertiesEnum.getType());
+        }
+    }
+
+    private void setTencentMap(TencentMapConfig config) {
+        tencentMapConfig = config;
+    }
+
+    private void setOss(OssConfig config) {
+        oss = config;
+    }
+
+    private void setAdminConfig(AdminConfig config) {
+        adminConfig = config;
+    }
+
 
     public String getOssUrl() {
         return oss.getOssFileHost();
@@ -35,11 +61,11 @@ public class PropertiesComponents {
     }
 
     public String getOssHotDownloads() {
-        return oss.getOssFileHotDownloads();
+        return oss.getOssHotDownloads();
     }
 
-    public String getOssPackageDownloads() {
-        return oss.getOssFilePackageDownloads();
+    public String getOssPackageUri() {
+        return oss.getOssPackageUri();
     }
 
     public String getAdminPrefix() {
@@ -70,19 +96,7 @@ public class PropertiesComponents {
         return tencentMapConfig;
     }
 
-    public void setTencentMap(TencentMapConfig config) {
-        tencentMapConfig = config;
-    }
-
-    public void setOss(OssConfig config) {
-        oss = config;
-    }
-
     public AdminConfig getAdminConfig() {
         return adminConfig;
-    }
-
-    public void setAdminConfig(AdminConfig adminConfig) {
-        this.adminConfig = adminConfig;
     }
 }

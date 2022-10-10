@@ -84,13 +84,13 @@ public interface AdminMenuRepository extends BaseMapper<AdminMenu> {
 
     @Select("""
             SELECT
-            \t*\s
+             *
             FROM
-            \tadmin_menu\s
+             admin_menu
             WHERE
-            \ttype = 2
-            \tAND FIND_IN_SET(id,(SELECT menu_id FROM admin_role_menu WHERE role_id = #{id}))""")
-    List<AdminMenu> selectButtonSecurityByRole(@Param("id") Long id);
+             type = 2
+             AND FIND_IN_SET(id,(SELECT menu_id FROM admin_role_menu WHERE role_key = #{role_key}))""")
+    List<AdminMenu> selectButtonSecurityByRole(@Param("role_key") String roleValue);
 
     @Select("""
             SELECT `value` FROM `admin_role`  WHERE id IN(SELECT role_id FROM `admin_role_menu` WHERE (INSTR(`menu_id`, #{id}) > 0 OR INSTR(`half_id`, #{id}) > 0 ))

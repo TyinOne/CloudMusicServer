@@ -122,6 +122,10 @@ public class RedisComponents {
         redisTemplate.opsForValue().set(key, value);
     }
 
+    public void save(final String key, final String value, final Long timeout, final TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
+    }
+
     @Async
     public void saveAsync(String key, String value) {
         log.info("Redis save key: " + key + ", value: " + value);

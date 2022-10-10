@@ -1,5 +1,6 @@
 package com.tyin.core.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -36,6 +37,7 @@ public class JsonUtils {
         MAPPER.configure(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature(), true);
         // 允许字符串中存在回车换行控制符
         MAPPER.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     private static ObjectMapper getMapper() {

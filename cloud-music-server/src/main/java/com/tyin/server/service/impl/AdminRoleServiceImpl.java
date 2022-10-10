@@ -49,8 +49,8 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     private final RedisComponents redisComponents;
 
     @Override
-    public AdminRole getRoles(Long userId) {
-        return adminRoleRepository.selectOne(Wrappers.<AdminRole>lambdaQuery()
+    public List<AdminRole> getRoles(Long userId) {
+        return adminRoleRepository.selectList(Wrappers.<AdminRole>lambdaQuery()
                 .apply("`id` IN ( SELECT `role_id` FROM `admin_user_role` WHERE `user_id` = {0} ) ", userId)
                 .eq(AdminRole::getDisabled, Boolean.FALSE)
         );
@@ -99,12 +99,12 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
         Asserts.isTrue(adminRoleRepository.selectCount(Wrappers.<AdminRole>lambdaQuery().ne(AdminRole::getId, id).and(i -> i.eq(AdminRole::getValue, value).or().eq(AdminRole::getName, name))) == 0, ROLE_HAS_EXIST);
         AdminRole adminRole = adminRoleRepository.selectById(id);
         Asserts.isTrue(Objects.nonNull(adminRole), ROLE_HAS_EXIST);
-        AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, id));
+        AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleKey, adminRole.getValue()));
         int roleMenuRow = Objects.nonNull(adminRoleMenu) ?
                 adminRoleMenuRepository.updateById(
                         AdminRoleMenu.builder()
                                 .id(adminRoleMenu.getId())
-                                .roleId(id)
+                                .roleKey(adminRole.getValue())
                                 .menuId(String.join(",", valid.getMenu()))
                                 .halfId(String.join(",", valid.getHalf()))
                                 .build()
@@ -112,7 +112,7 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
                 :
                 adminRoleMenuRepository.insert(
                         AdminRoleMenu.builder()
-                                .roleId(id)
+                                .roleKey(adminRole.getValue())
                                 .menuId(String.join(",", valid.getMenu()))
                                 .halfId(String.join(",", valid.getHalf()))
                                 .build()
@@ -133,7 +133,8 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
 
     @Override
     public List<Long> getRoleMenuSelectedLabel(Integer rowId) {
-        AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, rowId));
+        AdminRole adminRole = adminRoleRepository.selectById(rowId);
+        AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleKey, adminRole.getValue()));
         if (Objects.isNull(adminRoleMenu) || StringUtils.isEmpty(adminRoleMenu.getMenuId()))
             return Lists.newArrayList();
         return Arrays.stream(adminRoleMenu.getMenuId().split(",")).map(Long::parseLong).collect(Collectors.toList());
@@ -141,7 +142,8 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
 
     @Override
     public List<Long> getRoleMenuHalfLabel(Integer rowId) {
-        AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleId, rowId));
+        AdminRole adminRole = adminRoleRepository.selectById(rowId);
+        AdminRoleMenu adminRoleMenu = adminRoleMenuRepository.selectOne(Wrappers.<AdminRoleMenu>lambdaQuery().eq(AdminRoleMenu::getRoleKey, adminRole.getValue()));
         if (Objects.isNull(adminRoleMenu) || StringUtils.isEmpty(adminRoleMenu.getHalfId()))
             return Lists.newArrayList();
         return Arrays.stream(adminRoleMenu.getHalfId().split(",")).map(Long::parseLong).collect(Collectors.toList());

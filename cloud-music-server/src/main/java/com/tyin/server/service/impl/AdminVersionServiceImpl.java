@@ -59,7 +59,7 @@ public class AdminVersionServiceImpl implements IAdminVersionService {
         Asserts.isTrue(Lists.newArrayList("zip", "exe").contains(suffix), "文件类型暂不支持");
         //构建目录
         String tmpPath = propertiesComponents.getOssServer() + propertiesComponents.getOssTmp() + fileName;
-        String pathDir = propertiesComponents.getOssServer() + ("zip".equals(suffix) ? propertiesComponents.getOssHotDownloads() : propertiesComponents.getOssPackageDownloads()) + valid.getName();
+        String pathDir = propertiesComponents.getOssServer() + ("zip".equals(suffix) ? propertiesComponents.getOssHotDownloads() : propertiesComponents.getOssPackageUri()) + valid.getName();
         File source = new File(tmpPath);
         File target = new File(pathDir);
         String newSrc = "";

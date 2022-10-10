@@ -23,7 +23,7 @@ public class AdminRoleMenu extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
     private Long id;
-    private Long roleId;
+    private String roleKey;
     private String halfId;
     private String menuId;
 

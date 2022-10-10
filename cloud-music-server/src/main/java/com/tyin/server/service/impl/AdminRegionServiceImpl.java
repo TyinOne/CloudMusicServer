@@ -66,7 +66,7 @@ public class AdminRegionServiceImpl extends ServiceImpl<AdminRegionRepository, A
         String dataVersion = res.getDataVersion();
         Asserts.isTrue(!dataVersion.equals(propertiesComponents.getTencentMapDistrictDataVersion()), "暂无更新！");
         adminDictService.updateValueBy(TYPE, VERSION, dataVersion);
-        systemLoader.initMap();
+        systemLoader.initAll(Lists.newArrayList("map"));
         List<List<TencentMapDistrictRes.DistrictResultItem>> result = res.getResult();
         //省市区
         List<TencentMapDistrictRes.DistrictResultItem> provinces = result.get(0);

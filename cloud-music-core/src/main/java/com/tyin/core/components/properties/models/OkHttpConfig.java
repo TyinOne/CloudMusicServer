@@ -1,5 +1,6 @@
 package com.tyin.core.components.properties.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -26,10 +27,15 @@ import java.util.concurrent.TimeUnit;
 @ConfigurationProperties(prefix = "cloud.ok-http")
 @Data
 public class OkHttpConfig {
+    @JsonProperty("connect_timeout")
     private Integer connectTimeout;
+    @JsonProperty("read_timeout")
     private Integer readTimeout;
+    @JsonProperty("write_timeout")
     private Integer writeTimeout;
+    @JsonProperty("max_idle_connections")
     private Integer maxIdleConnections;
+    @JsonProperty("keep_alive_duration")
     private Long keepAliveDuration;
 
     @Bean

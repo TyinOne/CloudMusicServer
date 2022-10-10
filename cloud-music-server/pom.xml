@@ -13,6 +13,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.tyin</groupId>
             <artifactId>cloud-music-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>

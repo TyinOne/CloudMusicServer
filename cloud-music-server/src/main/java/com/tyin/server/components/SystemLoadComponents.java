@@ -3,6 +3,7 @@ package com.tyin.server.components;
 import com.tyin.server.loader.SystemLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,9 +24,7 @@ public class SystemLoadComponents {
     public void onLoad() {
         //加载字典
         try {
-            systemLoader.initAdminConfig();
-            systemLoader.initOss();
-            systemLoader.initMap();
+            systemLoader.initAll(Lists.newArrayList());
             systemLoader.initScheduled();
             systemLoader.startTimerTask();
             log.info("System Start success!");

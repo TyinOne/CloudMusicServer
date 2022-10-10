@@ -43,7 +43,7 @@ public class RequestLogServiceImpl implements IRequestLogService {
         List<AdminLogRes> records = resPage.getRecords();
         for (AdminLogRes item : records) {
             item.setIp(IpUtils.longToIp(Long.parseLong(item.getIp())));
-            item.setMethod(item.getMethod().substring("com.tyin.cloud.controller".length() + 1));
+            item.setMethod(item.getMethod().substring("com.tyin.cloud.controller".length() + 2));
             item.setElapsed(item.getElapsed() + "ms");
         }
         resPage.setRecords(records);

@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public interface IAdminMenuService {
 
-    Set<String> getButtonPermission(Long roleId);
+    Set<String> getButtonPermission(String roleKey);
 
     List<AdminMenu> getRouterByPermission(Long userId);
 

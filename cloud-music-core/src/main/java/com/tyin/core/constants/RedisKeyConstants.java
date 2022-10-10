@@ -21,4 +21,6 @@ public class RedisKeyConstants {
     public final static String TENCENT_MAP_PROPERTIES = "admin:properties:tencent_map";
 
     public final static String INVITE_CODE_EXPIRE = "admin:invite:";
+
+    public final static String USER_LOGIN_PREFIX = "login:token:";
 }

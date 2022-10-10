@@ -3,7 +3,6 @@ package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
 import com.tyin.core.annotations.NoLog;
-import com.tyin.core.annotations.Open;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.UpdateJsonUploadRes;
 import com.tyin.core.module.res.admin.UploadTmpRes;
@@ -35,7 +34,6 @@ public class AdminCommonController {
     private final IAdminRegionService adminRegionService;
     private final UploadComponents uploadComponents;
 
-    @Open
     @GetMapping("/area")
     @ApiOperation("更新省市区截数据")
     public Result<?> getAreaForTencent() {
@@ -85,7 +83,6 @@ public class AdminCommonController {
     }
 
     @NoLog
-    @Open
     @ApiOperation("测试接口")
     @GetMapping("/test")
     public Result<?> testController() {

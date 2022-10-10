@@ -1,11 +1,11 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
-import com.tyin.core.annotations.Open;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.entity.AdminUserDetailRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.server.api.Result;
+import com.tyin.server.auth.security.service.UserDetailsServiceImpl;
 import com.tyin.server.params.valid.AdminLoginValid;
 import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.sequence.AdminUserLoginValidSequence;
@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class AdminUserController {
     private final IAdminUserService adminUserService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    @Open
     @PostMapping("/register")
     @ApiOperation("用户注册")
     public Result<?> register(@RequestBody @Validated(AdminUserRegisterValidSequence.class) AdminRegisterValid adminRegisterValid) {
@@ -41,15 +41,16 @@ public class AdminUserController {
         return Result.success();
     }
 
-    @Open
     @PostMapping("/login")
     @ApiOperation("用户登录")
-    public Result<AdminUserLoginRes> login(@RequestBody @Validated(AdminUserLoginValidSequence.class) AdminLoginValid adminLoginValid, HttpServletRequest httpServletRequest) {
+    public Result<AdminUserLoginRes> loginT(@RequestBody @Validated(AdminUserLoginValidSequence.class) AdminLoginValid adminLoginValid, HttpServletRequest httpServletRequest) {
         //登录IP
         Long ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
-        AdminUserLoginRes res = adminUserService.login(adminLoginValid, ipAddress);
+        adminLoginValid.setIpAddress(ipAddress);
+        AdminUserLoginRes res = userDetailsService.login(adminLoginValid);
         return Result.success(res);
     }
+
 
     @PutMapping("/logout")
     @ApiOperation("用户登出")

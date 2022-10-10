@@ -38,7 +38,8 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.OAS_30).pathMapping("/")
+        return new Docket(DocumentationType.OAS_30)
+                .pathMapping("/")
                 // 定义是否开启swagger，false为关闭，可以通过变量控制
                 .enable(swaggerConfig.getEnable())
                 // 将api的元信息设置为包含在json ResourceListing响应中。
@@ -72,7 +73,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
      * 设置授权信息
      */
     private List<SecurityScheme> securitySchemes() {
-        ApiKey apiKey = new ApiKey("Authentication", "Authentication", In.HEADER.toValue());
+        ApiKey apiKey = new ApiKey("Authorization", "Authorization", In.HEADER.toValue());
         return Lists.newArrayList(apiKey);
     }
 
@@ -82,8 +83,12 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
     private List<SecurityContext> securityContexts() {
         return Collections.singletonList(
                 SecurityContext.builder()
-                        .securityReferences(Collections.singletonList(new SecurityReference("Authentication", new AuthorizationScope[]{new AuthorizationScope("global", "")})))
-                        .operationSelector(i -> PathSelectors.regex("^(?!login).*$").test(i.requestMappingPattern()))
+                        .securityReferences(Collections.singletonList(new SecurityReference("Authorization", new AuthorizationScope[]{new AuthorizationScope("global", "")})))
+                        .operationSelector(i ->
+                                PathSelectors
+                                        .regex("^(?!login).*$")
+                                        .test(i.requestMappingPattern())
+                        )
                         .build())
                 ;
     }

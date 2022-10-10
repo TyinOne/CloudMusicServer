@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Tyin
@@ -38,6 +39,6 @@ public class AdminAccountDetailRes {
     private String idCardNo;
     private String idCardName;
     private String idCardAddress;
-    private String roleId;
+    private Set<String> roles;
 
 }

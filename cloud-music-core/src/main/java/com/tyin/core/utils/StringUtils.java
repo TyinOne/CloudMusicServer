@@ -1,5 +1,7 @@
 package com.tyin.core.utils;
 
+import org.springframework.util.DigestUtils;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -48,5 +50,9 @@ public class StringUtils extends org.springframework.util.StringUtils {
         String uuid = UUID.randomUUID().toString();
         uuid = uuid.replace("-", "").toUpperCase(Locale.ROOT);
         return uuid;
+    }
+
+    public static String getMd5(String str) {
+        return DigestUtils.md5DigestAsHex(str.getBytes());
     }
 }
