@@ -2,7 +2,8 @@ package com.tyin.core.module.res.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tyin.core.utils.DateUtils;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,19 +21,19 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class AdminAccountRes {
-    @ApiModelProperty("用户名")
+    @Schema(description = "用户名")
     private String account;
-    @ApiModelProperty("昵称")
+    @Schema(description = "昵称")
     private String nickName;
-    @ApiModelProperty("邮箱")
+    @Schema(description = "邮箱")
     private String mail;
-    @ApiModelProperty("号码")
+    @Schema(description = "号码")
     private String phone;
-    @ApiModelProperty("是否禁用")
+    @Schema(description = "是否禁用")
     private Boolean disabled;
-    @ApiModelProperty("角色")
+    @Schema(description = "角色")
     private String roles;
-    @ApiModelProperty("最后登录时间")
+    @Schema(description = "最后登录时间")
     @JsonFormat(pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
     private Date lastLoginTime;
 }

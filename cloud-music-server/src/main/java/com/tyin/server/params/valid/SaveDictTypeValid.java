@@ -1,6 +1,6 @@
 package com.tyin.server.params.valid;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -11,10 +11,10 @@ import lombok.Data;
 @Data
 public class SaveDictTypeValid {
     private Long id;
-    @ApiModelProperty("字典分类")
+    @Schema(description = "字典分类")
     private String dictType;
-    @ApiModelProperty("字典名称")
+    @Schema(description = "字典名称")
     private String dictLabel;
-    @ApiModelProperty("描述")
+    @Schema(description = "描述")
     private String dictDescription;
 }

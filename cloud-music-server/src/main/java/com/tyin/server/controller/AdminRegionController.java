@@ -7,9 +7,9 @@ import com.tyin.core.module.res.admin.AdminRegionListRes;
 import com.tyin.core.module.res.admin.AdminRegionRes;
 import com.tyin.server.api.Result;
 import com.tyin.server.service.IAdminRegionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +23,15 @@ import java.util.List;
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/region")
 @RequiredArgsConstructor
-@Api(tags = "地区管理-省市区相关接口")
+@Tag(name = "地区管理-省市区相关接口")
 public class AdminRegionController {
     private final IAdminRegionService regionService;
 
-    @ApiOperation("省市区列表")
+    @Operation(description = "省市区列表")
     @GetMapping(value = {"/list/{parentId}"})
-    public Result<AdminRegionListRes> getRegionList(@ApiParam("父级ID") @PathVariable(name = "parentId") Long parentId,
-                                                    @ApiParam("关键词") @RequestParam(required = false) String keywords,
-                                                    @ApiParam("查询级别") @RequestParam(required = false, defaultValue = "0") Integer level,
+    public Result<AdminRegionListRes> getRegionList(@Parameter(description = "父级ID") @PathVariable(name = "parentId") Long parentId,
+                                                    @Parameter(description = "关键词") @RequestParam(required = false) String keywords,
+                                                    @Parameter(description = "查询级别") @RequestParam(required = false, defaultValue = "0") Integer level,
                                                     @Auth AuthAdminUser ignoredUser) {
         List<AdminRegionRes> list = regionService.selectListBy(parentId, keywords, level);
         return Result.success(AdminRegionListRes.builder().list(list).build());

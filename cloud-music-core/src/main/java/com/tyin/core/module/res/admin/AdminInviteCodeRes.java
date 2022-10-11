@@ -2,7 +2,8 @@ package com.tyin.core.module.res.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tyin.core.utils.DateUtils;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,24 +16,24 @@ import java.util.Date;
 @Data
 public class AdminInviteCodeRes {
 
-    @ApiModelProperty("id")
+    @Schema(description = "id")
     private String id;
-    @ApiModelProperty("邀请码")
+    @Schema(description = "邀请码")
     private String code;
-    @ApiModelProperty("角色名称")
+    @Schema(description = "角色名称")
     private String roleName;
-    @ApiModelProperty("是否无效")
+    @Schema(description = "是否无效")
     private Boolean invalid;
-    @ApiModelProperty("是否使用")
+    @Schema(description = "是否使用")
     private Boolean used;
-    @ApiModelProperty("创建者")
+    @Schema(description = "创建者")
     private String createBy;
-    @ApiModelProperty("使用者")
+    @Schema(description = "使用者")
     private String useBy;
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     @JsonFormat(pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
     private Date created;
-    @ApiModelProperty("过期时间")
+    @Schema(description = "过期时间")
     @JsonFormat(pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
     private Date expirationTime;
 }

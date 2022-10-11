@@ -11,9 +11,9 @@ import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.service.IAdminInviteCodeService;
 import com.tyin.server.service.IAdminUserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ import javax.validation.Valid;
  * @date 2022/7/28 17:18
  * @description ...
  */
-@Api(tags = "邀请码管理-相关接口")
+@Tag(name = "邀请码管理-相关接口")
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/invite")
 @RequiredArgsConstructor
@@ -33,22 +33,22 @@ public class AdminInviteController {
 
     private final IAdminInviteCodeService adminInviteCodeService;
 
-    @ApiOperation("邀请码查询列表")
+    @Operation(description = "邀请码查询列表")
     @GetMapping("/list")
-    public Result<PageResult<AdminInviteCodeRes, ?>> getInviteCodeList(@ApiParam("使用者") @RequestParam(required = false, defaultValue = "") String useBy,
-                                                                       @ApiParam("创建者") @RequestParam(required = false, defaultValue = "") String createBy,
-                                                                       @ApiParam("是否有效") @RequestParam(required = false) Boolean invalid,
-                                                                       @ApiParam("是否使用") @RequestParam(required = false) Boolean used,
-                                                                       @ApiParam(value = "页长度", defaultValue = "20") @RequestParam(required = false, defaultValue = "20") Long size,
-                                                                       @ApiParam(value = "当前页", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                                       @ApiParam(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser ignoredUser) {
+    public Result<PageResult<AdminInviteCodeRes, ?>> getInviteCodeList(@Parameter(description = "使用者") @RequestParam(required = false, defaultValue = "") String useBy,
+                                                                       @Parameter(description = "创建者") @RequestParam(required = false, defaultValue = "") String createBy,
+                                                                       @Parameter(description = "是否有效") @RequestParam(required = false) Boolean invalid,
+                                                                       @Parameter(description = "是否使用") @RequestParam(required = false) Boolean used,
+                                                                       @Parameter(description = "页长度", example = "20") @RequestParam(required = false, defaultValue = "20") Long size,
+                                                                       @Parameter(description = "当前页", example = "1") @RequestParam(required = false, defaultValue = "1") Long current,
+                                                                       @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser ignoredUser) {
         PageResult<AdminInviteCodeRes, ?> resPageResult = adminInviteCodeService.getList(useBy, createBy, invalid, used, current, size);
         return Result.success(resPageResult);
     }
 
-    @ApiOperation("生成邀请码")
+    @Operation(description = "生成邀请码")
     @PutMapping("/generate")
-    public Result<?> generateInviteCode(@ApiParam("角色ID") @Valid @RequestBody IdValid valid, @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
+    public Result<?> generateInviteCode(@Parameter(description = "角色ID") @Valid @RequestBody IdValid valid, @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
         InviteCodeBean code = userService.generateInviteCode(valid.getId(), user);
         GenerateInviteRes build = GenerateInviteRes.builder()
                 .code(code.getCode())
@@ -58,9 +58,9 @@ public class AdminInviteController {
         return Result.success(build);
     }
 
-    @ApiOperation("清除邀请码")
+    @Operation(description = "清除邀请码")
     @PutMapping("/remove")
-    public Result<?> removeInviteCode(@ApiParam("邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser ignoredUser) {
+    public Result<?> removeInviteCode(@Parameter(description = "邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser ignoredUser) {
         Integer row = adminInviteCodeService.remove(valid.getId());
         Asserts.isTrue(row == 1, "清理失败");
         return Result.success();

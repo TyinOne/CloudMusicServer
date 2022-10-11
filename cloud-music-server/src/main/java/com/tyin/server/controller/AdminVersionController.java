@@ -12,8 +12,8 @@ import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.InsertVersionValid;
 import com.tyin.server.service.IAdminDictService;
 import com.tyin.server.service.IAdminVersionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +29,13 @@ import java.util.Objects;
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/version")
 @RequiredArgsConstructor
-@Api(tags = "版本控制-版本控制相关接口")
+@Tag(name = "版本控制-版本控制相关接口")
 public class AdminVersionController {
     private final IAdminDictService adminDictService;
     private final IAdminVersionService adminVersionService;
 
     @GetMapping("/check")
-    @ApiOperation("检查更新-热更新")
+    @Operation(description = "检查更新-热更新")
     public Result<AdminUpdateRes> checkUpdate() {
         String value = adminDictService.selectValueByTypeKey("hotUpdate", "update:latest");
         AdminUpdateRes adminUpdateRes = JsonUtils.toJavaObject(value, AdminUpdateRes.class);
@@ -47,7 +47,7 @@ public class AdminVersionController {
     }
 
     @GetMapping("/list")
-    @ApiOperation("版本控制列表")
+    @Operation(description = "版本控制列表")
     public Result<PageResult<AdminVersionRes, ?>> getVersionList(@RequestParam(required = false) @DateTimeFormat(pattern = DateUtils.YYYY_MM_DD) Date startTime,
                                                                  @RequestParam(required = false) @DateTimeFormat(pattern = DateUtils.YYYY_MM_DD) Date stopTime,
                                                                  @RequestParam(required = false, defaultValue = "1") Long current,
@@ -58,7 +58,7 @@ public class AdminVersionController {
     }
 
     @PostMapping("/add")
-    @ApiOperation("新建版本")
+    @Operation(description = "新建版本")
     public Result<?> addVersion(@RequestBody InsertVersionValid valid) {
         Integer row = adminVersionService.addVersion(valid);
         Asserts.isTrue(row > 0, "新建版本失败");

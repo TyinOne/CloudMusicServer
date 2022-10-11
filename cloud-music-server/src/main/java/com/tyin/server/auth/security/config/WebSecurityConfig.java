@@ -34,21 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final RedisComponents redisComponents;
     private final TokenService tokenService;
 
-    private final static String[] AUTH_WHITELIST = {
-            "/admin/user/login",
-            "/admin/user/login/t",
+    private final static String[] AUTH_WHITELIST = {"/admin/user/login", "/admin/user/login/t",
             // -- swagger ui
-            "/v2/*",
-            "/v3/*",
-            "/doc.html",
-            "/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
-    };
+            "/v2/api-docs/*", "/v3/api-docs/*", "/doc.html", "/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**"};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -73,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth) {
         // 使用自定义身份验证组件
         auth.authenticationProvider(new CloudAuthenticationProvider(tokenService, userDetailsService, bCryptPasswordEncoder, redisComponents));
     }

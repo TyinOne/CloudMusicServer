@@ -18,3 +18,12 @@ logging:
 #    header: Authorization
 #    secret: abcdefghijklmnopqrstuvwxyz
 #    expireTime: 180
+springdoc:
+  use-fqn: true
+  api-docs:
+    resolve-schema-properties: true
+    path: /v3/api-docs
+  packages-to-scan: com.tyin.server
+  swagger-ui:
+    path: /doc
+    default-model-expand-depth: -1

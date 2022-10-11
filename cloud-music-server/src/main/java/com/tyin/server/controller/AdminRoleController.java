@@ -10,7 +10,7 @@ import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.InsertRoleValid;
 import com.tyin.server.params.valid.UpdateRoleValid;
 import com.tyin.server.service.IAdminRoleService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ import static com.tyin.core.constants.ResMessageConstants.ADD_FAILED;
  * @date 2022/4/9 4:22
  * @description ...
  */
-@Api(tags = "角色管理-角色相关接口")
+@Tag(name = "角色管理-角色相关接口")
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/role")
 @RequiredArgsConstructor

@@ -13,9 +13,9 @@ import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.params.valid.SaveDictTypeValid;
 import com.tyin.server.params.valid.SaveDictValid;
 import com.tyin.server.service.IAdminDictService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2022/5/8 22:46
  * @description ...
  */
-@Api(tags = "字典管理-字典相关接口")
+@Tag(name = "字典管理-字典相关接口")
 @RestController
 @RequestMapping("${cloud.api.prefix.admin}/dict")
 @RequiredArgsConstructor
@@ -34,29 +34,29 @@ public class AdminDictController {
     private final SystemLoadComponents systemLoadComponents;
 
     @GetMapping("/list")
-    @ApiOperation("字典列表")
-    public Result<PageResult<AdminDictRes, ?>> getDictList(@ApiParam("关键词") @RequestParam(required = false) String keywords,
-                                                           @ApiParam("字典key") @RequestParam(required = false) String dictKey,
-                                                           @ApiParam("字典type") @RequestParam(required = false) String dictType,
-                                                           @ApiParam("分页长度") @RequestParam(required = false, defaultValue = "20") Long size,
-                                                           @ApiParam("当前页") @RequestParam(required = false, defaultValue = "1") Long current,
+    @Operation(description = "字典列表")
+    public Result<PageResult<AdminDictRes, ?>> getDictList(@Parameter(description = "关键词") @RequestParam(required = false) String keywords,
+                                                           @Parameter(description = "字典key") @RequestParam(required = false) String dictKey,
+                                                           @Parameter(description = "字典type") @RequestParam(required = false) String dictType,
+                                                           @Parameter(description = "分页长度") @RequestParam(required = false, defaultValue = "20") Long size,
+                                                           @Parameter(description = "当前页") @RequestParam(required = false, defaultValue = "1") Long current,
                                                            @Auth("@permission.hasPermission('sys:dict:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminDictRes, ?> res = adminDictService.getDictList(keywords, dictKey, dictType, size, current);
         return Result.success(res);
     }
 
     @GetMapping("/type/list")
-    @ApiOperation("字典分类列表")
-    public Result<PageResult<AdminDictTypeRes, ?>> getDictTypeList(@ApiParam("关键词") @RequestParam(required = false) String keywords,
-                                                                   @ApiParam("是否启用") @RequestParam(required = false, defaultValue = "false") Boolean deleted,
-                                                                   @ApiParam("分页长度") @RequestParam(required = false, defaultValue = "20") Long size,
-                                                                   @ApiParam("当前页") @RequestParam(required = false, defaultValue = "1") Long current) {
+    @Operation(description = "字典分类列表")
+    public Result<PageResult<AdminDictTypeRes, ?>> getDictTypeList(@Parameter(description = "关键词") @RequestParam(required = false) String keywords,
+                                                                   @Parameter(description = "是否启用") @RequestParam(required = false, defaultValue = "false") Boolean deleted,
+                                                                   @Parameter(description = "分页长度") @RequestParam(required = false, defaultValue = "20") Long size,
+                                                                   @Parameter(description = "当前页") @RequestParam(required = false, defaultValue = "1") Long current) {
         PageResult<AdminDictTypeRes, ?> res = adminDictService.getDictTypeList(keywords, deleted, size, current);
         return Result.success(res);
     }
 
     @PostMapping("/save")
-    @ApiOperation("保存字典")
+    @Operation(description = "保存字典")
     public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
         Integer row = adminDictService.saveDict(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.SAVE_FAILED);
@@ -64,7 +64,7 @@ public class AdminDictController {
     }
 
     @PostMapping("/remove")
-    @ApiOperation("删除字典数据")
+    @Operation(description = "删除字典数据")
     public Result<?> removeDict(@RequestBody IdValid valid) {
         Integer row = adminDictService.removeDict(valid.getId());
         Asserts.isTrue(row > 0, ResMessageConstants.REMOVE_FAILED);
@@ -72,7 +72,7 @@ public class AdminDictController {
     }
 
     @PostMapping("/type/save")
-    @ApiOperation("保存字典分类")
+    @Operation(description = "保存字典分类")
     public Result<?> saveDictType(@RequestBody SaveDictTypeValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
         Integer row = adminDictService.saveDictType(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.SAVE_FAILED);
@@ -80,7 +80,7 @@ public class AdminDictController {
     }
 
     @PostMapping("/type/remove")
-    @ApiOperation("删除字典数据")
+    @Operation(description = "删除字典数据")
     public Result<?> removeDictType(@RequestBody IdValid valid) {
         Integer row = adminDictService.removeDictType(valid.getId());
         Asserts.isTrue(row > 0, ResMessageConstants.REMOVE_FAILED);
@@ -88,7 +88,7 @@ public class AdminDictController {
     }
 
     @PutMapping("/update/cache")
-    @ApiOperation("更新字典缓存")
+    @Operation(description = "更新字典缓存")
     public Result<?> updateDictCache(@Auth AuthAdminUser ignoredUser) {
         systemLoadComponents.onLoad();
         return Result.success();
