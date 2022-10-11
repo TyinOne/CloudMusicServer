@@ -1,10 +1,8 @@
 package com.tyin.server.auth;
 
-import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.server.auth.security.utils.SecurityUtils;
 import com.tyin.server.service.IAdminUserService;
 import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -21,6 +19,7 @@ import static com.tyin.core.constants.PermissionConstants.PERMISSION_SERVICE;
 @RequiredArgsConstructor
 public class AdminPermissionService {
     private final IAdminUserService adminUserService;
+
     /**
      * 接口鉴权
      *

@@ -1,6 +1,7 @@
 package com.tyin.server.auth.security.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.collect.Maps;
 import com.tyin.core.constants.ResMessageConstants;
 import com.tyin.core.module.entity.AdminUser;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
@@ -21,12 +22,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.tyin.server.auth.security.constant.ConstantKey.*;
+import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_USER_KEY;
 
 /**
  * @author Tyin
@@ -70,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private String createToken(AdminUserLoginRes user) {
         String token = user.getKey();
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = Maps.newHashMap();
         claims.put(LOGIN_USER_KEY, token);
         return tokenService.createToken(claims, user.getAccount());
     }

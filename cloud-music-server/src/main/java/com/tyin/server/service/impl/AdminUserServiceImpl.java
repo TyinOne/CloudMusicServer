@@ -16,12 +16,10 @@ import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.core.utils.Asserts;
-import com.tyin.core.utils.DateUtils;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.components.properties.PropertiesComponents;
-import com.tyin.server.params.valid.AdminLoginValid;
 import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 import com.tyin.server.repository.AdminUserExtraRepository;
@@ -34,9 +32,6 @@ import com.tyin.server.utils.IpUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,8 +51,6 @@ import static com.tyin.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 import static com.tyin.core.constants.RedisKeyConstants.ROLE_BUTTON_PREFIX;
-import static com.tyin.core.constants.ResMessageConstants.AUTH_FAILED;
-import static com.tyin.core.constants.ResMessageConstants.USER_DISABLED;
 
 /**
  * @author Tyin
@@ -76,51 +69,6 @@ public class AdminUserServiceImpl implements IAdminUserService {
     private final IAdminRoleService adminRoleService;
     private final IAdminMenuService adminMenuService;
     private final IAdminInviteCodeService adminInviteCodeService;
-
-    //    @Override
-    public AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress) {
-        String username = adminLoginValid.getAccount();
-        String password = adminLoginValid.getPassword();
-        password = StringUtils.sha256Encode(DigestUtils.md5Hex(password.getBytes(StandardCharsets.UTF_8))).toUpperCase(Locale.ROOT);
-        AdminUser adminUser = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda().eq(AdminUser::getPassword, password));
-        Asserts.isTrue(Objects.nonNull(adminUser), AUTH_FAILED);
-        Asserts.isTrue(!adminUser.getDisabled(), USER_DISABLED);
-        String avatar = StringUtils.isNotEmpty(adminUser.getAvatar()) ? propertiesComponents.getOssUrl() + adminUser.getAvatar() : StringUtils.EMPTY;
-        String token;
-        if (StringUtils.isNotEmpty(adminUser.getToken())) {
-            token = adminUser.getToken();
-        } else {
-            token = StringUtils.getUuid();
-            adminUser.setToken(token);
-        }
-        adminUser.setLastLogin(ipAddress);
-        adminUser.setLastLoginTime(DateUtils.getNowDate());
-        adminUserRepository.updateById(adminUser);
-        List<AdminRole> adminRoles = adminRoleService.getRoles(adminUser.getId());
-        Set<String> roles = adminRoles.stream().map(AdminRole::getValue).collect(Collectors.toSet());
-        Set<String> permissions = getPermissionByRole(roles);
-        AuthAdminUser user =
-                AuthAdminUser.builder()
-                        .id(adminUser.getId())
-                        .token(token)
-                        .nickName(adminUser.getNickName())
-                        .account(adminUser.getAccount())
-                        .avatar(avatar)
-                        .roles(roles)
-                        .permissions(permissions)
-                        .build();
-        redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + token, JsonUtils.toJSONString(user));
-        return new AdminUserLoginRes(
-                adminUser.getId(),
-                token,
-                adminUser.getNickName(),
-                user.getAccount(),
-                avatar,
-                roles,
-                permissions,
-                user.getDisabled()
-        );
-    }
 
     @Override
     public AdminUserDetailRes getUserInfo(AuthAdminUser user) {

@@ -1,11 +1,7 @@
 package com.tyin.server.auth.resolver;
 
 import com.tyin.core.annotations.Auth;
-import com.tyin.core.components.RedisComponents;
-import com.tyin.core.module.bean.AuthAdminUser;
-import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.server.auth.security.utils.SecurityUtils;
-import com.tyin.server.service.IUserCacheService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
@@ -14,9 +10,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import static com.tyin.core.constants.CommonConstants.TOKEN;
-import static com.tyin.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 
 /**
  * @author Tyin
@@ -32,7 +25,7 @@ public class AuthUserMethodArgumentResolver implements HandlerMethodArgumentReso
     }
 
     @Override
-    public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer, @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         return SecurityUtils.getLoginUser();
     }
 }

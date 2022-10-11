@@ -39,11 +39,6 @@ public class PropertiesComponents {
         oss = config;
     }
 
-    private void setAdminConfig(AdminConfig config) {
-        adminConfig = config;
-    }
-
-
     public String getOssUrl() {
         return oss.getOssFileHost();
     }
@@ -98,5 +93,9 @@ public class PropertiesComponents {
 
     public AdminConfig getAdminConfig() {
         return adminConfig;
+    }
+
+    private void setAdminConfig(AdminConfig config) {
+        adminConfig = config;
     }
 }

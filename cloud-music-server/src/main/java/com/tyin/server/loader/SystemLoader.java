@@ -5,12 +5,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tyin.core.components.CloudTimerTaskComponents;
-import com.tyin.core.components.RedisComponents;
 import com.tyin.core.components.ScheduledComponents;
 import com.tyin.core.components.properties.PropertiesEnum;
-import com.tyin.core.components.properties.models.AdminConfig;
-import com.tyin.core.components.properties.models.OssConfig;
-import com.tyin.core.components.properties.models.TencentMapConfig;
 import com.tyin.core.module.base.TimerTaskState;
 import com.tyin.core.module.bean.DictLabel;
 import com.tyin.core.module.entity.AdminDict;
@@ -24,7 +20,6 @@ import com.tyin.server.repository.AdminDictTypeRepository;
 import com.tyin.server.repository.AdminInviteCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.quartz.SchedulerException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -32,8 +27,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.tyin.core.constants.RedisKeyConstants.*;
 
 /**
  * @author Tyin
@@ -45,7 +38,6 @@ import static com.tyin.core.constants.RedisKeyConstants.*;
 @Slf4j
 public class SystemLoader {
     private final PropertiesComponents propertiesComponents;
-    private final RedisComponents redisComponents;
     private final ScheduledComponents scheduledComponents;
     private final CloudTimerTaskComponents timerTaskComponents;
     private final AdminDictRepository adminDictRepository;

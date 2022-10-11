@@ -2,8 +2,8 @@ package com.tyin.server.auth.security.filter;
 
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.core.utils.StringUtils;
-import com.tyin.server.auth.security.utils.SecurityUtils;
 import com.tyin.server.auth.security.service.TokenService;
+import com.tyin.server.auth.security.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,7 +53,7 @@ public class AuthenticationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(AdminUserLoginRes userLoginRes) throws ServletException, IOException {
+    private UsernamePasswordAuthenticationToken getAuthentication(AdminUserLoginRes userLoginRes) {
         return new UsernamePasswordAuthenticationToken(userLoginRes, null, userLoginRes.getAuthorities());
     }
 }

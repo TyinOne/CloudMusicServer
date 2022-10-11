@@ -10,8 +10,6 @@ import com.tyin.core.module.res.admin.AdminDictRes;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
-
 /**
  * @author Tyin
  * @date 2022/5/8 22:44

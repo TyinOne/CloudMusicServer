@@ -8,11 +8,9 @@ import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.server.api.PageResult;
-import com.tyin.server.params.valid.AdminLoginValid;
 import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,14 +19,6 @@ import java.util.Set;
  * @description ...
  */
 public interface IAdminUserService {
-    /**
-     * 用户登录
-     *
-     * @param adminLoginValid 登录参数
-     * @param ipAddress       登录IP
-     * @return token
-     */
-//    AdminUserLoginRes login(AdminLoginValid adminLoginValid, Long ipAddress);
 
     /**
      * 用户登出
@@ -98,8 +88,7 @@ public interface IAdminUserService {
     /**
      * 用户权限
      *
-     * @param roleId    角色Id
-     * @param roleValue 角色权限标识
+     * @param roles 角色权限标识
      * @return Set 权限字符集
      */
     Set<String> getPermissionByRole(Set<String> roles);
