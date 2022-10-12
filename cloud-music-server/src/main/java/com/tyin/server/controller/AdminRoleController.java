@@ -10,6 +10,7 @@ import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.InsertRoleValid;
 import com.tyin.server.params.valid.UpdateRoleValid;
 import com.tyin.server.service.IAdminRoleService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,20 +33,20 @@ public class AdminRoleController {
     public Result<PageResult<AdminRoleRes, ?>> getRoleList(@RequestParam(required = false) String keywords,
                                                            @RequestParam(required = false, defaultValue = "20") Long size,
                                                            @RequestParam(required = false, defaultValue = "1") Long current,
-                                                           @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser ignoredUser) {
+                                                           @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:role:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminRoleRes, ?> pageResult = adminRoleService.getRolesPageResult(keywords, size, current);
         return Result.success(pageResult);
     }
 
     @PostMapping("/add")
-    public Result<?> addRole(@RequestBody InsertRoleValid valid, @Auth("@permission.hasPermission('sys:role:add')") AuthAdminUser user) {
+    public Result<?> addRole(@RequestBody InsertRoleValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:role:add')") AuthAdminUser user) {
         Integer row = adminRoleService.addRole(valid, user);
         Asserts.isTrue(row == 1, ADD_FAILED);
         return Result.success();
     }
 
     @PutMapping("/update")
-    public Result<?> updateRole(@RequestBody UpdateRoleValid valid, @Auth("@permission.hasPermission('sys:role:update')") AuthAdminUser user) {
+    public Result<?> updateRole(@RequestBody UpdateRoleValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:role:update')") AuthAdminUser user) {
         adminRoleService.updateRole(valid, user);
         return Result.success();
     }

@@ -48,7 +48,7 @@ public class AdminInviteController {
 
     @Operation(description = "生成邀请码")
     @PutMapping("/generate")
-    public Result<?> generateInviteCode(@Parameter(description = "角色ID") @Valid @RequestBody IdValid valid, @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
+    public Result<?> generateInviteCode(@Parameter(description = "角色ID") @Valid @RequestBody IdValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:invite')") AuthAdminUser user) {
         InviteCodeBean code = userService.generateInviteCode(valid.getId(), user);
         GenerateInviteRes build = GenerateInviteRes.builder()
                 .code(code.getCode())
@@ -60,7 +60,7 @@ public class AdminInviteController {
 
     @Operation(description = "清除邀请码")
     @PutMapping("/remove")
-    public Result<?> removeInviteCode(@Parameter(description = "邀请码ID") @Valid @RequestBody IdValid valid, @Auth AuthAdminUser ignoredUser) {
+    public Result<?> removeInviteCode(@Parameter(description = "邀请码ID") @Valid @RequestBody IdValid valid, @Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
         Integer row = adminInviteCodeService.remove(valid.getId());
         Asserts.isTrue(row == 1, "清理失败");
         return Result.success();

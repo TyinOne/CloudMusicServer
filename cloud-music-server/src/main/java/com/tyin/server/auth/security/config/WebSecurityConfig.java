@@ -31,7 +31,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final static String[] AUTH_WHITELIST = {"/admin/user/login", "/admin/user/login/t",
             // -- swagger ui
-            "/v2/api-docs/*", "/v3/api-docs/*", "/doc.html", "/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**"};
+            "/v2/api-docs/*", "/v3/api-docs/*", "/v3/api-docs", "/doc.html", "/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**"};
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisComponents redisComponents;

@@ -29,26 +29,21 @@ public class AdminAccountController {
 
     @Operation(description = "用户列表")
     @GetMapping("/list")
-    public Result<PageResult<AdminAccountRes, ?>> getUserList(@Parameter(description = "用户 昵称/号码关键词") @RequestParam(required = false) String name,
-                                                              @Parameter(description = "角色ID") @RequestParam(required = false, defaultValue = "0") Long roleId,
-                                                              @Parameter(description = "是否禁用") @RequestParam(required = false, defaultValue = "-1") Long disabled,
-                                                              @Parameter(description = "页长度", example = "20") @RequestParam(required = false, defaultValue = "20") Long size,
-                                                              @Parameter(description = "当前页", example = "1") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                              @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:query')") AuthAdminUser ignoredUser) {
+    public Result<PageResult<AdminAccountRes, ?>> getUserList(@Parameter(description = "用户 昵称/号码关键词") @RequestParam(required = false) String name, @Parameter(description = "角色ID") @RequestParam(required = false, defaultValue = "0") Long roleId, @Parameter(description = "是否禁用") @RequestParam(required = false, defaultValue = "-1") Long disabled, @Parameter(description = "页长度", example = "20") @RequestParam(required = false, defaultValue = "20") Long size, @Parameter(description = "当前页", example = "1") @RequestParam(required = false, defaultValue = "1") Long current, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminAccountRes, ?> res = userService.getUserList(size, current, name, roleId, disabled);
         return Result.success(res);
     }
 
     @Operation(description = "用户详情")
     @GetMapping("/detail")
-    public Result<AdminAccountDetailRes> getUserDetail(@Parameter(description = "用户名") @RequestParam String account, @Auth("@permission.hasPermission('sys:account:detail')") AuthAdminUser ignoredUser) {
+    public Result<AdminAccountDetailRes> getUserDetail(@Parameter(description = "用户名") @RequestParam String account, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:detail')") AuthAdminUser ignoredUser) {
         AdminAccountDetailRes res = userService.getAccountDetail(account);
         return Result.success(res);
     }
 
     @Operation(description = "保存用户信息")
     @PostMapping("/save")
-    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid, @Auth("@permission.hasPermission('sys:account:save')") AuthAdminUser ignoredUser) {
+    public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:save')") AuthAdminUser ignoredUser) {
         userService.saveAccountInfo(valid);
         return Result.success();
     }

@@ -40,7 +40,7 @@ public class AdminDictController {
                                                            @Parameter(description = "字典type") @RequestParam(required = false) String dictType,
                                                            @Parameter(description = "分页长度") @RequestParam(required = false, defaultValue = "20") Long size,
                                                            @Parameter(description = "当前页") @RequestParam(required = false, defaultValue = "1") Long current,
-                                                           @Auth("@permission.hasPermission('sys:dict:query')") AuthAdminUser ignoredUser) {
+                                                           @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:dict:query')") AuthAdminUser ignoredUser) {
         PageResult<AdminDictRes, ?> res = adminDictService.getDictList(keywords, dictKey, dictType, size, current);
         return Result.success(res);
     }
@@ -57,7 +57,7 @@ public class AdminDictController {
 
     @PostMapping("/save")
     @Operation(description = "保存字典")
-    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
+    public Result<?> saveDict(@Validated @RequestBody SaveDictValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
         Integer row = adminDictService.saveDict(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.SAVE_FAILED);
         return Result.success();
@@ -73,7 +73,7 @@ public class AdminDictController {
 
     @PostMapping("/type/save")
     @Operation(description = "保存字典分类")
-    public Result<?> saveDictType(@RequestBody SaveDictTypeValid valid, @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
+    public Result<?> saveDictType(@RequestBody SaveDictTypeValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:dict:add')") AuthAdminUser ignoredUser) {
         Integer row = adminDictService.saveDictType(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.SAVE_FAILED);
         return Result.success();
@@ -89,7 +89,7 @@ public class AdminDictController {
 
     @PutMapping("/update/cache")
     @Operation(description = "更新字典缓存")
-    public Result<?> updateDictCache(@Auth AuthAdminUser ignoredUser) {
+    public Result<?> updateDictCache(@Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
         systemLoadComponents.onLoad();
         return Result.success();
     }

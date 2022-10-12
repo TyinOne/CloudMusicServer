@@ -32,7 +32,7 @@ public class AdminRegionController {
     public Result<AdminRegionListRes> getRegionList(@Parameter(description = "父级ID") @PathVariable(name = "parentId") Long parentId,
                                                     @Parameter(description = "关键词") @RequestParam(required = false) String keywords,
                                                     @Parameter(description = "查询级别") @RequestParam(required = false, defaultValue = "0") Integer level,
-                                                    @Auth AuthAdminUser ignoredUser) {
+                                                    @Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
         List<AdminRegionRes> list = regionService.selectListBy(parentId, keywords, level);
         return Result.success(AdminRegionListRes.builder().list(list).build());
     }

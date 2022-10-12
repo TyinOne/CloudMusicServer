@@ -44,7 +44,7 @@ public class AdminCommonController {
     @NoLog
     @Operation(description = "上传图片至临时目录")
     @PostMapping("/images/upload/tmp")
-    public Result<UploadTmpRes> uploadImage(@Parameter(description = "文件参数") @RequestParam MultipartFile file, @Auth AuthAdminUser user) {
+    public Result<UploadTmpRes> uploadImage(@Parameter(description = "文件参数") @RequestParam MultipartFile file, @Parameter(hidden = true) @Auth AuthAdminUser user) {
         UploadTmpRes tmpRes = uploadComponents.uploadTmp(file, user);
         return Result.success(tmpRes);
     }
@@ -52,7 +52,7 @@ public class AdminCommonController {
     @NoLog
     @Operation(description = "上传更新包至临时目录")
     @PostMapping("/package/upload/tmp")
-    public Result<UploadTmpRes> uploadPackage(@Parameter(description = "文件参数") @RequestParam MultipartFile updatePackage, @Auth AuthAdminUser user) {
+    public Result<UploadTmpRes> uploadPackage(@Parameter(description = "文件参数") @RequestParam MultipartFile updatePackage, @Parameter(hidden = true) @Auth AuthAdminUser user) {
         UploadTmpRes tmpRes = uploadComponents.uploadPackageTmp(updatePackage, user);
         return Result.success(tmpRes);
     }
@@ -60,7 +60,7 @@ public class AdminCommonController {
     @NoLog
     @Operation(description = "解析更新Json文件")
     @PostMapping("/parse/update")
-    public Result<UpdateJsonUploadRes> parseUpdateJson(@Parameter(description = "文件参数") @RequestParam MultipartFile updateJson, @Auth AuthAdminUser ignoredUser) {
+    public Result<UpdateJsonUploadRes> parseUpdateJson(@Parameter(description = "文件参数") @RequestParam MultipartFile updateJson, @Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
         StringBuilder stringBuilder;
         String json = "";
         try {

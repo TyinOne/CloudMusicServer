@@ -44,9 +44,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.tyin.core.constants.ParamsConstants.*;
-import static com.tyin.core.constants.PatternConstants.MAIL_PATTERN;
-import static com.tyin.core.constants.PatternConstants.TEL_PATTERN;
 import static com.tyin.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
@@ -160,12 +157,6 @@ public class AdminUserServiceImpl implements IAdminUserService {
         );
         redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + user.getToken(), JsonUtils.toJSONString(adminUserLoginRes));
         return adminUserLoginRes;
-    }
-
-    private String getColumns(String username) {
-        if (username.matches(TEL_PATTERN)) return PHONE;
-        if (username.matches(MAIL_PATTERN)) return MAIL;
-        return ACCOUNT;
     }
 
     @Override

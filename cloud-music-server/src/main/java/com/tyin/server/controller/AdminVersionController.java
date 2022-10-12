@@ -13,6 +13,7 @@ import com.tyin.server.params.valid.InsertVersionValid;
 import com.tyin.server.service.IAdminDictService;
 import com.tyin.server.service.IAdminVersionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -52,7 +53,7 @@ public class AdminVersionController {
                                                                  @RequestParam(required = false) @DateTimeFormat(pattern = DateUtils.YYYY_MM_DD) Date stopTime,
                                                                  @RequestParam(required = false, defaultValue = "1") Long current,
                                                                  @RequestParam(required = false, defaultValue = "20") Long size,
-                                                                 @Auth AuthAdminUser ignoredUser) {
+                                                                 @Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
         PageResult<AdminVersionRes, ?> pageResult = adminVersionService.getVersionList(startTime, stopTime, current, size);
         return Result.success(pageResult);
     }

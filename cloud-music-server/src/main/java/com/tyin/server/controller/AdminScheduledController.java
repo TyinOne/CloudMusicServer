@@ -7,6 +7,7 @@ import com.tyin.core.utils.Asserts;
 import com.tyin.server.api.Result;
 import com.tyin.server.params.valid.InsertScheduledValid;
 import com.tyin.server.service.IAdminScheduledService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class AdminScheduledController {
     private final IAdminScheduledService adminScheduledService;
 
     @PostMapping("/add")
-    public Result<?> addScheduled(@RequestBody InsertScheduledValid valid, @Auth AuthAdminUser ignoredUser) {
+    public Result<?> addScheduled(@RequestBody InsertScheduledValid valid, @Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
         Integer row = adminScheduledService.addScheduled(valid);
         Asserts.isTrue(row > 0, ResMessageConstants.ADD_FAILED);
         return Result.success();
