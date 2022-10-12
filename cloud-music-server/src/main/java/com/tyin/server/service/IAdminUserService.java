@@ -101,4 +101,6 @@ public interface IAdminUserService {
      * @return 邀请码Bean
      */
     InviteCodeBean generateInviteCode(Long id, AuthAdminUser user);
+
+    void updateToken(String account, String key);
 }

@@ -51,6 +51,13 @@ public class AdminLabelController {
         return Result.success(RoleLabelRes.builder().list(list).build());
     }
 
+    @GetMapping("/role/key")
+    @Operation(description = "角色列表Label接口")
+    public Result<RoleLabelRes> getRoleKeyLabel() {
+        List<RoleLabel> list = adminRoleService.getRoleKeyLabel();
+        return Result.success(RoleLabelRes.builder().list(list).build());
+    }
+
     @GetMapping("/menu")
     @Operation(description = "菜单树形Label数据接口(勾选)")
     public Result<MenuLabelRes> getMenuLabel(@RequestParam(required = false) Integer id) {

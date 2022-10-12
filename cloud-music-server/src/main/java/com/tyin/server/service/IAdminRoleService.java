@@ -36,9 +36,13 @@ public interface IAdminRoleService {
 
     List<RoleLabel> getRoleLabel();
 
+    List<RoleLabel> getRoleKeyLabel();
+
     List<RoleLabel> getRoleLabel(Set<Long> ids);
 
-    void updateUserRole(String account, Long roleId);
+    Integer addUserRoleKey(String account, String roleValue);
 
     AdminRole selectById(Long roleId);
+
+    Integer removeAllRoleByUserId(Long id);
 }

@@ -26,10 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.tyin.core.constants.ParamsConstants.*;
-import static com.tyin.core.constants.PatternConstants.MAIL_PATTERN;
-import static com.tyin.core.constants.PatternConstants.TEL_PATTERN;
 import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_USER_KEY;
+import static com.tyin.server.auth.security.utils.LoginUtils.getColumns;
 
 /**
  * @author Tyin
@@ -82,12 +80,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String md5Password = StringUtils.getMd5(StringUtils.getMd5(adminLoginValid.getPassword()));
         Authentication authentication = SpringUtils.getBean(AuthenticationManager.class).authenticate(new UsernamePasswordAuthenticationToken(adminLoginValid.getAccount(), md5Password));
         return (AdminUserLoginRes) authentication.getPrincipal();
-    }
-
-
-    private String getColumns(String username) {
-        if (username.matches(TEL_PATTERN)) return PHONE;
-        if (username.matches(MAIL_PATTERN)) return MAIL;
-        return ACCOUNT;
     }
 }

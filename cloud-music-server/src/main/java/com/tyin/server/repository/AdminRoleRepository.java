@@ -55,11 +55,10 @@ public interface AdminRoleRepository extends BaseMapper<AdminRole> {
     List<RoleLabel> selectLabel(@Param("ew") LambdaQueryWrapper<AdminRole> lambdaQuery);
 
     @Update("""
-            UPDATE `admin_user_role`
-             SET `role_id` = #{roleId}
-            WHERE `user_id` = (SELECT `id` FROM `admin_user` WHERE `account` = #{account})
+            INSERT INTO `admin_user_role`(user_id, role_id, created, modified) VALUES (
+            (SELECT `id` FROM `admin_user` WHERE `account` = #{account}),(SELECT admin_role.id FROM admin_role WHERE admin_role.value = #{roleValue}),sysdate(),sysdate());
             """)
-    void updateUserRole(@Param("account") String account, @Param("roleId") Long roleId);
+    Integer addUserRole(@Param("account") String account, @Param("roleValue") String roleValue);
 
     @Insert("""
             INSERT INTO
@@ -74,4 +73,18 @@ public interface AdminRoleRepository extends BaseMapper<AdminRole> {
             SELECT value FROM admin_role WHERE id IN(SELECT role_id FROM admin_user_role WHERE user_id = #{id} AND admin_user_role.deleted = 0)
             """)
     Set<String> selectRolesByUserId(@Param("id") Long id);
+
+    @Select("""
+            SELECT
+             `value` as value,
+             `name` as label
+            FROM
+             `admin_role` ${ew.customSqlSegment}\s
+            """)
+    List<RoleLabel> selectKeyLabel(@Param("ew") LambdaQueryWrapper<AdminRole> eq);
+
+    @Update("""
+            UPDATE `admin_user_role` SET deleted = 1 WHERE user_id = #{id}
+            """)
+    Integer removeAllRoleByUserId(@Param("id") Long id);
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Tyin
@@ -32,7 +33,7 @@ public class SaveAccountValid {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birth;
     @Schema(description = "角色ID")
-    private Long roleId;
+    private Set<String> roles;
     @Schema(description = "头像")
     private AvatarUpdate avatar;
 

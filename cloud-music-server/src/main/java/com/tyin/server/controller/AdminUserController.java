@@ -48,6 +48,9 @@ public class AdminUserController {
         Long ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
         adminLoginValid.setIpAddress(ipAddress);
         AdminUserLoginRes res = userDetailsService.login(adminLoginValid);
+        String key = res.getKey();
+        //更新用户表的token
+        adminUserService.updateToken(adminLoginValid.getAccount(), key);
         return Result.success(res);
     }
 

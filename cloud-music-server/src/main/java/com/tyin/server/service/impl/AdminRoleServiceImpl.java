@@ -155,6 +155,11 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     }
 
     @Override
+    public List<RoleLabel> getRoleKeyLabel() {
+        return adminRoleRepository.selectKeyLabel(Wrappers.<AdminRole>lambdaQuery().eq(AdminRole::getDisabled, Boolean.FALSE));
+    }
+
+    @Override
     public List<RoleLabel> getRoleLabel(Set<Long> ids) {
         return adminRoleRepository.selectLabel(
                 Wrappers.<AdminRole>lambdaQuery()
@@ -164,12 +169,17 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     }
 
     @Override
-    public void updateUserRole(String account, Long roleId) {
-        adminRoleRepository.updateUserRole(account, roleId);
+    public Integer addUserRoleKey(String account, String roleValue) {
+        return adminRoleRepository.addUserRole(account, roleValue);
     }
 
     @Override
     public AdminRole selectById(Long roleId) {
         return adminRoleRepository.selectById(roleId);
+    }
+
+    @Override
+    public Integer removeAllRoleByUserId(Long id) {
+        return adminRoleRepository.removeAllRoleByUserId(id);
     }
 }

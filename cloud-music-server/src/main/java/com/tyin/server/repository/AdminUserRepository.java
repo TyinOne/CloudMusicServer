@@ -28,23 +28,23 @@ public interface AdminUserRepository extends BaseMapper<AdminUser> {
      */
     @Select("""
             SELECT
-            \t`user`.`account`,
-            \t`user`.`nick_name`,
-            \tCONCAT(#{oss},`user`.`avatar`) `avatar`,
-            \t`user`.`phone`,
-            \t`user`.`mail`,
-            \t(SELECT GROUP_CONCAT( `name` ) FROM `admin_role` WHERE `id` IN ( SELECT role_id FROM admin_user_role WHERE user_id = `user`.id )) `role`,
-            \t`extra`.`sex`,
-            \t`extra`.`birth`,
-            \t`extra`.`region`,
-            \t`extra`.`id_card_no`,
-            \t`extra`.`id_card_name`,
-            \t`extra`.`id_card_address`
+             `user`.`account`,
+             `user`.`nick_name`,
+             CONCAT(#{oss},`user`.`avatar`) AS `avatar`,
+             `user`.`phone`,
+             `user`.`mail`,
+             (SELECT GROUP_CONCAT( `name` ) FROM `admin_role` WHERE `id` IN ( SELECT role_id FROM admin_user_role WHERE user_id = `user`.id )) `role`,
+             `extra`.`sex`,
+             `extra`.`birth`,
+             `extra`.`region`,
+             `extra`.`id_card_no`,
+             `extra`.`id_card_name`,
+             `extra`.`id_card_address`
             FROM
-            \t`admin_user` `user`
+             `admin_user` `user`
             LEFT JOIN `admin_user_extra` `extra` on `extra`.`user_id` = `user`.`id`
             WHERE
-            \t`account` = #{account}
+             `account` = #{account}
             """)
     AdminUserDetailRes selectUserDetail(@Param("account") String account, @Param("oss") String ossUrl);
 
@@ -56,37 +56,39 @@ public interface AdminUserRepository extends BaseMapper<AdminUser> {
             	`user`.`mail`,
             	`user`.`last_login_time`,
             	`user`.`disabled`,
-            	GROUP_CONCAT( `role`.`name` ) roles\s
+            	GROUP_CONCAT( `role`.`name` ) roles
             FROM
             	admin_user `user`
-            	LEFT JOIN admin_user_role `u_role` ON `u_role`.`user_id` = `user`.`id`\s
-            	LEFT JOIN admin_role `role` ON `role`.`id` = `u_role`.`role_id`\s
-             	LEFT JOIN admin_user_extra `extra` ON `extra`.`user_id` = `user`.`id`\s
-            ${ew.customSqlSegment}\s
+            	LEFT JOIN admin_user_role `u_role` ON `u_role`.`user_id` = `user`.`id`
+            	LEFT JOIN admin_role `role` ON `role`.`id` = `u_role`.`role_id`
+             	LEFT JOIN admin_user_extra `extra` ON `extra`.`user_id` = `user`.`id`
+            WHERE ${ew.sqlSegment}
             GROUP BY
-            	`user`.`id`\s""")
+            	`user`.`id`
+            """)
     IPage<AdminAccountRes> selectUserList(Page<AdminUser> adminUserPage, @Param("ew") QueryWrapper<AdminUser> wrapper);
 
     @Select("""
             SELECT
-            \t`user`.`id`,\s
-            \t`user`.`account`,\s
-            \t`user`.`nick_name`,\s
-            \t`user`.`avatar`,\s
-            \t`user`.`phone`,\s
-            \t`user`.`mail`,\s
-            \t`user`.`last_login`,\s
-            \t`user`.`last_login_time`,\s
-            \t`extra`.`sex`,\s
-            \tROUND(DATEDIFF(CURDATE(), `extra`.`birth`)/365.2422) `age`,\s
-            \t`extra`.`birth`,\s
-            \t`extra`.`region`,\s
-            \t`extra`.`id_card_no`,\s
-            \t`extra`.`id_card_name`,\s
-            \t`extra`.`id_card_address`
+             `user`.`id`,
+             `user`.`account`,
+             `user`.`nick_name`,
+             `user`.`avatar`,
+             `user`.`phone`,
+             `user`.`mail`,
+             `user`.`last_login`,
+             `user`.`last_login_time`,
+             `extra`.`sex`,
+             ROUND(DATEDIFF(CURDATE(), `extra`.`birth`)/365.2422) `age`,
+             `extra`.`birth`,
+             `extra`.`region`,
+             `extra`.`id_card_no`,
+             `extra`.`id_card_name`,
+             `extra`.`id_card_address`
             FROM
-            \t`admin_user` `user`
-            \tLEFT JOIN `admin_user_extra` `extra` ON `extra`.`user_id` = `user`.`id`
-            WHERE `user`.`account` = #{account} \t""")
+             `admin_user` `user`
+             LEFT JOIN `admin_user_extra` `extra` ON `extra`.`user_id` = `user`.`id`
+            WHERE `user`.`account` = #{account}
+            """)
     AdminAccountDetailRes selectAccountDetail(@Param("account") String account);
 }

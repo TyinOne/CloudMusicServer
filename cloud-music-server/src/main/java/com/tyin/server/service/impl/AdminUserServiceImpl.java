@@ -32,6 +32,7 @@ import com.tyin.server.utils.IpUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +49,8 @@ import static com.tyin.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 import static com.tyin.core.constants.RedisKeyConstants.ROLE_BUTTON_PREFIX;
+import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_TOKEN_KEY;
+import static com.tyin.server.auth.security.utils.LoginUtils.getColumns;
 
 /**
  * @author Tyin
@@ -85,6 +88,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
         wrapper.lambda()
                 .apply(disabled != -1, " `user`.`disabled` = {0} ", disabled)
                 .apply(roleId != 0, " `role`.`id` = {0}", roleId)
+                .apply(" `role`.`deleted` = {0}", 0)
+                .apply(" `u_role`.`deleted` = {0}", 0)
                 .and(StringUtils.isNotEmpty(name), i -> i
                         .apply(" INSTR(`user`.`nick_name`, {0}) > 0", name)
                         .or()
@@ -130,16 +135,23 @@ public class AdminUserServiceImpl implements IAdminUserService {
             }
             //复制文件
         }
-        adminRoleService.updateUserRole(valid.getAccount(), valid.getRoleId());
         adminUserRepository.update(user, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, valid.getAccount()));
         AdminUserExtra userExtra = AdminUserExtra.builder()
                 .birth(valid.getBirth())
                 .region(valid.getRegion())
                 .build();
         adminUserExtraRepository.update(userExtra, Wrappers.<AdminUserExtra>lambdaQuery().eq(AdminUserExtra::getUserId, userBase.getId()));
-        //强制下线 TODO 可重新调用登录接口保存最新信息
-        if (StringUtils.isNotEmpty(userBase.getToken())) {
-            redisComponents.deleteKey(ADMIN_USER_TOKEN_PREFIX + userBase.getToken());
+        Set<String> roles = valid.getRoles();
+        if (roles.size() > 0) {
+            //移除当前拥有的角色配置
+            Integer removeRow = adminRoleService.removeAllRoleByUserId(userBase.getId());
+            roles.forEach(role -> {
+                Integer row = adminRoleService.addUserRoleKey(valid.getAccount(), role);
+            });
+            //强制下线 TODO 可重新调用登录接口保存最新信息
+            if (StringUtils.isNotEmpty(userBase.getToken())) {
+                redisComponents.deleteKey(LOGIN_TOKEN_KEY + userBase.getToken());
+            }
         }
     }
 
@@ -195,6 +207,13 @@ public class AdminUserServiceImpl implements IAdminUserService {
     @Override
     public InviteCodeBean generateInviteCode(Long id, AuthAdminUser user) {
         return adminInviteCodeService.generateInviteCode(id, user);
+    }
+
+    @Override
+    @Async
+    public void updateToken(String account, String key) {
+        AdminUser user = AdminUser.builder().token(key).build();
+        adminUserRepository.update(user, Wrappers.<AdminUser>update().eq(getColumns(account), account));
     }
 
 
