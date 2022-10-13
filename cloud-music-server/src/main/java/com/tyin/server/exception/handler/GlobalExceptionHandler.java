@@ -37,7 +37,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result<String> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e.fillInStackTrace());
-        return Result.failed();
+        String message = "";
+        if (e.getBindingResult().getErrorCount() > 0) {
+            message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        }
+        return Result.failed(message);
     }
 
     @ResponseBody
