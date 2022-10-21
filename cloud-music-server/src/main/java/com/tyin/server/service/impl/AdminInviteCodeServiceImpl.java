@@ -55,7 +55,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
         long expiration = System.currentTimeMillis() + configExpire * MILLIS_MINUTE;
         Date expirationDate = new Date(expiration);
         InviteCodeBean build = InviteCodeBean.builder().code(code).expiration(configExpire * MILLIS_MINUTE).build();
-        redisComponents.save(inviteCodeKey, JsonUtils.toJSONString(build), configExpire * MILLIS_MINUTE, TimeUnit.MINUTES);
+        redisComponents.save(inviteCodeKey, JsonUtils.toJSONString(build), configExpire * MILLIS_MINUTE, TimeUnit.MILLISECONDS);
         AdminInviteCode adminInviteCode = AdminInviteCode.builder()
                 .roleId(id)
                 .code(code)

@@ -56,7 +56,7 @@ public class CloudAuthenticationProvider implements AuthenticationProvider {
                 res.setLoginTime(System.currentTimeMillis());
                 res.setExpireTime(res.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
                 res.setUuid(key);
-                redisComponents.save(tokenService.getTokenKey(key), JsonUtils.toJSONString(res), EXPIRE_TIME * MILLIS_MINUTE, TimeUnit.MINUTES);
+                redisComponents.save(tokenService.getTokenKey(key), JsonUtils.toJSONString(res), EXPIRE_TIME * MILLIS_MINUTE, TimeUnit.MILLISECONDS);
                 return new UsernamePasswordAuthenticationToken(res, password, authorities);
             }
         }

@@ -69,7 +69,7 @@ public class TokenService {
         adminUserLoginRes.setExpireTime(adminUserLoginRes.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(adminUserLoginRes.getUuid());
-        redisComponents.save(userKey, JsonUtils.toJSONString(adminUserLoginRes), EXPIRE_TIME * MILLIS_MINUTE, TimeUnit.MINUTES);
+        redisComponents.save(userKey, JsonUtils.toJSONString(adminUserLoginRes), EXPIRE_TIME * MILLIS_MINUTE, TimeUnit.MILLISECONDS);
         return adminUserLoginRes;
     }
 
