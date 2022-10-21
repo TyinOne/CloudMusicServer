@@ -51,8 +51,7 @@ public class AdminRoleServiceImpl implements IAdminRoleService {
     @Override
     public List<AdminRole> getRoles(Long userId) {
         return adminRoleRepository.selectList(Wrappers.<AdminRole>lambdaQuery()
-                .apply("`id` IN ( SELECT `role_id` FROM `admin_user_role` WHERE `user_id` = {0} ) ", userId)
-                .eq(AdminRole::getDisabled, Boolean.FALSE)
+                .apply("`id` IN ( SELECT `role_id` FROM `admin_user_role` WHERE `user_id` = {0} AND deleted = 0 ) ", userId)
         );
     }
 
