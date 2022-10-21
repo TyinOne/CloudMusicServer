@@ -7,12 +7,10 @@ import com.tyin.core.components.CloudTimerTaskComponents;
 import com.tyin.core.components.RedisComponents;
 import com.tyin.core.components.properties.models.AdminConfig;
 import com.tyin.core.constants.RedisKeyConstants;
-import com.tyin.core.constants.ResMessageConstants;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.entity.AdminInviteCode;
 import com.tyin.core.module.res.admin.AdminInviteCodeRes;
-import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
@@ -24,8 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static com.tyin.server.auth.security.constant.ConstantKey.MILLIS_MINUTE;
 
 /**
  * @author Tyin
@@ -52,11 +52,10 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
         int subEnd = subStart + 6;
         String code = StringUtils.sha256Encode(StringUtils.getUuid() + user.getAccount() + System.currentTimeMillis()).substring(subStart, subEnd).toUpperCase();
         String inviteCodeKey = RedisKeyConstants.INVITE_CODE_EXPIRE + user.getAccount() + ":" + id + ":" + code;
-        long expiration = System.currentTimeMillis() + configExpire * 60 * 1000;
+        long expiration = System.currentTimeMillis() + configExpire * MILLIS_MINUTE;
         Date expirationDate = new Date(expiration);
-        InviteCodeBean build = InviteCodeBean.builder().code(code).expiration(configExpire * 60 * 1000L).build();
-        redisComponents.saveAsync(inviteCodeKey, JsonUtils.toJSONString(build));
-        redisComponents.expireKeyAt(inviteCodeKey, expirationDate);
+        InviteCodeBean build = InviteCodeBean.builder().code(code).expiration(configExpire * MILLIS_MINUTE).build();
+        redisComponents.save(inviteCodeKey, JsonUtils.toJSONString(build), configExpire * MILLIS_MINUTE, TimeUnit.MINUTES);
         AdminInviteCode adminInviteCode = AdminInviteCode.builder()
                 .roleId(id)
                 .code(code)
