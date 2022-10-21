@@ -24,5 +24,5 @@ public class ConstantKey {
 
     public static final Long MILLIS_MINUTE = 60 * MILLIS_SECOND;
 
-    public static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+    public static final Long MILLIS_MINUTE_TEN = 20 * MILLIS_MINUTE;
 }

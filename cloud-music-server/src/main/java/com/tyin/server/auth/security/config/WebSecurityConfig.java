@@ -29,9 +29,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final static String[] AUTH_WHITELIST = {"/admin/user/login", "/admin/user/login/t",
+    private final static String[] AUTH_WHITELIST = {
+            "/admin/user/login",
+            "/admin/user/login/t",
             // -- swagger ui
-            "/v2/api-docs/*", "/v3/api-docs/*", "/v3/api-docs", "/doc.html", "/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**"};
+            "/v2/api-docs/*",
+            "/v3/api-docs/*",
+            "/v3/api-docs",
+            "/doc.html",
+            "/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/druid/**"
+    };
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisComponents redisComponents;
@@ -39,7 +53,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors()
+                .and()
+                //X-Frame-Options
+                .headers().frameOptions().disable()
+                .and().csrf().disable()
                 //session禁用
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

@@ -3,6 +3,7 @@ package com.tyin.core.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -62,4 +63,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
 
+    public static Date getEndForDay(Date endDate) {
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(endDate);
+        instance.set(Calendar.HOUR, 23);
+        instance.set(Calendar.MINUTE, 59);
+        instance.set(Calendar.SECOND, 59);
+        instance.set(Calendar.MILLISECOND, 999);
+        return instance.getTime();
+    }
 }

@@ -36,6 +36,7 @@
         <quartz.version>2.3.2</quartz.version>
         <jwt.version>0.9.1</jwt.version>
         <springdoc.version>1.6.11</springdoc.version>
+        <region.version>2.6.5</region.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -137,6 +138,11 @@
                 <artifactId>quartz</artifactId>
                 <type>pom</type>
                 <version>${quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${region.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

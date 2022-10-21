@@ -29,4 +29,6 @@ public class RequestLog extends BaseEntity implements Serializable {
     private String params;
     private String result;
     private Long elapsed;
+    private Boolean isLogin;
+    private String account;
 }

@@ -19,6 +19,7 @@ import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
+import com.tyin.server.auth.security.service.TokenService;
 import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
@@ -47,7 +48,6 @@ import java.util.stream.Collectors;
 
 import static com.tyin.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.core.constants.PermissionConstants.SUPPER_ROLE;
-import static com.tyin.core.constants.RedisKeyConstants.ADMIN_USER_TOKEN_PREFIX;
 import static com.tyin.core.constants.RedisKeyConstants.ROLE_BUTTON_PREFIX;
 import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_TOKEN_KEY;
 import static com.tyin.server.auth.security.utils.LoginUtils.getColumns;
@@ -69,6 +69,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     private final IAdminRoleService adminRoleService;
     private final IAdminMenuService adminMenuService;
     private final IAdminInviteCodeService adminInviteCodeService;
+    private final TokenService tokenService;
 
     @Override
     public AdminUserDetailRes getUserInfo(AuthAdminUser user) {
@@ -157,17 +158,8 @@ public class AdminUserServiceImpl implements IAdminUserService {
 
     @Override
     public AdminUserLoginRes getUserSession(AuthAdminUser user) {
-        AdminUserLoginRes adminUserLoginRes = new AdminUserLoginRes(
-                user.getId(),
-                user.getToken(),
-                user.getNickName(),
-                user.getAccount(),
-                user.getAvatar(),
-                user.getRoles(),
-                getPermissionByRole(user.getRoles()),
-                user.getDisabled()
-        );
-        redisComponents.saveAsync(ADMIN_USER_TOKEN_PREFIX + user.getToken(), JsonUtils.toJSONString(adminUserLoginRes));
+        AdminUserLoginRes adminUserLoginRes = (AdminUserLoginRes) user;
+        tokenService.verifyToken(adminUserLoginRes);
         return adminUserLoginRes;
     }
 
@@ -198,10 +190,9 @@ public class AdminUserServiceImpl implements IAdminUserService {
 
     @Override
     public void logout(AuthAdminUser user) {
-        String token = user.getToken();
         AdminUser adminUser = AdminUser.builder().token("").build();
         adminUserRepository.update(adminUser, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, user.getAccount()));
-        redisComponents.deleteKey(ADMIN_USER_TOKEN_PREFIX + token);
+        redisComponents.deleteKey(LOGIN_TOKEN_KEY + user.getUuid());
     }
 
     @Override

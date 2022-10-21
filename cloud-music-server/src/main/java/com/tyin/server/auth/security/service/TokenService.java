@@ -57,6 +57,7 @@ public class TokenService {
     public void verifyToken(AdminUserLoginRes adminUserLoginRes) {
         long expireTime = adminUserLoginRes.getExpireTime();
         long currentTime = System.currentTimeMillis();
+        //不足20分钟  刷新token
         if (expireTime - currentTime <= MILLIS_MINUTE_TEN) {
             refreshToken(adminUserLoginRes);
         }
@@ -66,8 +67,8 @@ public class TokenService {
         adminUserLoginRes.setLoginTime(System.currentTimeMillis());
         adminUserLoginRes.setExpireTime(adminUserLoginRes.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(adminUserLoginRes.getToken());
-        redisComponents.save(userKey, JsonUtils.toJSONString(adminUserLoginRes), EXPIRE_TIME, TimeUnit.MINUTES);
+        String userKey = getTokenKey(adminUserLoginRes.getUuid());
+        redisComponents.save(userKey, JsonUtils.toJSONString(adminUserLoginRes), EXPIRE_TIME * MILLIS_MINUTE, TimeUnit.MINUTES);
     }
 
     private String getToken(HttpServletRequest request) {

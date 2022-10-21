@@ -53,9 +53,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private AdminUserLoginRes createLoginUser(AdminUser user, Set<String> roles) {
+        String uuid = StringUtils.getUuid();
+        String uuidKey = user.getAccount() + ":" + uuid;
         AdminUserLoginRes res = new AdminUserLoginRes(
                 user.getId(),
                 "",
+                uuidKey,
                 user.getNickName(),
                 user.getAccount(),
                 propertiesComponents.getOssUrl() + user.getAvatar(),
@@ -63,14 +66,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 adminUserService.getPermissionByRole(roles),
                 user.getDisabled());
         res.setPassword(user.getPassword());
-        String uuid = StringUtils.getUuid();
-        res.setKey(res.getAccount() + ":" + uuid);
+//        res.setKey(uuidKey);
         res.setToken(createToken(res));
+//        res.setLoginTime(user.getLastLoginTime().getTime());
         return res;
     }
 
     private String createToken(AdminUserLoginRes user) {
-        String token = user.getKey();
+        String token = user.getUuid();
         Map<String, Object> claims = Maps.newHashMap();
         claims.put(LOGIN_USER_KEY, token);
         return tokenService.createToken(claims, user.getAccount());

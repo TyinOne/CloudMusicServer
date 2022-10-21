@@ -17,8 +17,9 @@ public class AdminLogRes {
     private String uri;
     private String ip;
     private String method;
-    private String params;
-    private String result;
+    //    太多了影响速度 放到详情里面
+//    private String params;
+//    private String result;
     private String elapsed;
     @JsonFormat(pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
     private Date created;

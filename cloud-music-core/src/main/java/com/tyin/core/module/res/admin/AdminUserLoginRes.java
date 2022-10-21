@@ -21,9 +21,9 @@ import java.util.Set;
 @JsonIgnoreProperties({"accountNonLocked", "credentialsNonExpired", "accountNonExpired", "enabled"})
 public class AdminUserLoginRes extends AuthAdminUser implements UserDetails {
     @JsonIgnore
-    @Getter
-    @Setter
-    private String key;
+//    @Getter
+//    @Setter
+//    private String key;
     @Getter
     @Setter
     private Long loginTime;
@@ -31,8 +31,9 @@ public class AdminUserLoginRes extends AuthAdminUser implements UserDetails {
     @Setter
     private Long expireTime;
 
-    public AdminUserLoginRes(Long id, String token, String nickName, String account, String avatar, Set<String> roles, Set<String> permissions, Boolean disabled) {
-        super(id, token, nickName, account, avatar, roles, permissions, disabled, "");
+    public AdminUserLoginRes(Long id, String token, String uuid, String nickName, String account, String avatar, Set<String> roles, Set<String> permissions, Boolean disabled) {
+        super(id, token, uuid, nickName, account, avatar, roles, permissions, disabled, "");
+//        this.key = key;
     }
 
     @Override

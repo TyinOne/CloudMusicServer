@@ -51,11 +51,12 @@ public class CloudAuthenticationProvider implements AuthenticationProvider {
                 // 这里设置权限和角色
                 ArrayList<GrantedAuthority> authorities = new ArrayList<>();
                 AdminUserLoginRes res = (AdminUserLoginRes) userDetails;
-                String key = res.getKey();
+                String key = res.getUuid();
                 //存储redis
                 res.setLoginTime(System.currentTimeMillis());
                 res.setExpireTime(res.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
-                redisComponents.save(tokenService.getTokenKey(key), JsonUtils.toJSONString(res), res.getExpireTime(), TimeUnit.MINUTES);
+                res.setUuid(key);
+                redisComponents.save(tokenService.getTokenKey(key), JsonUtils.toJSONString(res), EXPIRE_TIME * MILLIS_MINUTE, TimeUnit.MINUTES);
                 return new UsernamePasswordAuthenticationToken(res, password, authorities);
             }
         }

@@ -23,4 +23,5 @@ public class ResMessageConstants {
 
     public final static String ACCOUNT_REPEAT = "用户名已被使用";
 
+    public final static String DATA_ERROR = "数据异常";
 }

@@ -16,6 +16,11 @@ import org.apache.ibatis.annotations.Select;
  * @description ...
  */
 public interface RequestLogRepository extends BaseMapper<RequestLog> {
-    @Select("SELECT `id`, `uri`, `ip`, `method`, `params`, `result`, `elapsed`, `created` FROM `request_log`  ${ew.customSqlSegment}")
+    @Select("""
+            SELECT `id`, `uri`, `ip`, `method`, `elapsed`, `created`
+            FROM `request_log`
+            ${ew.customSqlSegment}
+            GROUP BY `id`
+            """)
     IPage<AdminLogRes> selectLogPage(Page<Object> page, @Param("ew") LambdaQueryWrapper<RequestLog> wrappers);
 }

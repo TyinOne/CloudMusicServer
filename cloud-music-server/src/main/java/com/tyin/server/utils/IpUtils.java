@@ -1,21 +1,31 @@
 package com.tyin.server.utils;
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
+import org.lionsoul.ip2region.xdb.Searcher;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Tyin
  * @date 2022/3/29 21:57
  * @description ...
  */
+@Slf4j
 public class IpUtils {
+    private static final URL REGION_RESOURCE = IpUtils.class.getResource("/ip2region.xdb");
     private static final String UNKNOWN = "unknown";
-
     private static final String LOCAL = "127.0.0.1";
+    private static final String LAN_A = "10.";
+    private static final String LAN_B = "172.";
+    private static final String LAN_C = "192.";
+    private static final String SWAGGER = "0.";
 
     public static String getIpAddress(HttpServletRequest request) {
         String ipAddress;
@@ -164,4 +174,43 @@ public class IpUtils {
         }
         return UNKNOWN;
     }
+
+    public static String getIpCity(Long longIp) throws IOException {
+        String ip = longToIp(longIp);
+        if (ip.startsWith(LAN_A) || ip.startsWith(LAN_B) || ip.startsWith(LAN_C) || ip.startsWith(SWAGGER) || ip.equals(LOCAL)) {
+            return "本地IP";
+        }
+        if (Objects.isNull(REGION_RESOURCE)) {
+            return "未知地址";
+        }
+        String dbPath = REGION_RESOURCE.getPath();
+        // 1、从 dbPath 加载整个 xdb 到内存。
+        byte[] cBuff;
+        try {
+            cBuff = Searcher.loadContentFromFile(dbPath);
+        } catch (Exception e) {
+            log.warn(String.format("failed to load content from `%s`: %s\n", dbPath, e));
+            return "未知地址";
+        }
+        Searcher searcher = null;
+        try {
+            searcher = Searcher.newWithBuffer(cBuff);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.warn(String.format("failed to create searcher with `%s`: %s\n", dbPath, e));
+            return "未知地址";
+        }
+        // 2、查询
+        try {
+            return searcher.search(ip);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.warn(String.format("failed to search(%s): %s\n", ip, e));
+        } finally {
+            // 3、关闭资源
+            searcher.close();
+        }
+        return "未知地址";
+    }
+
 }

@@ -20,6 +20,7 @@ import java.util.Set;
 public class AuthAdminUser {
     private Long id;
     private String token;
+    private String uuid;
     private String nickName;
     private String account;
     private String avatar;

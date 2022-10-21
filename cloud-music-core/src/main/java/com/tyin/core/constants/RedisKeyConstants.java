@@ -7,8 +7,6 @@ package com.tyin.core.constants;
  */
 public class RedisKeyConstants {
 
-    public final static String ADMIN_USER_TOKEN_PREFIX = "user:admin:token:";
-
     public final static String SUPPER_MENU_PREFIX = "supper:menu:";
 
     public final static String ROLE_MENU_PREFIX = "role:menu:";
