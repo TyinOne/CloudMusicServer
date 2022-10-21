@@ -2,10 +2,12 @@ package com.tyin.server.auth.security.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Maps;
+import com.tyin.core.components.RedisComponents;
 import com.tyin.core.constants.ResMessageConstants;
 import com.tyin.core.module.entity.AdminUser;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.core.utils.Asserts;
+import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.SpringUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.components.properties.PropertiesComponents;
@@ -26,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_TOKEN_KEY;
 import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_USER_KEY;
 import static com.tyin.server.auth.security.utils.LoginUtils.getColumns;
 
@@ -42,11 +45,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final IAdminUserService adminUserService;
     private final PropertiesComponents propertiesComponents;
     private final TokenService tokenService;
+    private final RedisComponents redisComponents;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AdminUser user = adminUserRepository.selectOne(Wrappers.<AdminUser>query().eq(getColumns(username), username).lambda());
         if (Objects.isNull(user)) return null;
+        if (StringUtils.isNotEmpty(user.getToken())) {
+            String s = redisComponents.get(LOGIN_TOKEN_KEY + user.getToken());
+            if (StringUtils.isNotEmpty(s)) {
+                AdminUserLoginRes res = JsonUtils.toJavaObject(s, AdminUserLoginRes.class);
+                if (Objects.nonNull(res) && Objects.nonNull(res.getExpireTime()) && res.getExpireTime() > System.currentTimeMillis()) {
+                    res.setPassword(user.getPassword());
+                    return tokenService.verifyToken(res);
+                }
+            }
+        }
         Asserts.isTrue(!user.getDisabled(), ResMessageConstants.USER_DISABLED);
         Set<String> roles = adminRoleRepository.selectRolesByUserId(user.getId());
         return createLoginUser(user, roles);

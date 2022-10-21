@@ -127,6 +127,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
             String pathDir = propertiesComponents.getOssServer() + avatarUri;
             File source = new File(tmpPath);
             File target = new File(pathDir);
+            //复制文件
             try {
                 FileUtils.copyFileToDirectory(source, target);
                 avatar = avatarUri + avatarUpdate.getFileName();
@@ -134,7 +135,6 @@ public class AdminUserServiceImpl implements IAdminUserService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //复制文件
         }
         adminUserRepository.update(user, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, valid.getAccount()));
         AdminUserExtra userExtra = AdminUserExtra.builder()
@@ -142,6 +142,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
                 .region(valid.getRegion())
                 .build();
         adminUserExtraRepository.update(userExtra, Wrappers.<AdminUserExtra>lambdaQuery().eq(AdminUserExtra::getUserId, userBase.getId()));
+        //更新AdminRes
         Set<String> roles = valid.getRoles();
         if (roles.size() > 0) {
             //移除当前拥有的角色配置
@@ -159,8 +160,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     @Override
     public AdminUserLoginRes getUserSession(AuthAdminUser user) {
         AdminUserLoginRes adminUserLoginRes = (AdminUserLoginRes) user;
-        tokenService.verifyToken(adminUserLoginRes);
-        return adminUserLoginRes;
+        return tokenService.verifyToken(adminUserLoginRes);
     }
 
     @Override

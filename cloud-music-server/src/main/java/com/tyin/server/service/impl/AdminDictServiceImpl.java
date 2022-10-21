@@ -49,7 +49,7 @@ public class AdminDictServiceImpl implements IAdminDictService {
                 .and(StringUtils.isNotBlank(keywords), i -> i.apply("INSTR(`dict_label`, {0}) > 0", keywords)
                         .or().apply(" INSTR(`dict_type`, {0}) > 0", keywords)
                         .or().apply(" INSTR(`dict_key`, {0}) > 0", keywords))
-                .eq(AdminDict::getDeleted, Boolean.FALSE)
+                .apply("deleted = 0")
                 .orderByAsc(AdminDict::getDictType)
                 .orderByAsc(AdminDict::getId)
         );

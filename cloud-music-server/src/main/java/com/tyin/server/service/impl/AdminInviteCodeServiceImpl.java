@@ -71,7 +71,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
     public void handleInviteCodeExpire(String code) {
         AdminInviteCode inviteCode = selectInviteCode(code);
         inviteCode.setInvalid(Boolean.TRUE);
-        adminInviteCodeRepository.deleteById(inviteCode);
+        adminInviteCodeRepository.updateById(inviteCode);
         String inviteCodeKey = RedisKeyConstants.INVITE_CODE_EXPIRE + inviteCode.getCreateBy() + ":" + inviteCode.getRoleId() + ":" + code;
         redisComponents.deleteKey(inviteCodeKey);
     }
@@ -110,7 +110,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
                         .apply(StringUtils.isNotEmpty(createBy), "INSTR(`create_by`, {0}) > 0", createBy)
                         .eq(Objects.nonNull(invalid), AdminInviteCode::getInvalid, invalid)
                         .eq(Objects.nonNull(isUsed), AdminInviteCode::getUsed, isUsed)
-                        .eq(AdminInviteCode::getDeleted, Boolean.FALSE)
+                        .apply("deleted = 0")
         );
         return PageResult.buildResult(res);
     }
