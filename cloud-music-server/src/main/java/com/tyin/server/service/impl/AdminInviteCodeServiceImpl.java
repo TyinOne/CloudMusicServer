@@ -7,10 +7,12 @@ import com.tyin.core.components.CloudTimerTaskComponents;
 import com.tyin.core.components.RedisComponents;
 import com.tyin.core.components.properties.models.AdminConfig;
 import com.tyin.core.constants.RedisKeyConstants;
+import com.tyin.core.constants.ResMessageConstants;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.entity.AdminInviteCode;
 import com.tyin.core.module.res.admin.AdminInviteCodeRes;
+import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -77,8 +80,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
     }
 
     private AdminInviteCode selectInviteCode(String code) {
-        return adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaUpdate()
-                .eq(AdminInviteCode::getCode, code));
+        return adminInviteCodeRepository.selectOne(Wrappers.<AdminInviteCode>lambdaUpdate().eq(AdminInviteCode::getCode, code));
     }
 
     @Override
@@ -118,8 +120,7 @@ public class AdminInviteCodeServiceImpl implements IAdminInviteCodeService {
     @Override
     public Integer remove(Long id) {
         AdminInviteCode adminInviteCode = adminInviteCodeRepository.selectById(id);
-        int row = adminInviteCodeRepository.deleteById(id);
         handleInviteCodeExpire(adminInviteCode.getCode());
-        return row;
+        return adminInviteCodeRepository.deleteById(id);
     }
 }
