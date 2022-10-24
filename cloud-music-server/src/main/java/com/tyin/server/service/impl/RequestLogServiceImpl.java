@@ -73,6 +73,8 @@ public class RequestLogServiceImpl implements IRequestLogService {
         String address = "";
         try {
             address = IpUtils.getIpCity(requestLog.getIp());
+            address = address.replace("0|", "");
+            address = address.replace("|", "-");
         } catch (IOException e) {
             e.printStackTrace();
             log.warn("ip转换失败: " + IpUtils.longToIp(requestLog.getIp()));
