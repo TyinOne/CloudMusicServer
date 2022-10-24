@@ -6,6 +6,8 @@ import org.lionsoul.ip2region.xdb.Searcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -183,13 +185,13 @@ public class IpUtils {
         if (Objects.isNull(REGION_RESOURCE)) {
             return "未知地址";
         }
-        String dbPath = REGION_RESOURCE.getPath();
-        // 1、从 dbPath 加载整个 xdb 到内存。
+        InputStream resourceAsStream = IpUtils.class.getClassLoader().getResourceAsStream("ip2region.xdb");
         byte[] cBuff;
         try {
-            cBuff = Searcher.loadContentFromFile(dbPath);
+            assert resourceAsStream != null;
+            cBuff = resourceAsStream.readAllBytes();
         } catch (Exception e) {
-            log.warn(String.format("failed to load content from `%s`: %s\n", dbPath, e));
+            log.warn(String.format("failed to load content from `%s`: %s\n", "resourceAsStream", e));
             return "未知地址";
         }
         Searcher searcher = null;
@@ -197,7 +199,7 @@ public class IpUtils {
             searcher = Searcher.newWithBuffer(cBuff);
         } catch (IOException e) {
             e.printStackTrace();
-            log.warn(String.format("failed to create searcher with `%s`: %s\n", dbPath, e));
+            log.warn(String.format("failed to create searcher with `%s`: %s\n", "resourceAsStream", e));
             return "未知地址";
         }
         // 2、查询
