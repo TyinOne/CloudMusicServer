@@ -25,6 +25,7 @@
         <commons-codec.version>1.13</commons-codec.version>
         <commons-io.version>2.7</commons-io.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-pool2.version>2.11.1</commons-pool2.version>
         <guava.version>30.0-android</guava.version>
         <validation.version>8.0.0.Alpha2</validation.version>
         <log4j.version>2.17.0</log4j.version>
@@ -143,6 +144,11 @@
                 <groupId>org.lionsoul</groupId>
                 <artifactId>ip2region</artifactId>
                 <version>${region.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
