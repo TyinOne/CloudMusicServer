@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -72,12 +73,13 @@ public class SystemLoader {
         groupByTypeMap.forEach((k, v) -> {
             Map<String, String> itemMaps = Maps.newHashMap();
             PropertiesEnum propertiesEnum = PropertiesEnum.getClazzByType(k);
-            assert propertiesEnum != null;
-            Class<?> clazzByType = propertiesEnum.getClazz();
-            v.forEach(i -> itemMaps.put(i.get("dict_key").toString(), i.get("dict_value").toString()));
-            String jsonString = JsonUtils.toJSONString(itemMaps);
-            Object o = JsonUtils.toJavaObject(jsonString, clazzByType);
-            propertiesComponents.setModules(propertiesEnum, o);
+            if (Objects.nonNull(propertiesEnum)) {
+                Class<?> clazzByType = propertiesEnum.getClazz();
+                v.forEach(i -> itemMaps.put(i.get("dict_key").toString(), i.get("dict_value").toString()));
+                String jsonString = JsonUtils.toJSONString(itemMaps);
+                Object o = JsonUtils.toJavaObject(jsonString, clazzByType);
+                propertiesComponents.setModules(propertiesEnum, o);
+            }
         });
     }
 }

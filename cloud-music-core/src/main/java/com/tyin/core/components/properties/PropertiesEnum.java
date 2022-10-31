@@ -2,6 +2,7 @@ package com.tyin.core.components.properties;
 
 import com.tyin.core.components.properties.models.AdminConfig;
 import com.tyin.core.components.properties.models.OssConfig;
+import com.tyin.core.components.properties.models.ScheduledGroupConfig;
 import com.tyin.core.components.properties.models.TencentMapConfig;
 
 /**
@@ -15,7 +16,9 @@ public enum PropertiesEnum {
      */
     MAP("map", TencentMapConfig.class),
     OSS("oss", OssConfig.class),
-    ADMIN("admin", AdminConfig.class);
+    ADMIN("admin", AdminConfig.class),
+    SCHEDULED_GROUP("sched_group", ScheduledGroupConfig.class),
+    ;
     private String type;
     private Class<?> clazz;
 

@@ -18,6 +18,7 @@ public class PropertiesComponents {
     private static OssConfig oss;
     private static TencentMapConfig tencentMapConfig;
     private static AdminConfig adminConfig;
+    private static ScheduledGroupConfig scheduledGroupConfig;
     private final OkHttpConfig okHttpConfig;
     private final ApiPrefixConfig apiPrefixConfig;
 
@@ -27,8 +28,13 @@ public class PropertiesComponents {
             case OSS -> setOss((OssConfig) obj);
             case MAP -> setTencentMap((TencentMapConfig) obj);
             case ADMIN -> setAdminConfig((AdminConfig) obj);
+            case SCHEDULED_GROUP -> setScheduledGroupConfig((ScheduledGroupConfig) obj);
             default -> log.warn("UnKnown propertiesEnumType : {}", propertiesEnum.getType());
         }
+    }
+
+    private void setScheduledGroupConfig(ScheduledGroupConfig obj) {
+        scheduledGroupConfig = obj;
     }
 
     private void setTencentMap(TencentMapConfig config) {
@@ -97,5 +103,9 @@ public class PropertiesComponents {
 
     private void setAdminConfig(AdminConfig config) {
         adminConfig = config;
+    }
+
+    public ScheduledGroupConfig getScheduledGroupConfig() {
+        return scheduledGroupConfig;
     }
 }
