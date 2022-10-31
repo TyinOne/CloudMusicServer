@@ -75,14 +75,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 uuidKey,
                 user.getNickName(),
                 user.getAccount(),
-                propertiesComponents.getOssUrl() + user.getAvatar(),
+                user.getAvatar(),
                 roles,
                 adminUserService.getPermissionByRole(roles),
                 user.getDisabled());
         res.setPassword(user.getPassword());
-//        res.setKey(uuidKey);
         res.setToken(createToken(res));
-//        res.setLoginTime(user.getLastLoginTime().getTime());
         return res;
     }
 
