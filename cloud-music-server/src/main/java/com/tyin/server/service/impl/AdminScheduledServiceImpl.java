@@ -8,6 +8,7 @@ import com.tyin.server.repository.AdminScheduledLogRepository;
 import com.tyin.server.repository.AdminScheduledRepository;
 import com.tyin.server.service.IAdminScheduledService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class AdminScheduledServiceImpl implements IAdminScheduledService {
     private final AdminScheduledLogRepository adminScheduledLogRepository;
 
@@ -41,6 +43,7 @@ public class AdminScheduledServiceImpl implements IAdminScheduledService {
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void test() {
+        log.info("Scheduled");
         redisComponents.get("Scheduled");
     }
 }
