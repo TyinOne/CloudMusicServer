@@ -9,10 +9,7 @@ import com.tyin.server.params.valid.InsertScheduledValid;
 import com.tyin.server.service.IAdminScheduledService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Tyin
@@ -24,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminScheduledController {
     private final IAdminScheduledService adminScheduledService;
+
 
     @PostMapping("/add")
     public Result<?> addScheduled(@RequestBody InsertScheduledValid valid, @Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {

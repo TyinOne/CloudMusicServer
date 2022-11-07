@@ -41,6 +41,6 @@ public class AdminScheduledServiceImpl implements IAdminScheduledService {
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void test() {
-        redisComponents.existsKey("");
+        redisComponents.get("Scheduled");
     }
 }
