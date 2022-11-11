@@ -2,6 +2,7 @@ package com.tyin.server.components;
 
 import com.tyin.core.components.ScheduledComponents;
 import com.tyin.core.module.entity.AdminScheduledLog;
+import com.tyin.core.utils.SpringUtils;
 import com.tyin.server.service.IAdminScheduledService;
 import org.quartz.Scheduler;
 import org.springframework.stereotype.Component;
@@ -13,15 +14,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ServiceScheduledComponents extends ScheduledComponents {
-    private final IAdminScheduledService adminScheduledService;
 
-    public ServiceScheduledComponents(Scheduler scheduler, IAdminScheduledService adminScheduledService) {
+    public ServiceScheduledComponents(Scheduler scheduler) {
         super(scheduler);
-        this.adminScheduledService = adminScheduledService;
     }
 
     @Override
     public void addLog(AdminScheduledLog adminScheduledLog) {
-        adminScheduledService.addLog(adminScheduledLog);
+        SpringUtils.getBean(IAdminScheduledService.class).addLog(adminScheduledLog);
     }
 }

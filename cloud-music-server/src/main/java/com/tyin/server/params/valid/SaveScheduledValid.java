@@ -7,14 +7,12 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * @author Tyin
- * @date 2022/7/14 10:45
+ * @date 2022/11/10 11:26
  * @description ...
  */
 @Data
-public class InsertScheduledValid {
-    /**
-     * 任务名称
-     */
+public class SaveScheduledValid {
+    private Long id;
     @NotBlank
     private String scheduledName;
 
@@ -44,10 +42,7 @@ public class InsertScheduledValid {
     /**
      * 是否并发执行（0允许 1禁止）
      */
-    private String concurrent;
+    private Boolean concurrent;
 
-    /**
-     * 任务状态（0正常 1暂停）
-     */
-    private String status;
+    private Boolean disabled;
 }

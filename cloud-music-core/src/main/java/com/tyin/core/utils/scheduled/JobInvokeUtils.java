@@ -1,6 +1,5 @@
 package com.tyin.core.utils.scheduled;
 
-import com.tyin.core.module.entity.AdminScheduled;
 import com.tyin.core.utils.CommonStringUtils;
 import com.tyin.core.utils.InvokeUtils;
 import com.tyin.core.utils.SpringUtils;
@@ -14,9 +13,8 @@ import java.util.List;
  * @date 2022/7/14 9:26
  * @description ...
  */
-public class JobInvokeUtil {
-    public static void invokeMethod(AdminScheduled adminScheduled) throws Exception {
-        String invokeTarget = adminScheduled.getInvokeTarget();
+public class JobInvokeUtils {
+    public static void invokeMethod(String invokeTarget) throws Exception {
         String beanName = getBeanName(invokeTarget);
         String methodName = getMethodName(invokeTarget);
         List<Object[]> methodParams = getMethodParams(invokeTarget);

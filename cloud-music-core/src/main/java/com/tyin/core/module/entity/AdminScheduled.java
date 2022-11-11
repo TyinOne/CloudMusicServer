@@ -53,10 +53,15 @@ public class AdminScheduled extends BaseEntity implements Serializable {
     /**
      * 是否并发执行（0允许 1禁止）
      */
-    private String concurrent;
+    private Boolean concurrent;
 
     /**
      * 任务状态（0正常 1暂停）
      */
-    private String status;
+    private Boolean disabled;
+
+    /**
+     * remark
+     */
+    private String remark;
 }

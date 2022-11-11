@@ -32,19 +32,19 @@ public class ScheduleConstants {
         /**
          * 正常
          */
-        NORMAL("0"),
+        NORMAL(Boolean.FALSE),
         /**
          * 暂停
          */
-        PAUSE("1");
+        PAUSE(Boolean.TRUE);
 
-        private final String value;
+        private final Boolean value;
 
-        Status(String value) {
+        Status(Boolean value) {
             this.value = value;
         }
 
-        public String getValue() {
+        public Boolean getValue() {
             return value;
         }
     }

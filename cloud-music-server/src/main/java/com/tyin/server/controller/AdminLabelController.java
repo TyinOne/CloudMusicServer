@@ -1,15 +1,14 @@
 package com.tyin.server.controller;
 
 
+import com.tyin.core.components.properties.models.ScheduledGroupConfig;
 import com.tyin.core.module.bean.DictLabel;
 import com.tyin.core.module.bean.RegionLabel;
 import com.tyin.core.module.bean.RoleLabel;
+import com.tyin.core.module.bean.ScheduledGroupLabel;
 import com.tyin.core.module.res.admin.*;
 import com.tyin.server.api.Result;
-import com.tyin.server.service.IAdminDictService;
-import com.tyin.server.service.IAdminMenuService;
-import com.tyin.server.service.IAdminRegionService;
-import com.tyin.server.service.IAdminRoleService;
+import com.tyin.server.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,6 +35,7 @@ public class AdminLabelController {
     private final IAdminMenuService adminMenuService;
     private final IAdminRegionService adminRegionService;
     private final IAdminDictService adminDictService;
+    private final IAdminScheduledService adminScheduledService;
 
     @GetMapping("/region")
     @Operation(description = "区域树形数据接口")
@@ -77,5 +77,12 @@ public class AdminLabelController {
     public Result<DictLabelRes> getDictLabel() {
         List<DictLabel> list = adminDictService.getDictLabel();
         return Result.success(DictLabelRes.builder().list(list).build());
+    }
+
+    @GetMapping("/sched_group")
+    @Operation(description = "任务调度分组Options接口")
+    public Result<ScheduledGroupLabelRes> getScheduledGroupSelect() {
+        List<ScheduledGroupLabel> list = adminScheduledService.getGroupLabel();
+        return Result.success(ScheduledGroupLabelRes.builder().list(list).build());
     }
 }

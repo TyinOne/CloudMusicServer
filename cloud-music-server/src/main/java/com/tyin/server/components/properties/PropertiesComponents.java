@@ -1,10 +1,16 @@
 package com.tyin.server.components.properties;
 
+import com.google.common.collect.Lists;
 import com.tyin.core.components.properties.PropertiesEnum;
 import com.tyin.core.components.properties.models.*;
+import com.tyin.core.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Tyin
@@ -23,26 +29,35 @@ public class PropertiesComponents {
     private final ApiPrefixConfig apiPrefixConfig;
 
 
-    public void setModules(PropertiesEnum propertiesEnum, Object obj) {
+    public void setModules(PropertiesEnum propertiesEnum, String obj) {
         switch (propertiesEnum) {
-            case OSS -> setOss((OssConfig) obj);
-            case MAP -> setTencentMap((TencentMapConfig) obj);
-            case ADMIN -> setAdminConfig((AdminConfig) obj);
-            case SCHEDULED_GROUP -> setScheduledGroupConfig((ScheduledGroupConfig) obj);
+            case OSS -> setOss(obj, propertiesEnum.getClazz());
+            case MAP -> setTencentMap(obj, propertiesEnum.getClazz());
+            case ADMIN -> setAdminConfig(obj, propertiesEnum.getClazz());
+            case SCHEDULED_GROUP -> setScheduledGroupConfig(obj, propertiesEnum.getClazz());
             default -> log.warn("UnKnown propertiesEnumType : {}", propertiesEnum.getType());
         }
     }
 
-    private void setScheduledGroupConfig(ScheduledGroupConfig obj) {
-        scheduledGroupConfig = obj;
+    private void setScheduledGroupConfig(String objString, Class<?> clazz) {
+        ScheduledGroupConfig config = new ScheduledGroupConfig();
+        List<ScheduledGroupConfig.ScheduledGroup> list = Lists.newArrayList();
+        Map<String, Object> stringObjectMap = JsonUtils.toMap(objString);
+        if (Objects.nonNull(stringObjectMap)) {
+            stringObjectMap.forEach((k, v) -> {
+                list.add(ScheduledGroupConfig.ScheduledGroup.builder().key(k).value(v.toString()).build());
+            });
+        }
+        config.setList(list);
+        scheduledGroupConfig = config;
     }
 
-    private void setTencentMap(TencentMapConfig config) {
-        tencentMapConfig = config;
+    private void setTencentMap(String objString, Class<?> clazz) {
+        tencentMapConfig = (TencentMapConfig) JsonUtils.toJavaObject(objString, clazz);
     }
 
-    private void setOss(OssConfig config) {
-        oss = config;
+    private void setOss(String objString, Class<?> clazz) {
+        oss = (OssConfig) JsonUtils.toJavaObject(objString, clazz);
     }
 
     public String getOssUrl() {
@@ -101,8 +116,8 @@ public class PropertiesComponents {
         return adminConfig;
     }
 
-    private void setAdminConfig(AdminConfig config) {
-        adminConfig = config;
+    private void setAdminConfig(String objString, Class<?> clazz) {
+        adminConfig = (AdminConfig) JsonUtils.toJavaObject(objString, clazz);
     }
 
     public ScheduledGroupConfig getScheduledGroupConfig() {

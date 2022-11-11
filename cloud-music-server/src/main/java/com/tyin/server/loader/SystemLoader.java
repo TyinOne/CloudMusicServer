@@ -18,6 +18,7 @@ import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.repository.AdminDictRepository;
 import com.tyin.server.repository.AdminDictTypeRepository;
 import com.tyin.server.repository.AdminInviteCodeRepository;
+import com.tyin.server.repository.AdminScheduledRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
@@ -43,11 +44,12 @@ public class SystemLoader {
     private final CloudTimerTaskComponents timerTaskComponents;
     private final AdminDictRepository adminDictRepository;
     private final AdminDictTypeRepository adminDictTypeRepository;
+    private final AdminScheduledRepository adminScheduledRepository;
     private final AdminInviteCodeRepository adminInviteCodeRepository;
 
     @Async
     public void initScheduled() throws SchedulerException {
-        List<AdminScheduled> scheduledList = Lists.newArrayList();
+        List<AdminScheduled> scheduledList = adminScheduledRepository.selectList(Wrappers.<AdminScheduled>lambdaQuery().eq(AdminScheduled::getDisabled, Boolean.FALSE));
         scheduledComponents.init(scheduledList);
     }
 
@@ -66,8 +68,9 @@ public class SystemLoader {
 
     @Async
     public void initAll(List<String> dictTypes) {
-        if (dictTypes.size() == 0)
+        if (dictTypes.size() == 0) {
             dictTypes = adminDictTypeRepository.selectDictLabel().stream().map(DictLabel::getValue).toList();
+        }
         List<Map<String, Object>> maps = adminDictRepository.selectMaps(Wrappers.<AdminDict>lambdaQuery().in(AdminDict::getDictType, dictTypes));
         Map<String, List<Map<String, Object>>> groupByTypeMap = maps.stream().collect(Collectors.groupingBy(i -> i.get("dict_type").toString()));
         groupByTypeMap.forEach((k, v) -> {
@@ -77,8 +80,7 @@ public class SystemLoader {
                 Class<?> clazzByType = propertiesEnum.getClazz();
                 v.forEach(i -> itemMaps.put(i.get("dict_key").toString(), i.get("dict_value").toString()));
                 String jsonString = JsonUtils.toJSONString(itemMaps);
-                Object o = JsonUtils.toJavaObject(jsonString, clazzByType);
-                propertiesComponents.setModules(propertiesEnum, o);
+                propertiesComponents.setModules(propertiesEnum, jsonString);
             }
         });
     }

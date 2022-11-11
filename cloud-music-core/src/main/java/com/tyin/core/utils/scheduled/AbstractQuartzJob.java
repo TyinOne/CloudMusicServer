@@ -25,14 +25,14 @@ public abstract class AbstractQuartzJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
-        AdminScheduled scheduled = new AdminScheduled();
-        BeanUtils.copyProperties(scheduled, context.getMergedJobDataMap().get(ScheduleConstants.TASK_PROPERTIES));
+        AdminScheduled scheduled = (AdminScheduled) context.getMergedJobDataMap().get(ScheduleConstants.TASK_PROPERTIES);
         try {
             before(context, scheduled);
-            doExecute(context, scheduled);
+            doExecute(context, scheduled.getInvokeTarget());
             after(context, scheduled, null);
+            log.info("任务已执行");
         } catch (Exception e) {
-            log.error("任务执行异常  - ：", e);
+            log.error("任务执行异常  - ：", e.fillInStackTrace());
             after(context, scheduled, e);
         }
     }
@@ -75,15 +75,15 @@ public abstract class AbstractQuartzJob implements Job {
         }
 
         // 写入数据库当中
-        SpringUtils.getBean(ScheduledComponents.class).addLog(adminScheduledLog);
+//        SpringUtils.getBean(ScheduledComponents.class).addLog(adminScheduledLog);
     }
 
     /**
      * 执行方法，由子类重载
      *
-     * @param context 工作执行上下文对象
-     * @param sysJob  系统计划任务
+     * @param context      工作执行上下文对象
+     * @param invokeTarget 系统计划任务
      * @throws Exception 执行过程中的异常
      */
-    protected abstract void doExecute(JobExecutionContext context, AdminScheduled sysJob) throws Exception;
+    protected abstract void doExecute(JobExecutionContext context, String invokeTarget) throws Exception;
 }

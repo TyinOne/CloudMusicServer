@@ -1,6 +1,5 @@
 package com.tyin.core.utils.scheduled;
 
-import com.tyin.core.module.entity.AdminScheduled;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 
@@ -12,7 +11,7 @@ import org.quartz.JobExecutionContext;
 @DisallowConcurrentExecution
 public class QuartzDisallowConcurrentExecution extends AbstractQuartzJob {
     @Override
-    protected void doExecute(JobExecutionContext context, AdminScheduled adminScheduled) throws Exception {
-        JobInvokeUtil.invokeMethod(adminScheduled);
+    protected void doExecute(JobExecutionContext context, String invokeTarget) throws Exception {
+        JobInvokeUtils.invokeMethod(invokeTarget);
     }
 }

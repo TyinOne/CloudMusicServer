@@ -1,7 +1,14 @@
 package com.tyin.server.service;
 
+import com.tyin.core.module.bean.ScheduledGroupLabel;
 import com.tyin.core.module.entity.AdminScheduledLog;
-import com.tyin.server.params.valid.InsertScheduledValid;
+import com.tyin.core.module.res.admin.AdminScheduleRes;
+import com.tyin.core.module.res.admin.AdminScheduledDetail;
+import com.tyin.server.api.PageResult;
+import com.tyin.server.params.valid.SaveScheduledValid;
+import org.quartz.SchedulerException;
+
+import java.util.List;
 
 /**
  * @author Tyin
@@ -22,5 +29,25 @@ public interface IAdminScheduledService {
      * @param valid 任务实体
      * @return 受影响行数
      */
-    Integer addScheduled(InsertScheduledValid valid);
+    Integer saveScheduled(SaveScheduledValid valid) throws SchedulerException;
+
+    List<ScheduledGroupLabel> getGroupLabel();
+
+    /**
+     * 定时任务搜索列表
+     *
+     * @param keywords 关键词
+     * @param group    分组
+     * @param disabled 是否禁用
+     * @param size     页长度
+     * @param current  当前页
+     * @return list
+     */
+    PageResult<AdminScheduleRes, ?> getSchedulePageResult(String keywords, String group, Boolean disabled, Long size, Long current);
+
+    /**
+     * @param id 任务id;
+     * @return detail;
+     */
+    AdminScheduledDetail getScheduled(Long id);
 }

@@ -13,8 +13,7 @@ import org.quartz.*;
 public class ScheduleUtils {
 
     private static Class<? extends Job> getQuartzJobClass(AdminScheduled scheduled) {
-        boolean isConcurrent = "0".equals(scheduled.getConcurrent());
-        return isConcurrent ? QuartzJobExecution.class : QuartzDisallowConcurrentExecution.class;
+        return scheduled.getConcurrent() ? QuartzDisallowConcurrentExecution.class : QuartzJobExecution.class;
     }
 
     public static void createScheduleJob(Scheduler scheduler, AdminScheduled adminScheduled) throws SchedulerException {
@@ -22,7 +21,6 @@ public class ScheduleUtils {
         // 构建job信息
         Long scheduledId = adminScheduled.getId();
         String scheduledGroup = adminScheduled.getScheduledGroup();
-        JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(getJobKey(scheduledId, scheduledGroup)).build();
 
         // 表达式调度构建器
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(adminScheduled.getCronExpression());
@@ -33,7 +31,11 @@ public class ScheduleUtils {
                 .withSchedule(cronScheduleBuilder).build();
 
         // 放入参数，运行时的方法可以获取
-        jobDetail.getJobDataMap().put(ScheduleConstants.TASK_PROPERTIES, adminScheduled);
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put(ScheduleConstants.TASK_PROPERTIES, adminScheduled);
+        JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(getJobKey(scheduledId, scheduledGroup))
+                .usingJobData(jobDataMap)
+                .build();
 
         // 判断是否存在
         if (scheduler.checkExists(getJobKey(scheduledId, scheduledGroup))) {
@@ -44,7 +46,7 @@ public class ScheduleUtils {
         scheduler.scheduleJob(jobDetail, trigger);
 
         // 暂停任务
-        if (adminScheduled.getStatus().equals(ScheduleConstants.Status.PAUSE.getValue())) {
+        if (adminScheduled.getDisabled().equals(ScheduleConstants.Status.PAUSE.getValue())) {
             scheduler.pauseJob(ScheduleUtils.getJobKey(scheduledId, scheduledGroup));
         }
     }

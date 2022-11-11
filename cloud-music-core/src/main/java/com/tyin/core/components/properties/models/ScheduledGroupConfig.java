@@ -1,6 +1,9 @@
 package com.tyin.core.components.properties.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -14,6 +17,9 @@ public class ScheduledGroupConfig {
     private List<ScheduledGroup> list;
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class ScheduledGroup {
         private String key;
         private String value;

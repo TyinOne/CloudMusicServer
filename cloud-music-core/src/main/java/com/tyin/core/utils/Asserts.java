@@ -56,4 +56,12 @@ public class Asserts {
 
     public static void isTrue(boolean hasPermission) {
     }
+
+    public static void trycatch(AssertTry assertTry) {
+        try {
+            assertTry.trycatch();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
 }

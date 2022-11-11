@@ -49,10 +49,10 @@ spring:
     timeout: 5000ms
     lettuce:
       pool:
-        max-active: 500
-        min-idle: 5
-        max-idle: -1
-        max-wait: -1
+        max-active: 8
+        min-idle: 8
+        max-idle: 0
+        max-wait: -1ms
   jackson:
     default-property-inclusion: NON_NULL
     time-zone: GMT+8
