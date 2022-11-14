@@ -1,10 +1,13 @@
 package com.tyin.server.auth.security.service;
 
+import com.google.common.collect.Maps;
 import com.tyin.core.components.RedisComponents;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
+import com.tyin.core.utils.DateUtils;
 import com.tyin.core.utils.JsonUtils;
 import com.tyin.core.utils.StringUtils;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +33,21 @@ public class TokenService {
     public String createToken(Map<String, Object> claims, String account) {
         long now = System.currentTimeMillis();
         long expiration = now + EXPIRE_TIME * MILLIS_MINUTE;
-        return Jwts.builder().setClaims(claims).setIssuer(account).setIssuedAt(new Date(now)).setExpiration(new Date(expiration)).signWith(SignatureAlgorithm.HS512, SIGNING_KEY).compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuer(account)
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(expiration))
+                .signWith(SignatureAlgorithm.HS512, SIGNING_KEY)
+                .compact();
     }
 
     public Claims parseToken(String token) {
-        return Jwts.parser().setSigningKey(SIGNING_KEY).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser().setSigningKey(SIGNING_KEY).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 
     public AdminUserLoginRes getLoginAdminUser(HttpServletRequest request) {
@@ -65,6 +78,10 @@ public class TokenService {
     }
 
     public AdminUserLoginRes refreshToken(AdminUserLoginRes adminUserLoginRes) {
+        Map<String, Object> claims = Maps.newHashMap();
+        claims.put(LOGIN_USER_KEY, adminUserLoginRes.getUuid());
+        String newToken = createToken(claims, adminUserLoginRes.getAccount());
+        adminUserLoginRes.setToken(newToken);
         adminUserLoginRes.setLoginTime(System.currentTimeMillis());
         adminUserLoginRes.setExpireTime(adminUserLoginRes.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
