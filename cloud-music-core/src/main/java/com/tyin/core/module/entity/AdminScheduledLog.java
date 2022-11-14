@@ -26,12 +26,12 @@ public class AdminScheduledLog extends BaseEntity implements Serializable {
     /**
      * 任务名称
      */
-    private String scheduleName;
+    private String scheduledName;
 
     /**
      * 任务组名
      */
-    private String scheduleGroup;
+    private String scheduledGroup;
 
     /**
      * 调用目标字符串
@@ -41,7 +41,7 @@ public class AdminScheduledLog extends BaseEntity implements Serializable {
     /**
      * 任务信息
      */
-    private String scheduleMessage;
+    private String scheduledMessage;
 
     private Date startTime;
 

@@ -53,7 +53,7 @@ public class AdminScheduledServiceImpl implements IAdminScheduledService {
 
     @Override
     public void addLog(AdminScheduledLog adminScheduledLog) {
-//        adminScheduledLogRepository.insert(adminScheduledLog);
+        adminScheduledLogRepository.insert(adminScheduledLog);
     }
 
     @Override

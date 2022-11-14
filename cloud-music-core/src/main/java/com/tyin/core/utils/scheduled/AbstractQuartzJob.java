@@ -1,8 +1,10 @@
 package com.tyin.core.utils.scheduled;
 
+import com.tyin.core.components.ScheduledComponents;
 import com.tyin.core.constants.ScheduleConstants;
 import com.tyin.core.module.entity.AdminScheduled;
 import com.tyin.core.module.entity.AdminScheduledLog;
+import com.tyin.core.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -56,13 +58,13 @@ public abstract class AbstractQuartzJob implements Job {
         THREAD_LOCAL.remove();
 
         final AdminScheduledLog adminScheduledLog = new AdminScheduledLog();
-        adminScheduledLog.setScheduleName(scheduled.getScheduledName());
-        adminScheduledLog.setScheduleGroup(scheduled.getScheduledGroup());
+        adminScheduledLog.setScheduledName(scheduled.getScheduledName());
+        adminScheduledLog.setScheduledGroup(scheduled.getScheduledGroup());
         adminScheduledLog.setInvokeTarget(scheduled.getInvokeTarget());
         adminScheduledLog.setStartTime(startTime);
         adminScheduledLog.setStopTime(new Date());
         long runMs = adminScheduledLog.getStopTime().getTime() - adminScheduledLog.getStartTime().getTime();
-        adminScheduledLog.setScheduleMessage(adminScheduledLog.getScheduleMessage() + " 总共耗时：" + runMs + "毫秒");
+        adminScheduledLog.setScheduledMessage(adminScheduledLog.getScheduledMessage() + "; 总共耗时：" + runMs + "毫秒");
         if (Objects.nonNull(e)) {
             adminScheduledLog.setFailed(Boolean.FALSE);
             String errorMsg = e.getMessage().trim();
@@ -72,7 +74,7 @@ public abstract class AbstractQuartzJob implements Job {
         }
 
         // 写入数据库当中
-//        SpringUtils.getBean(ScheduledComponents.class).addLog(adminScheduledLog);
+        SpringUtils.getBean(ScheduledComponents.class).addLog(adminScheduledLog);
     }
 
     /**
