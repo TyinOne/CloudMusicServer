@@ -1,7 +1,6 @@
 package com.tyin.server.controller;
 
 
-import com.tyin.core.components.properties.models.ScheduledGroupConfig;
 import com.tyin.core.module.bean.DictLabel;
 import com.tyin.core.module.bean.RegionLabel;
 import com.tyin.core.module.bean.RoleLabel;

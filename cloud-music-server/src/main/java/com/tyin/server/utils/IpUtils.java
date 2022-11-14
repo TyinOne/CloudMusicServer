@@ -7,7 +7,6 @@ import org.lionsoul.ip2region.xdb.Searcher;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;

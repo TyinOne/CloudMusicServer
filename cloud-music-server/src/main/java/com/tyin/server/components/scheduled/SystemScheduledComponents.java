@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class SystemScheduledComponents {
     private final RedisComponents redisComponents;
 
-    public void loadConfig(String configName) {
-        System.out.println(configName);
+    public void aliveRedis() {
+        redisComponents.get("Scheduled");
     }
 }
