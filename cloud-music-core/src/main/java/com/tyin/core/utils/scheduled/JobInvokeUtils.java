@@ -5,6 +5,7 @@ import com.tyin.core.utils.InvokeUtils;
 import com.tyin.core.utils.SpringUtils;
 import com.tyin.core.utils.StringUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @description ...
  */
 public class JobInvokeUtils {
-    public static void invokeMethod(String invokeTarget) throws Exception {
+    public static void invokeMethod(String invokeTarget) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         String beanName = getBeanName(invokeTarget);
         String methodName = getMethodName(invokeTarget);
         List<Object[]> methodParams = getMethodParams(invokeTarget);

@@ -64,15 +64,15 @@ public abstract class AbstractQuartzJob implements Job {
         adminScheduledLog.setStartTime(startTime);
         adminScheduledLog.setStopTime(new Date());
         long runMs = adminScheduledLog.getStopTime().getTime() - adminScheduledLog.getStartTime().getTime();
-        adminScheduledLog.setScheduledMessage(adminScheduledLog.getScheduledMessage() + "; 总共耗时：" + runMs + "毫秒");
+        adminScheduledLog.setScheduledMessage("总共耗时：" + runMs + "毫秒");
         if (Objects.nonNull(e)) {
-            adminScheduledLog.setFailed(Boolean.FALSE);
+            adminScheduledLog.setFailed(Boolean.TRUE);
             String errorMsg = e.getMessage().trim();
             adminScheduledLog.setExceptionInfo(errorMsg);
+            e.printStackTrace();
         } else {
-            adminScheduledLog.setFailed(Boolean.TRUE);
+            adminScheduledLog.setFailed(Boolean.FALSE);
         }
-
         // 写入数据库当中
         SpringUtils.getBean(ScheduledComponents.class).addLog(adminScheduledLog);
     }
