@@ -9,7 +9,6 @@ import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.params.valid.AdminRegisterValid;
-import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.params.valid.SaveAccountValid;
 import com.tyin.server.params.valid.UpdatePasswordValid;
 
