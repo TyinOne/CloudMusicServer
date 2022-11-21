@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -46,6 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final PropertiesComponents propertiesComponents;
     private final TokenService tokenService;
     private final RedisComponents redisComponents;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -95,5 +97,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String md5Password = StringUtils.getMd5(StringUtils.getMd5(adminLoginValid.getPassword()));
         Authentication authentication = SpringUtils.getBean(AuthenticationManager.class).authenticate(new UsernamePasswordAuthenticationToken(adminLoginValid.getAccount(), md5Password));
         return (AdminUserLoginRes) authentication.getPrincipal();
+    }
+
+    public String getPassword(String rawPassword) {
+        return bCryptPasswordEncoder.encode(rawPassword);
     }
 }

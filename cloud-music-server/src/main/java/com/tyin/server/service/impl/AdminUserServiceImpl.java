@@ -17,12 +17,15 @@ import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.JsonUtils;
+import com.tyin.core.utils.SpringUtils;
 import com.tyin.core.utils.StringUtils;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.auth.security.service.TokenService;
+import com.tyin.server.auth.security.service.UserDetailsServiceImpl;
 import com.tyin.server.components.properties.PropertiesComponents;
 import com.tyin.server.params.valid.AdminRegisterValid;
 import com.tyin.server.params.valid.SaveAccountValid;
+import com.tyin.server.params.valid.UpdatePasswordValid;
 import com.tyin.server.repository.AdminUserExtraRepository;
 import com.tyin.server.repository.AdminUserRepository;
 import com.tyin.server.service.IAdminInviteCodeService;
@@ -34,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +53,7 @@ import java.util.stream.Collectors;
 import static com.tyin.core.constants.PermissionConstants.ADMIN_SECURITY;
 import static com.tyin.core.constants.PermissionConstants.SUPPER_ROLE;
 import static com.tyin.core.constants.RedisKeyConstants.ROLE_BUTTON_PREFIX;
+import static com.tyin.core.constants.ResMessageConstants.UPDATE_FAILED;
 import static com.tyin.server.auth.security.constant.ConstantKey.LOGIN_TOKEN_KEY;
 import static com.tyin.server.auth.security.utils.LoginUtils.getColumns;
 
@@ -86,16 +91,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     @Override
     public PageResult<AdminAccountRes, ?> getUserList(Long size, Long current, String name, Long roleId, Long disabled) {
         QueryWrapper<AdminUser> wrapper = new QueryWrapper<>();
-        wrapper.lambda()
-                .apply(disabled != -1, " `user`.`disabled` = {0} ", disabled)
-                .apply(roleId != 0, " `role`.`id` = {0}", roleId)
-                .apply(" `role`.`deleted` = {0}", 0)
-                .apply(" `u_role`.`deleted` = {0}", 0)
-                .and(StringUtils.isNotEmpty(name), i -> i
-                        .apply(" INSTR(`user`.`nick_name`, {0}) > 0", name)
-                        .or()
-                        .apply(" INSTR(`extra`.`id_card_name`, {0}) > 0", name))
-        ;
+        wrapper.lambda().apply(disabled != -1, " `user`.`disabled` = {0} ", disabled).apply(roleId != 0, " `role`.`id` = {0}", roleId).apply(" `role`.`deleted` = {0}", 0).apply(" `u_role`.`deleted` = {0}", 0).and(StringUtils.isNotEmpty(name), i -> i.apply(" INSTR(`user`.`nick_name`, {0}) > 0", name).or().apply(" INSTR(`extra`.`id_card_name`, {0}) > 0", name));
         IPage<AdminAccountRes> resPage = adminUserRepository.selectUserList(new Page<>(current, size), wrapper);
         return PageResult.buildResult(resPage);
     }
@@ -114,11 +110,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
     public void saveAccountInfo(SaveAccountValid valid) {
         //更新数据库
         AdminUser userBase = getUserEntity(valid.getAccount());
-        AdminUser user = AdminUser.builder()
-                .nickName(valid.getNickName())
-                .mail(valid.getMail())
-                .phone(valid.getPhone())
-                .build();
+        AdminUser user = AdminUser.builder().nickName(valid.getNickName()).mail(valid.getMail()).phone(valid.getPhone()).build();
         String avatar;
         if (StringUtils.isNotEmpty(valid.getAvatar().getFileName())) {
             SaveAccountValid.AvatarUpdate avatarUpdate = valid.getAvatar();
@@ -137,10 +129,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
             }
         }
         adminUserRepository.update(user, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, valid.getAccount()));
-        AdminUserExtra userExtra = AdminUserExtra.builder()
-                .birth(valid.getBirth())
-                .region(valid.getRegion())
-                .build();
+        AdminUserExtra userExtra = AdminUserExtra.builder().birth(valid.getBirth()).region(valid.getRegion()).build();
         adminUserExtraRepository.update(userExtra, Wrappers.<AdminUserExtra>lambdaQuery().eq(AdminUserExtra::getUserId, userBase.getId()));
         //更新AdminRes
         Set<String> roles = valid.getRoles();
@@ -207,6 +196,18 @@ public class AdminUserServiceImpl implements IAdminUserService {
         adminUserRepository.update(user, Wrappers.<AdminUser>update().eq(getColumns(account), account));
     }
 
+    @Override
+    public void resetPassword(UpdatePasswordValid valid) {
+        String newPassword = SpringUtils.getBean(UserDetailsServiceImpl.class).getPassword(StringUtils.getMd5(StringUtils.getMd5(valid.getPassword())));
+        AdminUser adminUser = getUserEntity(valid.getAccount());
+        adminUser.setPassword(newPassword);
+        int update = adminUserRepository.updateById(adminUser);
+        String key = LOGIN_TOKEN_KEY + adminUser.getAccount();
+        adminUserRepository.update(adminUser, Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, adminUser.getAccount()));
+        redisComponents.deletePrefixKey(key);
+        Asserts.isTrue(update == 1, UPDATE_FAILED);
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -221,18 +222,9 @@ public class AdminUserServiceImpl implements IAdminUserService {
         Long aLong = adminUserRepository.selectCount(Wrappers.<AdminUser>lambdaQuery().eq(AdminUser::getAccount, account));
         Asserts.isTrue(aLong == 0, ResMessageConstants.ACCOUNT_REPEAT);
         String defaultAvatar = propertiesComponents.getAdminConfig().getDefaultAvatar();
-        AdminUser adminUser = AdminUser.builder()
-                .account(account)
-                .nickName(account)
-                .password(password)
-                .avatar(defaultAvatar)
-                .build();
-        AdminUserExtra adminUserExtra = AdminUserExtra.builder()
-                .userId(adminUser.getId())
-                .build();
-        Asserts.isTrue(adminUserRepository.insert(adminUser) == 1 &&
-                adminUserExtraRepository.insert(adminUserExtra) == 1 &&
-                adminRoleService.addUserRole(adminUser.getId(), adminInviteCode.getRoleId()) == 1, ResMessageConstants.REGISTER_FAILED);
+        AdminUser adminUser = AdminUser.builder().account(account).nickName(account).password(password).avatar(defaultAvatar).build();
+        AdminUserExtra adminUserExtra = AdminUserExtra.builder().userId(adminUser.getId()).build();
+        Asserts.isTrue(adminUserRepository.insert(adminUser) == 1 && adminUserExtraRepository.insert(adminUserExtra) == 1 && adminRoleService.addUserRole(adminUser.getId(), adminInviteCode.getRoleId()) == 1, ResMessageConstants.REGISTER_FAILED);
         adminInviteCodeService.handleInviteCodeUse(code, account);
     }
 }

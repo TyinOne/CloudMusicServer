@@ -76,6 +76,11 @@ public class RedisComponents {
         redisTemplate.delete(kSet);
     }
 
+    public void deletePrefixKey(String keyPrefix) {
+        Set<String> keys = redisTemplate.keys(keyPrefix + ":*");
+        deleteKey(keys);
+    }
+
     /**
      * 设置key的生命周期
      *

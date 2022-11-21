@@ -9,7 +9,9 @@ import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.params.valid.AdminRegisterValid;
+import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.params.valid.SaveAccountValid;
+import com.tyin.server.params.valid.UpdatePasswordValid;
 
 import java.util.Set;
 
@@ -102,5 +104,18 @@ public interface IAdminUserService {
      */
     InviteCodeBean generateInviteCode(Long id, AuthAdminUser user);
 
+    /**
+     * 更新token
+     *
+     * @param account 用户名
+     * @param key     key
+     */
     void updateToken(String account, String key);
+
+    /**
+     * 重置密码为cloudadmin
+     *
+     * @param valid valid
+     */
+    void resetPassword(UpdatePasswordValid valid);
 }

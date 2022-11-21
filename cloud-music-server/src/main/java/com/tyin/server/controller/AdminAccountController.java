@@ -6,7 +6,9 @@ import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
 import com.tyin.server.api.PageResult;
 import com.tyin.server.api.Result;
+import com.tyin.server.params.valid.IdValid;
 import com.tyin.server.params.valid.SaveAccountValid;
+import com.tyin.server.params.valid.UpdatePasswordValid;
 import com.tyin.server.service.IAdminUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,6 +47,13 @@ public class AdminAccountController {
     @PostMapping("/save")
     public Result<?> saveAccountInfo(@Validated @RequestBody SaveAccountValid valid, @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:account:save')") AuthAdminUser ignoredUser) {
         userService.saveAccountInfo(valid);
+        return Result.success();
+    }
+
+    @Operation(description = "重置密码")
+    @PutMapping("/password/reset")
+    public Result<?> resetPassword(@Validated @RequestBody UpdatePasswordValid valid, @Parameter(hidden = true) @Auth AuthAdminUser ignoreUser) {
+        userService.resetPassword(valid);
         return Result.success();
     }
 }
