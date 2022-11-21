@@ -48,8 +48,11 @@ public class RequestLogServiceImpl implements IRequestLogService {
     }
 
     @Override
-    public PageResult<AdminLogRes, ?> queryLog(Date startDate, Date endDate, String keywords, Long size, Long current) {
+    public PageResult<AdminLogRes, ?> queryLog(Date startDate, Date endDate, String method, Boolean status, String keywords, Long size, Long current) {
         LambdaQueryWrapper<RequestLog> wrapper = Wrappers.lambdaQuery();
+        wrapper
+                .eq(StringUtils.isNotEmpty(method), RequestLog::getRequestMethod, method)
+                .eq(Objects.nonNull(status), RequestLog::getStatus, status);
         if (Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
             endDate = DateUtils.getEndForDay(endDate);
             wrapper.between(RequestLog::getCreated, startDate, endDate);
@@ -88,6 +91,7 @@ public class RequestLogServiceImpl implements IRequestLogService {
                 .uri(requestLog.getUri())
                 .account(requestLog.getAccount())
                 .address(address)
+                .headers(requestLog.getHeaders())
                 .build();
     }
 }

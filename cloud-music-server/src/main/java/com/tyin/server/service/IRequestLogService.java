@@ -16,7 +16,7 @@ import java.util.Date;
 public interface IRequestLogService {
     void save(RequestLog log);
 
-    PageResult<AdminLogRes, ?> queryLog(Date startDate, Date endDate, String keywords, Long size, Long current);
+    PageResult<AdminLogRes, ?> queryLog(Date startDate, Date endDate, String method, Boolean status, String keywords, Long size, Long current);
 
     /**
      * 日志详情

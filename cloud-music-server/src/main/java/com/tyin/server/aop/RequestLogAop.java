@@ -73,6 +73,8 @@ public class RequestLogAop implements Ordered {
         RequestLog.RequestLogBuilder builder = RequestLog.builder();
         Map<String, Object> paramsMap = Maps.newHashMap();
         Enumeration<String> headerNames = request.getHeaderNames();
+        String headers = "";
+        Map<String, String> headersMap = Maps.newHashMap();
         String params = "";
         try {
             boolean isJson = Boolean.FALSE;
@@ -81,7 +83,9 @@ public class RequestLogAop implements Ordered {
             while (headerNames.hasMoreElements()) {
                 String next = headerNames.nextElement();
                 isJson = "application/json".equals(request.getHeader(next).toLowerCase(Locale.ROOT));
+                headersMap.put(next, request.getHeader(next));
             }
+            headers = JsonUtils.toJSONString(headersMap);
             if (isJson) {
                 params = JsonUtils.toJSONString(Objects.isNull(args[0]) ? new Object() : args[0]);
             } else {
@@ -99,8 +103,11 @@ public class RequestLogAop implements Ordered {
         String uri = request.getRequestURI();
         String ip = getIpAddress(request);
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
+        String requestMethod = request.getMethod();
         Long aLong = IpUtils.ipToLong(ip);
         builder.params(params).uri(uri).ip(aLong).method(method);
+        builder.requestMethod(requestMethod);
+        builder.headers(headers);
         builder.isLogin(Boolean.FALSE);
         AdminUserLoginRes loginUser;
         try {
@@ -119,6 +126,7 @@ public class RequestLogAop implements Ordered {
             Object result = joinPoint.proceed();
             long end = System.currentTimeMillis();
             resultStr = JsonUtils.toJSONString(result);
+            builder.status(Boolean.TRUE);
             builder(builder, start, resultStr, end);
             return result;
         } catch (Throwable e) {
@@ -129,6 +137,7 @@ public class RequestLogAop implements Ordered {
             }
             Result<?> result = new Result<>(code, e.getMessage());
             resultStr = JsonUtils.toJSONString(result);
+            builder.status(Boolean.FALSE);
             builder(builder, start, resultStr, end);
             throw new ApiException(code, e.getMessage(), e);
         }

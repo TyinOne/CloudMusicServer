@@ -26,6 +26,7 @@ public class AdminLogDetailRes {
     private Date time;
     private String uri;
     private String params;
+    private String headers;
     private String result;
     private String address;
     private String account;

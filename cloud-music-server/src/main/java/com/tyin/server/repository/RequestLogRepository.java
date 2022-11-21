@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Select;
  */
 public interface RequestLogRepository extends BaseMapper<RequestLog> {
     @Select("""
-            SELECT `id`, `uri`, `ip`, `method`, `elapsed`, `created`
+            SELECT `id`, `uri`, `ip`, `method`, `status`, `request_method`, `elapsed`, `created`
             FROM `request_log`
             ${ew.customSqlSegment}
             GROUP BY `id`

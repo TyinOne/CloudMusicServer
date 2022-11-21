@@ -37,11 +37,13 @@ public class AdminLogController {
     public Result<PageResult<AdminLogRes, ?>> queryLog(@RequestParam(required = false) @DateTimeFormat(pattern = YYYY_MM_DD) Date startDate,
                                                        @RequestParam(required = false) @DateTimeFormat(pattern = YYYY_MM_DD) Date endDate,
                                                        @RequestParam(required = false) String keywords,
+                                                       @RequestParam(required = false) String method,
+                                                       @RequestParam(required = false) Boolean status,
                                                        @Parameter(description = "分页长度", example = "20") @RequestParam(required = false, defaultValue = "20") Long size,
                                                        @Parameter(description = "当前页", example = "1") @RequestParam(required = false, defaultValue = "1") Long current,
                                                        @Parameter(hidden = true) @Auth("@permission.hasPermission('sys:log:query')") AuthAdminUser ignoredUser) {
 
-        PageResult<AdminLogRes, ?> pageResult = requestLogService.queryLog(startDate, endDate, keywords, size, current);
+        PageResult<AdminLogRes, ?> pageResult = requestLogService.queryLog(startDate, endDate, method, status, keywords, size, current);
         return Result.success(pageResult);
     }
 

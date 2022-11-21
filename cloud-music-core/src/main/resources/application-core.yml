@@ -47,7 +47,7 @@ spring:
       filters: stat, wall
   redis:
     timeout: 5000ms
-    lettuce:
+    jedis:
       pool:
         max-active: 8
         min-idle: 8
