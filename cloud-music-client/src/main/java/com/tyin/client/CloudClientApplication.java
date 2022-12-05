@@ -1,24 +1,22 @@
-package com.tyin.server;
+package com.tyin.client;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author Tyin
- * @date 2022/6/14 15:26
+ * @date ${DATE} ${TIME}
  * @description ...
  */
-@MapperScan("com.tyin.server.repository")
+@MapperScan("com.tyin.client.repository")
 @ComponentScan({"com.tyin.*"})
 @EnableAsync
 @SpringBootApplication
-@EnableScheduling
-public class CloudMusicServerApplication {
+public class CloudClientApplication {
     public static void main(String[] args) {
-        SpringApplication.run(CloudMusicServerApplication.class, args);
+        SpringApplication.run(CloudClientApplication.class, args);
     }
 }

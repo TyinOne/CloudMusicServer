@@ -44,7 +44,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/login")
-    @Operation(description = "用户登录")
+    @Operation(description = "用户登录",tags = "用户登录")
     public Result<AdminUserLoginRes> login(@RequestBody @Validated(AdminUserLoginValidSequence.class) AdminLoginValid adminLoginValid, HttpServletRequest httpServletRequest) {
         //登录IP
         Long ipAddress = IpUtils.getIpAddressInt(httpServletRequest);

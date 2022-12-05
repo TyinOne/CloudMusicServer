@@ -36,7 +36,7 @@
         <okhttp.version>4.9.3</okhttp.version>
         <quartz.version>2.3.2</quartz.version>
         <jwt.version>0.9.1</jwt.version>
-        <springdoc.version>1.6.11</springdoc.version>
+        <springdoc.version>1.6.13</springdoc.version>
         <region.version>2.6.5</region.version>
     </properties>
     <dependencyManagement>
@@ -55,6 +55,12 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${springdoc.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.yaml</groupId>
+                        <artifactId>snakeyaml</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
@@ -93,26 +99,26 @@
                 <artifactId>oshi-core</artifactId>
                 <version>${oshi.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webflux-api</artifactId>
-                <version>${openapi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-                <version>${openapi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>${openapi.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.mybatis.spring.boot</groupId>-->
+<!--                <artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--                <version>${mybatis-spring.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.springdoc</groupId>-->
+<!--                <artifactId>springdoc-openapi-starter-webflux-api</artifactId>-->
+<!--                <version>${openapi.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.springdoc</groupId>-->
+<!--                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>-->
+<!--                <version>${openapi.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.springdoc</groupId>-->
+<!--                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
+<!--                <version>${openapi.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -140,6 +146,11 @@
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-security</artifactId>-->
+<!--                <version>5.8.0${security.version}</version>-->
+<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
 </project>

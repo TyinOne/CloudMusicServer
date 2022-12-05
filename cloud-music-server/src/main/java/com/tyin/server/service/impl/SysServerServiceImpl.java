@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-import static com.tyin.core.module.res.admin.SysInfoRes.*;
-
 /**
  * @author Tyin
  * @date 2022/3/29 16:25

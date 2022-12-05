@@ -197,7 +197,7 @@ public class AdminUserServiceImpl implements IAdminUserService {
 
     @Override
     public void resetPassword(UpdatePasswordValid valid) {
-        String newPassword = SpringUtils.getBean(UserDetailsServiceImpl.class).getPassword(StringUtils.getMd5(StringUtils.getMd5(valid.getPassword())));
+        String newPassword = SpringUtils.getBean(UserDetailsServiceImpl.class).getPassword(valid.getPassword());
         AdminUser adminUser = getUserEntity(valid.getAccount());
         adminUser.setPassword(newPassword);
         int update = adminUserRepository.updateById(adminUser);

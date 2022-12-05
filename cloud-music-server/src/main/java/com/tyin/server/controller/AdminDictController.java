@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.UnknownHostException;
+
 /**
  * @author Tyin
  * @date 2022/5/8 22:46
@@ -89,7 +91,7 @@ public class AdminDictController {
 
     @PutMapping("/update/cache")
     @Operation(description = "更新字典缓存")
-    public Result<?> updateDictCache(@Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) {
+    public Result<?> updateDictCache(@Parameter(hidden = true) @Auth AuthAdminUser ignoredUser) throws UnknownHostException {
         systemLoadComponents.onLoad();
         return Result.success();
     }

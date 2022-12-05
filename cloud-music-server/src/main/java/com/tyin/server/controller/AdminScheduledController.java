@@ -15,8 +15,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static com.tyin.core.constants.ResMessageConstants.*;
-
 /**
  * @author Tyin
  * @date 2022/7/14 10:40

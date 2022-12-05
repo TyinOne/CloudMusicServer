@@ -94,8 +94,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public AdminUserLoginRes login(AdminLoginValid adminLoginValid) {
-        String md5Password = StringUtils.getMd5(StringUtils.getMd5(adminLoginValid.getPassword()));
-        Authentication authentication = SpringUtils.getBean(AuthenticationManager.class).authenticate(new UsernamePasswordAuthenticationToken(adminLoginValid.getAccount(), md5Password));
+        Authentication authentication = SpringUtils.getBean(AuthenticationManager.class).authenticate(new UsernamePasswordAuthenticationToken(adminLoginValid.getAccount(), adminLoginValid.getPassword()));
         return (AdminUserLoginRes) authentication.getPrincipal();
     }
 

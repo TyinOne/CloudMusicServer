@@ -1,6 +1,5 @@
 package com.tyin.server.auth.security.utils;
 
-import static com.tyin.core.constants.ParamsConstants.*;
 import static com.tyin.core.constants.PatternConstants.MAIL_PATTERN;
 import static com.tyin.core.constants.PatternConstants.TEL_PATTERN;
 
