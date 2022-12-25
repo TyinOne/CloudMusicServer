@@ -1,14 +1,14 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.PageResult;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminAccountDetailRes;
 import com.tyin.core.module.res.admin.AdminAccountRes;
-import com.tyin.server.api.PageResult;
-import com.tyin.server.api.Result;
-import com.tyin.server.params.valid.SaveAccountValid;
-import com.tyin.server.params.valid.UpdatePasswordValid;
-import com.tyin.server.service.IAdminUserService;
+import com.tyin.core.module.valid.SaveAccountValid;
+import com.tyin.core.module.valid.UpdatePasswordValid;
+import com.tyin.core.service.IAdminUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

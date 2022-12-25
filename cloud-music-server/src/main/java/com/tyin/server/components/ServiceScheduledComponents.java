@@ -2,8 +2,8 @@ package com.tyin.server.components;
 
 import com.tyin.core.components.ScheduledComponents;
 import com.tyin.core.module.entity.AdminScheduledLog;
+import com.tyin.core.service.IAdminScheduledService;
 import com.tyin.core.utils.SpringUtils;
-import com.tyin.server.service.IAdminScheduledService;
 import org.quartz.Scheduler;
 import org.springframework.stereotype.Component;
 

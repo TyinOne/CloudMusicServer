@@ -1,13 +1,13 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.MenuDetailRes;
 import com.tyin.core.module.res.admin.MenuRes;
+import com.tyin.core.module.valid.SaveMenuValid;
+import com.tyin.core.service.IAdminMenuService;
 import com.tyin.core.utils.Asserts;
-import com.tyin.server.api.Result;
-import com.tyin.server.params.valid.SaveMenuValid;
-import com.tyin.server.service.IAdminMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

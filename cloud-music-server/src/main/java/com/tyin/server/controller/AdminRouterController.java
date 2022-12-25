@@ -2,10 +2,10 @@ package com.tyin.server.controller;
 
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminRouterListRes;
-import com.tyin.server.api.Result;
-import com.tyin.server.service.IAdminRouterService;
+import com.tyin.core.service.IAdminRouterService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

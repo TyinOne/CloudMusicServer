@@ -1,18 +1,18 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.PageResult;
+import com.tyin.core.api.Result;
 import com.tyin.core.constants.ResMessageConstants;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminDictRes;
 import com.tyin.core.module.res.admin.AdminDictTypeRes;
+import com.tyin.core.module.valid.IdValid;
+import com.tyin.core.module.valid.SaveDictTypeValid;
+import com.tyin.core.module.valid.SaveDictValid;
+import com.tyin.core.service.IAdminDictService;
 import com.tyin.core.utils.Asserts;
-import com.tyin.server.api.PageResult;
-import com.tyin.server.api.Result;
 import com.tyin.server.components.SystemLoadComponents;
-import com.tyin.server.params.valid.IdValid;
-import com.tyin.server.params.valid.SaveDictTypeValid;
-import com.tyin.server.params.valid.SaveDictValid;
-import com.tyin.server.service.IAdminDictService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

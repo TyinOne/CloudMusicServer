@@ -147,6 +147,7 @@ public class JsonUtils {
         return value != null ? toMap(value, () -> null) : null;
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Object value, Supplier<Map<String, Object>> defaultSupplier) {
         if (value == null) {
             return defaultSupplier.get();
@@ -161,6 +162,7 @@ public class JsonUtils {
         return toMap(toJSONString(value), defaultSupplier);
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(String value, Supplier<Map<String, Object>> defaultSupplier) {
         if (StringUtils.isBlank(value)) {
             return defaultSupplier.get();
@@ -181,6 +183,7 @@ public class JsonUtils {
         return value != null ? toList(value, () -> null) : null;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Object> toList(String value, Supplier<List<Object>> defaultSuppler) {
         if (StringUtils.isBlank(value)) {
             return defaultSuppler.get();
@@ -193,6 +196,7 @@ public class JsonUtils {
         return defaultSuppler.get();
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Object> toList(Object value, Supplier<List<Object>> defaultSuppler) {
         if (value == null) {
             return defaultSuppler.get();

@@ -2,14 +2,14 @@ package com.tyin.server.controller;
 
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.PageResult;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminRoleRes;
+import com.tyin.core.module.valid.InsertRoleValid;
+import com.tyin.core.module.valid.UpdateRoleValid;
+import com.tyin.core.service.IAdminRoleService;
 import com.tyin.core.utils.Asserts;
-import com.tyin.server.api.PageResult;
-import com.tyin.server.api.Result;
-import com.tyin.server.params.valid.InsertRoleValid;
-import com.tyin.server.params.valid.UpdateRoleValid;
-import com.tyin.server.service.IAdminRoleService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

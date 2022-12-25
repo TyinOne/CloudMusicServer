@@ -2,11 +2,11 @@ package com.tyin.server.controller;
 
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminRegionListRes;
 import com.tyin.core.module.res.admin.AdminRegionRes;
-import com.tyin.server.api.Result;
-import com.tyin.server.service.IAdminRegionService;
+import com.tyin.core.service.IAdminRegionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

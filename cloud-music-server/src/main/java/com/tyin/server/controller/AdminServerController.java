@@ -2,10 +2,10 @@ package com.tyin.server.controller;
 
 
 import com.tyin.core.annotations.NoLog;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.res.admin.SysInfoRes;
 import com.tyin.core.module.res.admin.SysRedisRes;
-import com.tyin.server.api.Result;
-import com.tyin.server.service.ISysServerService;
+import com.tyin.core.service.ISysServerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

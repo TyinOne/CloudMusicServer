@@ -1,26 +1,28 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.Result;
+import com.tyin.core.auth.admin.UserDetailsServiceImpl;
+import com.tyin.core.components.PropertiesComponents;
+import com.tyin.core.components.properties.PropertiesEnum;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.entity.AdminUserDetailRes;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
-import com.tyin.server.api.Result;
-import com.tyin.server.auth.security.service.UserDetailsServiceImpl;
-import com.tyin.server.components.properties.PropertiesComponents;
-import com.tyin.server.params.valid.AdminLoginValid;
-import com.tyin.server.params.valid.AdminRegisterValid;
-import com.tyin.server.params.valid.sequence.AdminUserLoginValidSequence;
-import com.tyin.server.params.valid.sequence.AdminUserRegisterValidSequence;
-import com.tyin.server.service.IAdminUserService;
+import com.tyin.core.module.valid.AdminLoginValid;
+import com.tyin.core.module.valid.AdminRegisterValid;
+import com.tyin.core.module.valid.sequence.AdminUserLoginValidSequence;
+import com.tyin.core.module.valid.sequence.AdminUserRegisterValidSequence;
+import com.tyin.core.service.IAdminUserService;
 import com.tyin.server.utils.IpUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import static com.tyin.core.constants.PropertiesKeyConstants.OSS_FILE_HOST;
 
 /**
  * @author Tyin
@@ -44,16 +46,16 @@ public class AdminUserController {
     }
 
     @PostMapping("/login")
-    @Operation(description = "用户登录",tags = "用户登录")
+    @Operation(description = "用户登录", tags = "用户登录")
     public Result<AdminUserLoginRes> login(@RequestBody @Validated(AdminUserLoginValidSequence.class) AdminLoginValid adminLoginValid, HttpServletRequest httpServletRequest) {
         //登录IP
         Long ipAddress = IpUtils.getIpAddressInt(httpServletRequest);
         adminLoginValid.setIpAddress(ipAddress);
         AdminUserLoginRes res = userDetailsService.login(adminLoginValid);
-        String key = res.getUuid();
+        String key = res.getRedisKey();
         //更新用户表的token
-        adminUserService.updateToken(adminLoginValid.getAccount(), key);
-        res.setAvatar(propertiesComponents.getOssUrl() + res.getAvatar());
+        adminUserService.updateToken(adminLoginValid.getAccount(), key, ipAddress);
+        res.setAvatar(propertiesComponents.getConfigByKey(PropertiesEnum.OSS, OSS_FILE_HOST) + res.getAvatar());
         return Result.success(res);
     }
 
@@ -69,7 +71,7 @@ public class AdminUserController {
     @Operation(description = "获取用户信息")
     public Result<AdminUserDetailRes> getUserInfo(@Parameter(hidden = true) @Auth AuthAdminUser user) {
         AdminUserDetailRes res = adminUserService.getUserInfo(user);
-        res.setAvatar(propertiesComponents.getOssUrl() + res.getAvatar());
+        res.setAvatar(propertiesComponents.getConfigByKey(PropertiesEnum.OSS, OSS_FILE_HOST) + res.getAvatar());
         return Result.success(res);
     }
 
@@ -77,7 +79,7 @@ public class AdminUserController {
     @Operation(description = "用户状态认证")
     public Result<AdminUserLoginRes> getSession(@Parameter(hidden = true) @Auth AuthAdminUser user) {
         AdminUserLoginRes res = adminUserService.getUserSession(user);
-        res.setAvatar(propertiesComponents.getOssUrl() + res.getAvatar());
+        res.setAvatar(propertiesComponents.getConfigByKey(PropertiesEnum.OSS, OSS_FILE_HOST) + res.getAvatar());
         return Result.success(res);
     }
 }

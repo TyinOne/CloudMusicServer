@@ -2,8 +2,8 @@ package com.tyin.core.module.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.tyin.core.module.base.BaseEntity;
 import com.tyin.core.constants.ScheduleConstants;
+import com.tyin.core.module.base.BaseEntity;
 import lombok.*;
 
 import java.io.Serial;

@@ -1,7 +1,7 @@
 package com.tyin.server.auth.resolver;
 
 import com.tyin.core.annotations.Auth;
-import com.tyin.server.auth.security.utils.SecurityUtils;
+import com.tyin.core.auth.admin.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;

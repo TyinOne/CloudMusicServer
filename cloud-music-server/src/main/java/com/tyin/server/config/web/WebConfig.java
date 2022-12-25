@@ -2,9 +2,10 @@ package com.tyin.server.config.web;
 
 
 import com.google.common.collect.Lists;
+import com.tyin.core.components.PropertiesComponents;
 import com.tyin.server.auth.resolver.AuthUserMethodArgumentResolver;
-import com.tyin.server.components.properties.PropertiesComponents;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -24,17 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final PropertiesComponents properties;
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        /*
-         * List<String> list = Lists.newArrayList();
-         *         list.add("/doc.html");
-         *         list.add("/swagger-ui.html");
-         *         list.add("/swagger-resources");
-         *         list.add("/api-docs");
-         *         list.add("/v2/api-docs");
-         *         list.add("/v3/api-docs");
-         *         list.add("/error");
-         */
+    public void addInterceptors(@NotNull InterceptorRegistry registry) {
         List<String> excludeList = Lists.newArrayList();
         excludeList.add("/doc.html");
         excludeList.add("/swagger-ui.html");

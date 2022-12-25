@@ -1,9 +1,14 @@
 package com.tyin.server.auth.security.filter;
 
+import com.tyin.core.auth.admin.TokenService;
+import com.tyin.core.auth.admin.utils.SecurityUtils;
 import com.tyin.core.module.res.admin.AdminUserLoginRes;
 import com.tyin.core.utils.StringUtils;
-import com.tyin.server.auth.security.service.TokenService;
-import com.tyin.server.auth.security.utils.SecurityUtils;
+import com.tyin.server.auth.AdminPermissionService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,14 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.tyin.server.auth.security.constant.ConstantKey.TOKEN_PREFIX;
+import static com.tyin.core.constants.SecurityConstantKey.TOKEN_PREFIX;
 
 /**
  * @author Tyin
@@ -30,15 +31,17 @@ import static com.tyin.server.auth.security.constant.ConstantKey.TOKEN_PREFIX;
 public class AuthenticationFilter extends BasicAuthenticationFilter {
 
     private final TokenService tokenService;
+    private final AdminPermissionService adminPermissionService;
 
-    public AuthenticationFilter(TokenService tokenService, AuthenticationManager authenticationManager) {
+    public AuthenticationFilter(TokenService tokenService, AdminPermissionService adminPermissionService, AuthenticationManager authenticationManager) {
         super(authenticationManager);
         this.tokenService = tokenService;
+        this.adminPermissionService = adminPermissionService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        AdminUserLoginRes user = tokenService.getLoginAdminUser(request);
+        AdminUserLoginRes user = adminPermissionService.getLoginAdminUser(request);
 
         String header = request.getHeader("Authorization");
         if (StringUtils.isEmpty(header) || !header.startsWith(TOKEN_PREFIX)) {

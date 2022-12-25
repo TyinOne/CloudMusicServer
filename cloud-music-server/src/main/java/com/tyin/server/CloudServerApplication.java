@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @date 2022/6/14 15:26
  * @description ...
  */
-@MapperScan("com.tyin.server.repository")
+@MapperScan("com.tyin.core.repository.*")
 @ComponentScan({"com.tyin.*"})
 @EnableAsync
 @SpringBootApplication

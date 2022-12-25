@@ -17,6 +17,15 @@ cloud:
     application-description: API文档
     try-host: http://localhost:${server.port}
 spring:
+  data:
+    redis:
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          min-idle: 8
+          max-idle: 10
+          max-wait: -1ms
   application:
     name: cloud_music_server
   datasource:
@@ -45,14 +54,6 @@ spring:
       min-evictable-idle-time-millis: 300000
       max-evictable-idle-time-millis: 900000
       filters: stat, wall
-  redis:
-    timeout: 5000ms
-    jedis:
-      pool:
-        max-active: 8
-        min-idle: 8
-        max-idle: 0
-        max-wait: -1ms
   jackson:
     default-property-inclusion: NON_NULL
     time-zone: GMT+8

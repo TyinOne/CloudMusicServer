@@ -1,11 +1,11 @@
 server:
   port: 9527
-  max-http-header-size: 8192
   tomcat:
     basedir: /
     remoteip:
       remote-ip-header: x-forwarded-for
       protocol-header: x-forwarded-proto
+  max-http-request-header-size: 8192
 logging:
   file:
     name: /data/logs/server/cloud-music.log

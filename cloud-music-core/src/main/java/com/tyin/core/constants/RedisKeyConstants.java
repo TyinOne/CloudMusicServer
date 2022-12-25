@@ -21,4 +21,6 @@ public class RedisKeyConstants {
     public final static String INVITE_CODE_EXPIRE = "admin:invite:";
 
     public final static String USER_LOGIN_PREFIX = "login:token:";
+
+    public final static String SYSTEM_CONFIG = "system_config:";
 }

@@ -1,9 +1,9 @@
 package com.tyin.server.exception.handler;
 
+import com.tyin.core.api.Result;
 import com.tyin.core.enums.ResultCode;
 import com.tyin.core.exception.ApiException;
 import com.tyin.core.utils.StringUtils;
-import com.tyin.server.api.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

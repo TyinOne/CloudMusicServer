@@ -10,14 +10,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
+        <version>3.0.0</version>
         <relativePath/>
     </parent>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+
+        <mybatis-plus.version>3.5.2.4-SNAPSHOT</mybatis-plus.version>
+        <mysql-connector.verion>8.0.31</mysql-connector.verion>
         <jackson.version>2.13.0-rc1</jackson.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger.ui.version>3.0.2</swagger.ui.version>
@@ -31,7 +33,7 @@
         <log4j.version>2.17.0</log4j.version>
         <druid.version>1.2.9</druid.version>
         <oshi.version>6.1.5</oshi.version>
-        <mybatis-spring.version>2.2.2</mybatis-spring.version>
+        <mybatis.version>3.0.0</mybatis.version>
         <openapi.version>2.0.0-M2</openapi.version>
         <okhttp.version>4.9.3</okhttp.version>
         <quartz.version>2.3.2</quartz.version>
@@ -39,12 +41,32 @@
         <springdoc.version>1.6.13</springdoc.version>
         <region.version>2.6.5</region.version>
     </properties>
+    <modules>
+        <module>cloud-music-client</module>
+        <module>cloud-music-core</module>
+        <module>cloud-music-server</module>
+    </modules>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql-connector.verion}</version>
+            </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis-spring</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -99,26 +121,21 @@
                 <artifactId>oshi-core</artifactId>
                 <version>${oshi.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.mybatis.spring.boot</groupId>-->
-<!--                <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--                <version>${mybatis-spring.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.springdoc</groupId>-->
-<!--                <artifactId>springdoc-openapi-starter-webflux-api</artifactId>-->
-<!--                <version>${openapi.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.springdoc</groupId>-->
-<!--                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>-->
-<!--                <version>${openapi.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.springdoc</groupId>-->
-<!--                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
-<!--                <version>${openapi.version}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springdoc</groupId>-->
+            <!--                <artifactId>springdoc-openapi-starter-webflux-api</artifactId>-->
+            <!--                <version>${openapi.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springdoc</groupId>-->
+            <!--                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>-->
+            <!--                <version>${openapi.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springdoc</groupId>-->
+            <!--                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
+            <!--                <version>${openapi.version}</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -146,11 +163,26 @@
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-starter-security</artifactId>-->
-<!--                <version>5.8.0${security.version}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springframework.boot</groupId>-->
+            <!--                <artifactId>spring-boot-starter-security</artifactId>-->
+            <!--                <version>5.8.0${security.version}</version>-->
+            <!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <!-- 由于未正式发版，所以在Maven仓库里还搜不到，需要额外配置一个远程仓库 -->
+        <repository>
+            <id>sr</id>
+            <name>OSS Snapshot repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

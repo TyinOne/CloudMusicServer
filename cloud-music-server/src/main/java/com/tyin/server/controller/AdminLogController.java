@@ -2,12 +2,12 @@ package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
 import com.tyin.core.annotations.NoLog;
+import com.tyin.core.api.PageResult;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.AdminLogDetailRes;
 import com.tyin.core.module.res.admin.AdminLogRes;
-import com.tyin.server.api.PageResult;
-import com.tyin.server.api.Result;
-import com.tyin.server.service.IRequestLogService;
+import com.tyin.core.service.IAdminRequestLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ import static com.tyin.core.utils.DateUtils.YYYY_MM_DD;
 @RequestMapping("${cloud.api.prefix.admin}/log")
 @RequiredArgsConstructor
 public class AdminLogController {
-    private final IRequestLogService requestLogService;
+    private final IAdminRequestLogService requestLogService;
 
     @Operation(description = "日志查询接口")
     @GetMapping("/list")

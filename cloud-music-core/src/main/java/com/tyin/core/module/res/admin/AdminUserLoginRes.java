@@ -1,6 +1,5 @@
 package com.tyin.core.module.res.admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tyin.core.module.bean.AuthAdminUser;
 import lombok.Getter;
@@ -20,10 +19,6 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties({"accountNonLocked", "credentialsNonExpired", "accountNonExpired", "enabled"})
 public class AdminUserLoginRes extends AuthAdminUser implements UserDetails {
-    @JsonIgnore
-//    @Getter
-//    @Setter
-//    private String key;
     @Getter
     @Setter
     private Long loginTime;
@@ -33,7 +28,6 @@ public class AdminUserLoginRes extends AuthAdminUser implements UserDetails {
 
     public AdminUserLoginRes(Long id, String token, String uuid, String nickName, String account, String avatar, Set<String> roles, Set<String> permissions, Boolean disabled) {
         super(id, token, uuid, nickName, account, avatar, roles, permissions, disabled, "");
-//        this.key = key;
     }
 
     @Override
@@ -57,17 +51,17 @@ public class AdminUserLoginRes extends AuthAdminUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

@@ -1,23 +1,22 @@
 package com.tyin.server.auth.security.config;
 
+import com.tyin.core.auth.admin.TokenService;
 import com.tyin.core.components.RedisComponents;
-import com.tyin.server.auth.security.CloudAuthenticationProvider;
+import com.tyin.server.auth.AdminPermissionService;
 import com.tyin.server.auth.security.filter.AuthenticationFilter;
 import com.tyin.server.auth.security.filter.JWTLoginFilter;
 import com.tyin.server.auth.security.point.Http401AuthenticationEntryPoint;
-import com.tyin.server.auth.security.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * @author Tyin
@@ -26,9 +25,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
     private final static String[] AUTH_WHITELIST = {
             "/admin/user/login",
             "/admin/user/login/t",
@@ -50,42 +48,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisComponents redisComponents;
     private final TokenService tokenService;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final AdminPermissionService adminPermissionService;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                //X-Frame-Options
-                .headers().frameOptions().disable()
-                .and().csrf().disable()
-                //session禁用
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
+                .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                //拦截规则配置
-                .authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll()
-                .anyRequest().authenticated()  // 所有请求需要身份认证
-                //异常处理器
+                .authorizeHttpRequests()
+                .requestMatchers(AUTH_WHITELIST)
+                .permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new Http401AuthenticationEntryPoint())
                 .and()
-
                 .addFilter(new JWTLoginFilter(authenticationManager()))
-                .addFilter(new AuthenticationFilter(tokenService, authenticationManager()))
+                .addFilter(new AuthenticationFilter(tokenService, adminPermissionService, authenticationManager()))
                 .logout()
-                .permitAll();
-    }
-
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) {
-        // 使用自定义身份验证组件
-        auth.authenticationProvider(new CloudAuthenticationProvider(tokenService, userDetailsService, bCryptPasswordEncoder, redisComponents));
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+                .and()
+//                .authenticationProvider(new CloudAuthenticationProvider(tokenService, userDetailsService, bCryptPasswordEncoder, redisComponents))
+                .build();
     }
 }

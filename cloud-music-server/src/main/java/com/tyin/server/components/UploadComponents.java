@@ -1,11 +1,12 @@
 package com.tyin.server.components;
 
 
+import com.tyin.core.components.PropertiesComponents;
+import com.tyin.core.components.properties.PropertiesEnum;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.res.admin.UploadTmpRes;
 import com.tyin.core.utils.Asserts;
 import com.tyin.core.utils.StringUtils;
-import com.tyin.server.components.properties.PropertiesComponents;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static com.tyin.core.constants.PropertiesKeyConstants.*;
 import static com.tyin.core.constants.ResMessageConstants.UPLOAD_FAILED;
 
 /**
@@ -38,10 +40,14 @@ public class UploadComponents {
     }
 
     private UploadTmpRes uploadTmp(MultipartFile file) {
+        String ossUrl = propertiesComponents.getConfigByKey(PropertiesEnum.OSS, OSS_FILE_HOST);
+        String ossServer = propertiesComponents.getConfigByKey(PropertiesEnum.OSS, OSS_SERVER_URI);
+        String ossTmp = propertiesComponents.getConfigByKey(PropertiesEnum.OSS, OSS_FILE_URI_TEMP);
+
         String originalFilename = file.getOriginalFilename();
         String suffix = Objects.isNull(originalFilename) ? "" : originalFilename.split("\\.")[1];
         String fileName = System.currentTimeMillis() + "-" + StringUtils.getUuid() + "." + suffix;
-        String serverTmpPath = propertiesComponents.getOssServer() + propertiesComponents.getOssTmp();
+        String serverTmpPath = ossServer + ossTmp;
         String absolutePath;
         String md5 = "";
         try {
@@ -57,8 +63,8 @@ public class UploadComponents {
             Asserts.fail(UPLOAD_FAILED);
         }
         return UploadTmpRes.builder()
-                .src(propertiesComponents.getOssUrl() + propertiesComponents.getOssTmp() + fileName)
-                .uri(propertiesComponents.getOssTmp())
+                .src(ossUrl + ossTmp + fileName)
+                .uri(ossTmp)
                 .fileName(fileName)
                 .md5(md5)
                 .build();

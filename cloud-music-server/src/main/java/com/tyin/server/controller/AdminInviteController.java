@@ -1,23 +1,22 @@
 package com.tyin.server.controller;
 
 import com.tyin.core.annotations.Auth;
+import com.tyin.core.api.PageResult;
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.AuthAdminUser;
 import com.tyin.core.module.bean.InviteCodeBean;
 import com.tyin.core.module.res.admin.AdminInviteCodeRes;
 import com.tyin.core.module.res.admin.GenerateInviteRes;
+import com.tyin.core.module.valid.IdValid;
+import com.tyin.core.service.IAdminInviteCodeService;
+import com.tyin.core.service.IAdminUserService;
 import com.tyin.core.utils.Asserts;
-import com.tyin.server.api.PageResult;
-import com.tyin.server.api.Result;
-import com.tyin.server.params.valid.IdValid;
-import com.tyin.server.service.IAdminInviteCodeService;
-import com.tyin.server.service.IAdminUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * @author Tyin

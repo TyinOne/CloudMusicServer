@@ -1,13 +1,13 @@
 package com.tyin.server.controller;
 
 
+import com.tyin.core.api.Result;
 import com.tyin.core.module.bean.DictLabel;
 import com.tyin.core.module.bean.RegionLabel;
 import com.tyin.core.module.bean.RoleLabel;
 import com.tyin.core.module.bean.ScheduledGroupLabel;
 import com.tyin.core.module.res.admin.*;
-import com.tyin.server.api.Result;
-import com.tyin.server.service.*;
+import com.tyin.core.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

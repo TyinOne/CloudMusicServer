@@ -1,12 +1,12 @@
 package com.tyin.server.auth.security.point;
 
+import com.tyin.core.api.Result;
 import com.tyin.core.utils.JsonUtils;
-import com.tyin.server.api.Result;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.tyin.core.enums.ResultCode.SIGNATURE_NOT_MATCH;

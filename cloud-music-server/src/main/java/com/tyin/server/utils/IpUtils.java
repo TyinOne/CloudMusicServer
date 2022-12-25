@@ -1,17 +1,13 @@
 package com.tyin.server.utils;
 
 import com.google.common.collect.Maps;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.lionsoul.ip2region.xdb.Searcher;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Tyin
@@ -77,74 +73,6 @@ public class IpUtils {
      * @param text IPv4地址
      * @return byte 字节
      */
-    public static byte[] textToNumericFormatV4(String text) {
-        if (text.length() == 0) {
-            return null;
-        }
-
-        byte[] bytes = new byte[4];
-        String[] elements = text.split("\\.", -1);
-        try {
-            long l;
-            int i;
-            switch (elements.length) {
-                case 1:
-                    l = Long.parseLong(elements[0]);
-                    if ((l < 0L) || (l > 4294967295L)) {
-                        return null;
-                    }
-                    bytes[0] = (byte) (int) (l >> 24 & 0xFF);
-                    bytes[1] = (byte) (int) ((l & 0xFFFFFF) >> 16 & 0xFF);
-                    bytes[2] = (byte) (int) ((l & 0xFFFF) >> 8 & 0xFF);
-                    bytes[3] = (byte) (int) (l & 0xFF);
-                    break;
-                case 2:
-                    l = Integer.parseInt(elements[0]);
-                    if ((l < 0L) || (l > 255L)) {
-                        return null;
-                    }
-                    bytes[0] = (byte) (int) (l & 0xFF);
-                    l = Integer.parseInt(elements[1]);
-                    if ((l < 0L) || (l > 16777215L)) {
-                        return null;
-                    }
-                    bytes[1] = (byte) (int) (l >> 16 & 0xFF);
-                    bytes[2] = (byte) (int) ((l & 0xFFFF) >> 8 & 0xFF);
-                    bytes[3] = (byte) (int) (l & 0xFF);
-                    break;
-                case 3:
-                    for (i = 0; i < 2; ++i) {
-                        l = Integer.parseInt(elements[i]);
-                        if ((l < 0L) || (l > 255L)) {
-                            return null;
-                        }
-                        bytes[i] = (byte) (int) (l & 0xFF);
-                    }
-                    l = Integer.parseInt(elements[2]);
-                    if ((l < 0L) || (l > 65535L)) {
-                        return null;
-                    }
-                    bytes[2] = (byte) (int) (l >> 8 & 0xFF);
-                    bytes[3] = (byte) (int) (l & 0xFF);
-                    break;
-                case 4:
-                    for (i = 0; i < 4; ++i) {
-                        l = Integer.parseInt(elements[i]);
-                        if ((l < 0L) || (l > 255L)) {
-                            return null;
-                        }
-                        bytes[i] = (byte) (int) (l & 0xFF);
-                    }
-                    break;
-                default:
-                    return null;
-            }
-        } catch (NumberFormatException e) {
-            return null;
-        }
-        return bytes;
-    }
-
     public static Long ipToLong(String ipStr) {
         if (ipStr.startsWith("0")) return 1L;
         String[] ip = ipStr.split("\\.");
@@ -160,58 +88,5 @@ public class IpUtils {
         return String.join(".", ipArr);
     }
 
-    public static String getHostIp() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException ignored) {
-        }
-        return LOCAL;
-    }
-
-    public static String getHostName() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ignored) {
-        }
-        return UNKNOWN;
-    }
-
-    public static String getIpCity(Long longIp) throws IOException {
-        String ip = longToIp(longIp);
-        if (ip.startsWith(LAN_A) || ip.startsWith(LAN_B) || ip.startsWith(LAN_C) || ip.startsWith(SWAGGER) || ip.equals(LOCAL)) {
-            return "本地IP";
-        }
-        if (Objects.isNull(REGION_RESOURCE)) {
-            return "未知地址";
-        }
-        InputStream resourceAsStream = IpUtils.class.getClassLoader().getResourceAsStream("ip2region.xdb");
-        byte[] cBuff;
-        try {
-            assert resourceAsStream != null;
-            cBuff = resourceAsStream.readAllBytes();
-        } catch (Exception e) {
-            log.warn(String.format("failed to load content from `%s`: %s\n", "resourceAsStream", e));
-            return "未知地址";
-        }
-        Searcher searcher = null;
-        try {
-            searcher = Searcher.newWithBuffer(cBuff);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.warn(String.format("failed to create searcher with `%s`: %s\n", "resourceAsStream", e));
-            return "未知地址";
-        }
-        // 2、查询
-        try {
-            return searcher.search(ip);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.warn(String.format("failed to search(%s): %s\n", ip, e));
-        } finally {
-            // 3、关闭资源
-            searcher.close();
-        }
-        return "未知地址";
-    }
 
 }

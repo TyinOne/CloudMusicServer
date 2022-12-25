@@ -1,39 +1,47 @@
 package com.tyin.core.components.properties;
 
-import com.tyin.core.components.properties.models.AdminConfig;
-import com.tyin.core.components.properties.models.OssConfig;
-import com.tyin.core.components.properties.models.ScheduledGroupConfig;
-import com.tyin.core.components.properties.models.TencentMapConfig;
-
 /**
  * @author Tyin
  * @date 2022/9/28 11:25
  * @description ...
+ * map
+ * oss
+ * sys_test
+ * admin
+ * ok_http
+ * update
+ * sched_group
  */
 public enum PropertiesEnum {
     /**
-     * 腾讯云地图sdk配置
+     * 系统配置
      */
-    MAP("map", TencentMapConfig.class),
-    OSS("oss", OssConfig.class),
-    ADMIN("admin", AdminConfig.class),
-    SCHEDULED_GROUP("sched_group", ScheduledGroupConfig.class),
+    ADMIN("admin"),
+    /**
+     * 文件存储
+     */
+    OSS("oss"),
+    /**
+     * 地图区域
+     */
+    MAP("map"),
+    /**
+     * OkHttp
+     */
+    OK_HTTP("ok_http"),
+    /**
+     * 版本管理
+     */
+    UPDATE("update"),
+    /**
+     * 任务分组
+     */
+    SCHED_GROUP("sched_group"),
     ;
     private String type;
-    private Class<?> clazz;
 
-    PropertiesEnum(String type, Class<?> clazz) {
+    PropertiesEnum(String type) {
         this.type = type;
-        this.clazz = clazz;
-    }
-
-    public static PropertiesEnum getClazzByType(String type) {
-        for (PropertiesEnum item : PropertiesEnum.values()) {
-            if (item.getType().equals(type)) {
-                return item;
-            }
-        }
-        return null;
     }
 
     public String getType() {
@@ -42,13 +50,5 @@ public enum PropertiesEnum {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Class<?> getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(Class<?> clazz) {
-        this.clazz = clazz;
     }
 }
